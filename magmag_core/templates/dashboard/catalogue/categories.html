@@ -1,0 +1,368 @@
+{% load i18n %}
+<script>
+    //@ sourceURL=dynamicScript.js
+    Ext.onReady(init_page);
+    function init_page()
+    {
+        Ext.define('Category',{
+            extend: 'Ext.data.TreeModel',
+            fields: ['id', 'name', 'description', 'slug', 'image', 'data', 'leaf'],
+            idProperty: 'id'
+        });
+        var store = new Ext.data.TreeStore({
+            storeId: 'categoryTreeStore',
+            model: 'Category',
+            autoLoad: true,
+            proxy: {
+                type: 'ajax',
+                url: '{% url "magmag:dashboard:categories" "json" %}',
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    totalProperty: 'total'
+                }
+            }
+        });
+
+        var winAdd = new Ext.window.Window({
+            title: '{% trans "Edit category" %}',
+            id: '{{ current_path  }}_wndAdd',
+            layout: 'fit',
+            closeAction: 'hide',
+            //height: 500,
+            width: 400,
+            cls:'wndFormDialog',
+            items:[
+                {
+                    xtype: 'form',
+                    id: '{{ current_path  }}_wndEditForm',
+                    layout: 'form',
+                    items:[
+                        {
+                            xtype: 'hidden',
+                            id:'{{ current_path  }}_hdnId',
+                            name: 'id'
+                        },{
+                            xtype: 'textfield',
+                            id:'{{ current_path  }}_txtName',
+                            name: 'name',
+                            fieldLabel: '{% trans "Name" %}',
+                            allowBlank: false
+                        },{
+                            xtype: 'textarea',
+                            id:'{{ current_path  }}_txtDescription',
+                            name: 'description',
+                            fieldLabel: '{% trans "Description" %}',
+                            allowBlank: true,
+                            grow: false,
+                            height: 80
+                        },{
+                            xtype: 'textfield',
+                            id:'{{ current_path  }}_txtSlug',
+                            name: 'slug',
+                            fieldLabel: '{% trans "Slug" %}',
+                            allowBlank: false
+                        },
+                        Ext.create('Ext.ux.TreePicker',
+                        {
+                            store: store,
+                            displayField: 'name',
+                            valueField: 'id',
+                            id:'{{ current_path  }}_cmbParent',
+                            name: 'parent',
+                            fieldLabel: '{% trans "Parent" %}',
+                            allowBlank: true
+                        }),{
+                            xtype: 'filefield',
+                            name: 'image',
+                            id: '{{ current_path  }}_ffImage',
+                            fieldLabel: '{% trans "Image" %}',
+                            buttonText: '{% trans "Select" %}...',
+                            icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/image_add.png',
+                            listeners: {
+                                change: function(uploader, value, eOpts) {
+                                    var container = Ext.getCmp('{{ current_path  }}_pnlImagePreview');
+                                    if (container){
+                                        container.removeAll(true);
+                                        readImages(uploader.fileInputEl.dom, container);
+                                    }
+                                }
+                            }
+                        },
+                        {
+                            xtype: 'panel',
+                            collapsible: true,
+                            id:'{{ current_path  }}_pnlImagePreview'
+                        }
+                    ]
+
+                }
+            ],
+            buttons:[
+                {
+                    icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/accept.png',
+                    text: '{% trans "Save" %}',
+                    tooltip: '{% trans "Save" %}',
+                    handler: function(){
+                        var form = Ext.getCmp('{{ current_path  }}_wndEditForm');
+                        updateTreeEl(store, form)
+                    }
+                },{
+                    icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/cancel.png',
+                    text: '{% trans "Cancel" %}',
+                    tooltip: '{% trans "Cancel" %}',
+                    handler: function(){
+                        var win = Ext.getCmp('{{ current_path  }}_wndAdd');
+                        if(win)
+                            win.hide();
+                    }
+                }
+            ],
+            listeners:{
+                hide: function(wnd, eOpts){
+                    clearWndEditForm();
+                }
+            }
+
+        });
+
+
+        var tab = Ext.getCmp('{{ current_path }}');
+        if (tab)
+        {
+            var container = new Ext.panel.Panel( {
+                layout: 'fit',
+                title:'{% trans "Categories" %}',
+                id: '{{ current_path  }}_container',
+                items:[
+                    {
+                        xtype : 'tree',
+                        layout: 'fit',
+                        useArrows: true,
+                        rootVisible: false,
+                        store: store,
+                        multiSelect: true,
+                        singleExpand: true,
+                        autoScroll: true,
+                        cls: 'dashboard-grid',
+                        //the 'columns' property is now 'headers'
+                        viewConfig: {
+                            plugins: {
+                                ptype: 'treeviewdragdrop'
+                            },
+                            listeners:{
+                                    drop: function(node, data, overModel, dropPosition, eOpts){
+                                        var ddElId = data.records[0].data.id;
+                                        var destElId = data.records[0].data.parentId;
+
+                                        moveTreeEl(ddElId,destElId);
+
+                                    },
+                                    beforedrop: function( node, data, overModel, dropPosition, dropHandlers, eOpts ){
+                                        var destElId = overModel.data.parentId;
+                                        if(dropPosition == 'append')
+                                            destElId = overModel.data.id;
+                                        if(destElId != data.records[0].data.parentId)
+                                            dropHandlers.processDrop();
+                                        else dropHandlers.cancelDrop();
+                                    },
+                                    itemdblclick: function(view, record, item, index, e, eOpts ){
+                                        setRecorToWndEditForm(record);
+                                        winAdd.show();
+                                    }
+                            }
+                        },
+                        columns: [{
+                            xtype: 'treecolumn', //this is so we know which column will show the tree
+                            text: '{% trans "Name" %}',
+                            flex: 2,
+                            sortable: true,
+                            dataIndex: 'name'
+                        },{
+                            text: '{% trans "Description" %}',
+                            flex: 2,
+                            dataIndex: 'description',
+                            sortable: false,
+                            editable:true
+
+                        },{
+                            xtype: 'actioncolumn',
+                            flex:1,
+                            items:[
+                                {
+                                        icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/delete.png',  // Use a URL in the icon config
+                                        tooltip: '{% trans "Delete" %}',
+                                        handler: function(grid, rowIndex, colIndex) {
+                                            var record = grid.getStore().getAt(rowIndex);
+                                            if(record)
+                                                deleteTreeEl(grid, record.data.id);
+                                        }
+                                    }
+                                ]
+                            }],
+                        tbar:{
+                            xtype: 'toolbar',
+                            items:[
+                                {
+                                    icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/add.png',
+                                    text: '{% trans "Add" %}',
+                                    tooltip: '{% trans "Add" %}',
+                                    handler: function() {
+                                        winAdd.show();
+                                    }
+                                },{
+                                    xtype: 'tbfill'
+                                },{
+                                    icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/arrow_refresh.png',
+                                    text: '{% trans "Refresh" %}',
+                                    tooltip: '{% trans "Refresh" %}',
+                                    handler: function(){
+                                        store.reload();
+                                    }
+                                }
+
+                            ]
+                        }
+                    }
+                ]
+
+               });
+            tab.add(container);
+        }
+    }
+    //handlers////////////////////////////////////////////////////////////////////////////////////////
+    function moveTreeEl(ddElId, targetElId)
+    {
+        Ext.Ajax.request(
+            {
+                url: '{{ current_path }}',
+                params: {
+                    action: 'move',
+                    ddElId: ddElId,
+                    targetElId: targetElId,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                method: 'POST',
+                success: function(response){
+
+                    }
+                ,
+                failure: function(response){
+                        alert('fail');
+                    }
+            }
+        );
+    }
+    function deleteTreeEl(grid, delElId)
+    {
+        Ext.Ajax.request(
+            {
+                url: '{{ current_path }}',
+                params: {
+                    action: 'delete',
+                    delElId: delElId,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                method: 'POST',
+                success: function(response){
+                        var store = grid.getTreeStore();
+                        store.reload();
+                    }
+                ,
+                failure: function(response){
+                        alert('fail');
+                    }
+            }
+        );
+    }
+    function updateTreeEl(store, form)
+    {
+        form.getForm().submit({
+            clientValidation: true,
+            url: '{{ current_path }}',
+            method: 'POST',
+            params: {
+                action: 'update',
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(form, action) {
+                store.reload();
+                var win = Ext.getCmp('{{ current_path  }}_wndAdd');
+                if(win)
+                    win.hide();
+            },
+            failure: function(form, action) {
+                if (action.failureType == 'server')
+                    alert('fail');
+            }
+        });
+    }
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    //utils//////////////////////////////////////////////////////////////////////////////////////
+    function readImages(input, container) {
+        if (input.files && input.files.length > 0) {
+            for(var i = 0; i < input.files.length; i++)
+            {
+                if(input.files[i])
+                {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        var box = Ext.create('Ext.Img', {
+                            src: e.target.result,
+                            height: 150
+                            //width: 120
+
+                        });
+                        container.add(box);
+
+                    }
+                    reader.readAsDataURL(input.files[i]);
+                }
+            }
+        }
+    }
+
+    function clearWndEditForm()
+    {
+        var form = Ext.getCmp('{{ current_path  }}_wndEditForm');
+        if (form)
+        {
+            form.getForm().reset();
+            var preview_container = Ext.getCmp('{{ current_path  }}_pnlImagePreview');
+            if(preview_container)
+                preview_container.removeAll(true);
+        }
+
+    }
+    function setRecorToWndEditForm(record)
+    {
+        var form = Ext.getCmp('{{ current_path  }}_wndEditForm');
+        if (form)
+        {
+            form.getForm().loadRecord(record);
+            if(record.data.image != null && record.data.image != ''){
+                var preview_container = Ext.getCmp('{{ current_path  }}_pnlImagePreview');
+                if(preview_container){
+                    var box = Ext.create('Ext.Img', {
+                                    src: record.data.image,
+                                    height: 150
+                                    //width: 120
+
+                                });
+                    preview_container.add(box);
+                }
+            }
+            if(record.data.parentId != 'root')
+            {
+                var cmbParent = Ext.getCmp('{{ current_path  }}_cmbParent');
+                if(cmbParent)
+                {
+                    cmbParent.setValue(record.data.parentId);
+                }
+            }
+
+        }
+    }
+</script>

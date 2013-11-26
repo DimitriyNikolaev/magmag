@@ -1,0 +1,133 @@
+{% load i18n %}
+{% load dashboard_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link href="{{ STATIC_URL }}magmag_core/css/dashboard.css" rel="stylesheet" type="text/css" media="screen" />
+    <link href="{{ STATIC_URL }}magmag_core/js/extjs/resources/css/ext-all-neptune.css" rel="stylesheet" type="text/css" media="screen" />
+    <script type="text/javascript" src="{{ STATIC_URL }}magmag_core/js/extjs/ext-all.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}magmag_core/js/extjs/ext-theme-neptune.js"></script>
+
+    <script>
+        {% dashboard_navigation request.user %}
+
+        Ext.application({
+            requires: ['Ext.container.Viewport'],
+            name: 'dashboard',
+
+            appFolder: 'app',
+
+            launch: function() {
+                Ext.create('Ext.container.Viewport', {
+                    layout: 'fit',
+                    items: [
+                        {
+                            xtype: 'panel',
+                            layout: 'border',
+                            tbar:
+                            {
+                                xtype: 'toolbar',
+                                items:[
+                                    {
+                                        xtype: 'tbtext',
+                                        text:'Dashboard'
+                                    },
+                                    {
+                                        xtype: 'tbfill'
+                                    },
+                                    {
+                                        text: '{% trans 'Logout' %}',
+                                        href: '{% url "logout" %}?next=/',
+                                        icon: ''
+                                    }
+                                ]
+                            },
+                            items:[
+                                {
+                                    xtype:'tree',
+                                    title:'{% trans 'Menu' %}',
+                                    region: 'west',
+                                    width: 250,
+                                    split:true,
+                                    root: {
+                                        text: '{{ application_name }}',
+                                        expanded: true,
+                                        children: [
+                                            {% for item in nav_items %}
+                                                    {% if item.is_heading %}
+                                                        {
+                                                            text:'{{item.label }}',
+                                                            expanded:true,
+                                                            url:'{% if item.url %}{{ item.url }}{% endif %}',
+
+                                                    {% else %}
+                                                        {
+                                                            text: '{{ item.label }}',
+                                                            url:'{% if item.url %}{{ item.url }}{% endif %}',
+
+                                                    {% endif %}
+                                                    {% if item.has_children %}
+                                                            children :[
+                                                            {% for subitem in item.children %}
+                                                                {
+                                                                    url:'{% if subitem.url %}{{ subitem.url }}{% endif %}',
+                                                                    text:'{{ subitem.label }}',
+                                                                    leaf:true,
+                                                                },
+                                                            {% endfor %}
+                                                            ]
+                                                        },
+                                                    {% else %}
+                                                            leaf: true
+                                                        },
+                                                    {% endif %}
+                                            {% endfor %}
+                                        ]
+                                    },
+                                    listeners: {
+                                        itemclick: function(tree, record, item, index, e, eOpts) {
+                                            if (typeof(record.raw.url) !== 'undefined')
+                                                openTab(record.raw.text, record.raw.url);
+                                        }
+                                    }
+                                },
+                                {
+                                    xtype:'tabpanel',
+                                    id:'content_tab_panel',
+                                    region: 'center',
+                                    layout: 'fit'
+                                }
+                            ]
+                        }
+                    ]
+                });
+            }
+        });
+
+    function openTab(title, url)
+    {
+        var tabPanel = Ext.getCmp('content_tab_panel');
+        if(tabPanel && url != '')
+        {
+            if(!tabPanel.items.containsKey(url))
+            {
+                tabPanel.add({
+                title: title,
+                id:url,
+                layout: 'fit',
+                autoLoad: {url: url, scripts: true, scope: this},
+                closable:true
+                }).show();
+            }
+            else{
+                tabPanel.setActiveTab(url);
+            }
+        }
+    }
+    </script>
+</head>
+<body>
+
+</body>
+</html>

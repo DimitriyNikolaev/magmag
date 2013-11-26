@@ -1,0 +1,198 @@
+{% load i18n %}
+<script>
+    //@ sourceURL=dynamicStoreScript.js
+    Ext.onReady(init_page);
+    function init_page(){
+        Ext.define('Store',{
+            extend: 'Ext.data.Model',
+            fields: ['id', 'name', 'phone', 'address'],
+            idProperty: 'id'
+        });
+
+        var store = new Ext.data.JsonStore({
+            storeId: 'storesListStore',
+            model: 'Store',
+            autoLoad: true,
+            proxy: {
+                type: 'ajax',
+                url: '{% url "magmag:dashboard:stores" "json" %}',
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    totalProperty: 'total',
+                    idProperty: 'id'
+                }
+            }
+        });
+
+        var form = new Ext.form.Panel ({
+                        hidden: false,
+                        items:[
+                            {name: 'id', xtype: 'textfield'},
+                            {name: 'name', xtype: 'textfield'},
+                            {name: 'phone', xtype: 'textfield'},
+                            {name: 'address', xtype: 'textfield'}
+                        ]
+                    });
+
+        var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
+            clicksToEdit: 1
+        });
+
+        var tab = Ext.getCmp('{{ current_path }}');
+        if (tab)
+        {
+            var container = new Ext.panel.Panel( {
+                layout: 'fit',
+                title:'{% trans "Stores" %}',
+                id: '{{ current_path  }}_container',
+                items:[
+                    {
+                        xtype : 'grid',
+                        layout: 'fit',
+                        store: store,
+                        multiSelect: false,
+                        autoScroll: true,
+                        cls: 'dashboard-grid',
+
+                        //the 'columns' property is now 'headers'
+                        columns: [{
+                            text: '{% trans "Name" %}',
+                            flex: 2,
+                            sortable: true,
+                            dataIndex: 'name',
+                            field: {
+                                allowBlank: false
+                            }
+                        },{
+                            text: '{% trans "Phone" %}',
+                            flex: 2,
+                            dataIndex: 'phone',
+                            sortable: false,
+                            editable:true,
+                            field: {
+                                allowBlank: true
+                            }
+
+                        },{
+                            text: '{% trans "Address" %}',
+                            flex: 2,
+                            dataIndex: 'address',
+                            sortable: false,
+                            editable:true,
+                            field: {
+                                allowBlank: true
+                            }
+
+                        },{
+                            xtype: 'actioncolumn',
+                            flex:1,
+                            items:[
+                                {
+                                    icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/disk.png',  // Use a URL in the icon config
+                                    tooltip: '{% trans "Update" %}',
+                                    handler: function(grid, rowIndex, colIndex) {
+                                        var record = grid.getStore().getAt(rowIndex);
+                                        if(record && form)
+                                        {
+                                            form.getForm().loadRecord(record);
+                                            updateEl(record, form);
+                                        }
+
+                                    }
+                                },{
+                                    icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/delete.png',  // Use a URL in the icon config
+                                    tooltip: '{% trans "Delete" %}',
+                                    handler: function(grid, rowIndex, colIndex) {
+                                        var record = grid.getStore().getAt(rowIndex);
+                                        if(record)
+                                            deleteEl(grid, record);
+
+                                    }
+                                }
+                                ]
+                            }],
+                        tbar:{
+                            xtype: 'toolbar',
+                            items:[
+                                {
+                                    icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/add.png',
+                                    text: '{% trans "Add" %}',
+                                    tooltip: '{% trans "Add" %}',
+                                    handler: function() {
+                                        var r = Ext.create('Store',{
+                                            id: '',
+                                            name: 'name',
+                                            phone: 'phone',
+                                            address: 'address'
+                                        });
+                                        store.insert(0, r);
+                                        cellEditing.startEditByPosition({row: 0, column: 0});
+                                    }
+                                },{
+                                    xtype: 'tbfill'
+                                },{
+                                    icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/arrow_refresh.png',
+                                    text: '{% trans "Refresh" %}',
+                                    tooltip: '{% trans "Refresh" %}',
+                                    handler: function(){
+                                        store.reload();
+                                    }
+                                }
+
+                            ]
+                        },
+                        plugins: [cellEditing]
+                    }
+                ]
+
+               });
+            tab.add(container);
+        }
+    }
+
+    // handlers/////////////////////////////////////////////////////////////////////////////////////////////////////////
+    function deleteEl(grid, delEl)
+    {
+        Ext.Ajax.request(
+            {
+                url: '{{ current_path }}',
+                params: {
+                    action: 'delete',
+                    delElId: delEl.data.id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                method: 'POST',
+                success: function(response){
+                        var store = grid.getStore();
+                        store.remove(delEl);
+                    }
+                ,
+                failure: function(response){
+                        alert('fail');
+                    }
+            }
+        );
+    }
+
+    function updateEl(record, form)
+    {
+        form.getForm().submit({
+            clientValidation: true,
+            url: '{{ current_path }}',
+            method: 'POST',
+            params: {
+                action: 'update',
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(form, action) {
+                record.commit();
+            },
+            failure: function(form, action) {
+                if (action.failureType == 'server')
+                    alert('fail');
+            }
+        });
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+</script>

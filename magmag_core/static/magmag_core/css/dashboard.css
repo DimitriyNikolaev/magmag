@@ -1,0 +1,8 @@
+html,body {height:100%}
+
+.page-container{height: inherit; width: 100%;}
+
+.dashboard-grid .x-action-col-icon {margin-left: 15px;}
+.dashboard-grid .x-column-header-text {white-space: normal;}
+
+.wndFormDialog .x-window-item { padding: 15px; }

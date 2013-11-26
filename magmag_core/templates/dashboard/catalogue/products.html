@@ -1,0 +1,119 @@
+{% load i18n %}
+<script>
+    //@ sourceURL=dynamicProductsScript.js
+    Ext.onReady(init_page);
+    function init_page(){
+        Ext.define('Product',{
+            extend: 'Ext.data.Model',
+            fields: ['id', 'name', 'image', 'slug', 'date_added', 'article'],
+            idProperty: 'id'
+        });
+
+        var store = new Ext.data.JsonStore({
+            storeId: 'productsListStore',
+            model: 'Product',
+            autoLoad: true,
+            pageSize: {{ page_size }},
+            proxy: {
+                type: 'ajax',
+                url: '{% url "magmag:dashboard:products" "json" %}',
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    totalProperty: 'total',
+                    idProperty: 'id'
+                }
+            }
+        });
+
+        var tab = Ext.getCmp('{{ current_path }}');
+        if (tab)
+        {
+            var container = new Ext.panel.Panel( {
+                layout: 'fit',
+                title: '{% trans "Products" %}',
+                id: '{{ current_path  }}_container',
+                items: [
+                    {
+                        xtype : 'grid',
+                        layout: 'fit',
+                        store: store,
+                        multiSelect: false,
+                        autoScroll: true,
+                        cls: 'dashboard-grid',
+
+                        //the 'columns' property is now 'headers'
+                        columns: [
+                            {
+                                text: '{% trans "Name" %}',
+                                flex: 2,
+                                sortable: true,
+                                dataIndex: 'name'
+
+                            },{
+                                text: '{% trans "Article" %}',
+                                flex: 2,
+                                dataIndex: 'article',
+                                sortable: false
+                            },{
+                                text: '{% trans "Date Added" %}',
+                                flex: 2,
+                                dataIndex: 'date_added',
+                                sortable: false
+
+                            },{
+                                text: '{% trans "Slug" %}',
+                                flex: 2,
+                                dataIndex: 'slug',
+                                sortable: false
+                            },{
+                                xtype: 'actioncolumn',
+                                flex:1,
+                                items:[
+                                    {
+                                        icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/delete.png',  // Use a URL in the icon config
+                                        tooltip: '{% trans "Delete" %}',
+                                        handler: function(grid, rowIndex, colIndex) {
+                                            var record = grid.getStore().getAt(rowIndex);
+                                            //if(record)
+                                                //deleteEl(grid, record);
+
+                                        }
+                                    }
+                                ]
+                            }],
+                        tbar:{
+                            xtype: 'toolbar',
+                            items:[
+                                {
+                                    icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/add.png',
+                                    text: '{% trans "Add" %}',
+                                    tooltip: '{% trans "Add" %}',
+                                    handler: function() {
+                                        alert('add');
+                                    }
+                                },{
+                                    xtype: 'tbfill'
+                                }//,{
+                                 //   icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/arrow_refresh.png',
+                                 //   text: '{% trans "Refresh" %}',
+                                 //   tooltip: '{% trans "Refresh" %}',
+                                 //   handler: function(){
+                                 //       store.reload();
+                                 //   }
+                                //}
+
+                            ]
+                        },
+                        bbar:{
+                            xtype: 'pagingtoolbar',
+                            store: store,
+                            displayInfo: true
+                        }
+                    }
+                ]
+            });
+            tab.add(container);
+        }
+    }
+</script>
