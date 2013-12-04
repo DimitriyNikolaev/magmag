@@ -75,8 +75,8 @@
                                         tooltip: '{% trans "Delete" %}',
                                         handler: function(grid, rowIndex, colIndex) {
                                             var record = grid.getStore().getAt(rowIndex);
-                                            //if(record)
-                                                //deleteEl(grid, record);
+                                            if(record)
+                                                deleteEl(grid, record);
 
                                         }
                                     }
@@ -116,4 +116,28 @@
             tab.add(container);
         }
     }
+//handlers///////////////////////////////////////////////////////////////////////////////////////////////////
+    function deleteEl(grid, delEl)
+    {
+        Ext.Ajax.request(
+            {
+                url: '{{ current_path }}',
+                params: {
+                    action: 'delete',
+                    delElId: delEl.data.id,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                method: 'POST',
+                success: function(response){
+                        var store = grid.getStore();
+                        store.remove(delEl);
+                    }
+                ,
+                failure: function(response){
+                        alert('fail');
+                    }
+            }
+        );
+    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 </script>

@@ -7,15 +7,16 @@ from magmag_core.view.base_views import ListMixedView, SingleTreeEditorMixin, Si
 from magmag_core.apps.catalogue.models import Category, Store, Product
 from magmag_core.apps.dashboard.catalogue.view_models import get_category_tree_model, get_store_model, \
     get_product_grid_model
-from magmag_core.apps.catalogue.models_logic import CategoryLogic, StoreLogic
+from magmag_core.apps.catalogue.models_logic import CategoryLogic, StoreLogic, ProductLogic
 from magmag_core.apps.dashboard.catalogue.forms import CategoryForm, StoreForm
 
 
-class ProductListView(ListMixedView):
+class ProductListView(ListMixedView, SingleEditorMixin):
     template_name = 'dashboard/catalogue/products.html'
     model = Product
     context_object_name = 'products'
     converter = get_product_grid_model
+    delete = ProductLogic.delete_instance
     paginate_by = 20
 
     def get_queryset(self):
@@ -25,6 +26,9 @@ class ProductListView(ListMixedView):
         ctx = super(ListMixedView, self).get_context_data(**kwargs)
         ctx['page_size'] = self.paginate_by
         return ctx
+
+    def post(self, request, *args, **kwargs):
+        return self.edit_handler(request, *args, **kwargs)
 
 
 class CategoryListView(ListMixedView, SingleTreeEditorMixin):
@@ -63,3 +67,6 @@ class StoreListView(ListMixedView, SingleEditorMixin):
     def post(self, request, *args, **kwargs):
         return self.edit_handler(request, *args, **kwargs)
 
+
+class ProductFormView():
+    pass

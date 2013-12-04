@@ -32,6 +32,10 @@ class BaseLogic(object):
         abstract = True
 
 
+class ProductLogic(BaseLogic):
+    pass
+
+
 class CategoryLogic(BaseLogic):
     @staticmethod
     def move_category(view, src_id, target_id):
