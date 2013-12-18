@@ -109,6 +109,12 @@
                             xtype: 'pagingtoolbar',
                             store: store,
                             displayInfo: true
+                        },
+                        listeners:{
+                            itemdblclick: function(grid, record, item, index, e, eOpts ){
+                                alert('ok');
+                            }
+
                         }
                     }
                 ]

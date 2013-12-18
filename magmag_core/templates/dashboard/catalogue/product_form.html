@@ -1,0 +1,19 @@
+{% load i18n %}
+<script>
+    //@ sourceURL=dynamicProductsScript.js
+    Ext.onReady(init_page);
+    function init_page(){
+        var tab = Ext.getCmp('{{ current_path }}');
+        if (tab)
+        {
+            var container = new Ext.panel.Panel( {
+                layout: 'fit',
+                title: '{% trans "Product" %}',
+                id: '{{ current_path  }}_container',
+                items: [
+                ]
+            });
+            tab.add(container);
+        }
+    }
+</script>

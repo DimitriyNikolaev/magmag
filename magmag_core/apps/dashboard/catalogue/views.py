@@ -3,7 +3,7 @@ __author__ = 'dimitriy'
 import json
 from django.http import HttpResponse
 from django.views.generic import TemplateView, UpdateView
-from magmag_core.view.base_views import ListMixedView, SingleTreeEditorMixin, SingleEditorMixin
+from magmag_core.view.base_views import SingleEditMixedView, ListMixedView, SingleTreeEditorMixin, SingleEditorMixin
 from magmag_core.apps.catalogue.models import Category, Store, Product
 from magmag_core.apps.dashboard.catalogue.view_models import get_category_tree_model, get_store_model, \
     get_product_grid_model
@@ -68,5 +68,7 @@ class StoreListView(ListMixedView, SingleEditorMixin):
         return self.edit_handler(request, *args, **kwargs)
 
 
-class ProductFormView():
-    pass
+class ProductFormView(SingleEditMixedView):
+    template_name = 'dashboard/catalogue/product_form.html'
+    model = Product
+    context_object_name = 'product'

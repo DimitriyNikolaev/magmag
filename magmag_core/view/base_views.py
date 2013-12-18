@@ -3,7 +3,7 @@ __author__ = 'dimitriy'
 
 import json
 from django.http import HttpResponse
-from django.views.generic import ListView
+from django.views.generic import ListView, UpdateView
 from django.http import Http404
 from django.utils.translation import ugettext_lazy as _
 
@@ -14,6 +14,22 @@ class JsonResponseMixin(object):
 
     def convert_context_to_json(self, context, extract_from_queryset=None):
         pass
+
+
+class SingleEditMixedView(JsonResponseMixin, UpdateView):
+
+    def get(self, request, *args, **kwargs):
+        if kwargs['content_type'] == 'json' or self.template_name is None:
+
+            context = self.get_context_data(object=self.object)
+            return JsonResponseMixin.render_to_response_json(self, context)
+        else:
+            return super(ListMixedView,self).get(self, request, *args, **kwargs)
+
+    def convert_context_to_json(self, context, extract_from_queryset=None):
+        source = context[self.context_object_name]
+        data = json.dumps(source, ensure_ascii=False)
+        return data
 
 
 class ListMixedView(JsonResponseMixin, ListView):
