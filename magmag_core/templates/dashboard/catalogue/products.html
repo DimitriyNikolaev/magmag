@@ -1,6 +1,8 @@
 {% load i18n %}
 <script>
     //@ sourceURL=dynamicProductsScript.js
+
+    var product_link_template = '{% url "magmag:dashboard:product" "0" "template" %}';
     Ext.onReady(init_page);
     function init_page(){
         Ext.define('Product',{
@@ -90,7 +92,7 @@
                                     text: '{% trans "Add" %}',
                                     tooltip: '{% trans "Add" %}',
                                     handler: function() {
-                                        alert('add');
+                                        openTab('Новый товар', product_link_template)
                                     }
                                 },{
                                     xtype: 'tbfill'
@@ -112,7 +114,8 @@
                         },
                         listeners:{
                             itemdblclick: function(grid, record, item, index, e, eOpts ){
-                                alert('ok');
+                                var linktoproduct = product_link_template.replace('0', record.data.id);
+                                openTab(record.data.name, linktoproduct);
                             }
 
                         }

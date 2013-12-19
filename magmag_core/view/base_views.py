@@ -24,7 +24,7 @@ class SingleEditMixedView(JsonResponseMixin, UpdateView):
             context = self.get_context_data(object=self.object)
             return JsonResponseMixin.render_to_response_json(self, context)
         else:
-            return super(ListMixedView,self).get(self, request, *args, **kwargs)
+            return super(SingleEditMixedView,self).get(self, request, *args, **kwargs)
 
     def convert_context_to_json(self, context, extract_from_queryset=None):
         source = context[self.context_object_name]
