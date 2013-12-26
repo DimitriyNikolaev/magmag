@@ -2,7 +2,7 @@
 __author__ = 'dimitriy'
 
 from django.forms import ModelForm
-from magmag_core.apps.catalogue.models import Category, Store
+from magmag_core.apps.catalogue.models import Category, Store, Product
 
 
 class CategoryForm(ModelForm):
@@ -13,3 +13,8 @@ class CategoryForm(ModelForm):
 class StoreForm(ModelForm):
     class Meta:
         model = Store
+
+
+class ProductForm(ModelForm):
+    class Meta:
+        model = Product

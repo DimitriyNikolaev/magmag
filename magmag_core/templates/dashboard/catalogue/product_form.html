@@ -1,6 +1,6 @@
 {% load i18n %}
 <script>
-    //@ sourceURL=dynamicSingleProductScript.js
+    //@ sourceURL={{ current_path }}.js
     Ext.onReady(init_page);
     function init_page(){
         var tab = Ext.getCmp('{{ current_path }}');
@@ -8,9 +8,97 @@
         {
             var container = new Ext.panel.Panel( {
                 layout: 'fit',
-                title: '{% trans "Product" %}',
+                //title: '{% trans "Product" %}',
                 id: '{{ current_path  }}_container',
                 items: [
+                    {
+                        xtype:'panel',
+                        layout: 'border',
+                        items:[
+                            {
+                                xtype:'form',
+                                id: '{{ current_path  }}_productMainForm',
+                                title: '{% trans 'Main info' %}',
+                                region:'center',
+                                layout: {
+                                        type: 'hbox',
+                                        align: 'stretch'
+                                },
+                                border:true,
+                                items:[
+                                    {
+                                        xtype: 'panel',
+                                        flex: 3,
+                                        items:[
+                                            {
+                                                xtype: 'textfield',
+                                                fieldLabel: '{% trans 'Name' %}',
+                                                name: 'name'
+
+                                            },
+                                            {
+                                                xtype: 'textareafield',
+                                                fieldLabel: '{% trans 'Description' %}',
+                                                name: 'description'
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        xtype: 'panel',
+                                        flex:2,
+                                        items:[]
+                                    }
+                                ]
+
+                            },
+                            {
+                                xtype: 'panel',
+                                id:'{{ current_path  }}_productImages',
+                                region: 'east',
+                                title:'{% trans 'Images' %}',
+                                border: true,
+                                width: '40%'
+
+                            },
+                            {
+                                xtype: 'panel',
+                                region: 'south',
+                                height: '40%',
+                                layout: {
+                                        type: 'hbox',
+                                        align: 'stretch'
+                                },
+                                items:[
+                                    {
+                                        xtype: 'panel',
+                                        flex:3,
+                                        id: '{{ current_path }}_productItems',
+                                        title: '{% trans 'Product items' %}',
+                                        border: true,
+                                        items:[]
+                                    },
+                                    {
+                                        xtype: 'panel',
+                                        flex:2,
+                                        id: '{{ current_path }}_productItemsRests',
+                                        title: '{% trans 'Rests' %}',
+                                        border: true,
+                                        items:[]
+                                    }
+                                ]
+                            }
+
+                        ],
+                        buttons:[
+                                    {
+                                        text: '{% trans 'Save' %}'
+                                    },
+                                    {
+                                        text: '{% trans 'Cancel' %}'
+                                    }
+                                ]
+                    }
+
                 ]
             });
             tab.add(container);

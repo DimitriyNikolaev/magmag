@@ -8,7 +8,7 @@ from magmag_core.apps.catalogue.models import Category, Store, Product
 from magmag_core.apps.dashboard.catalogue.view_models import get_category_tree_model, get_store_model, \
     get_product_grid_model
 from magmag_core.apps.catalogue.models_logic import CategoryLogic, StoreLogic, ProductLogic
-from magmag_core.apps.dashboard.catalogue.forms import CategoryForm, StoreForm
+from magmag_core.apps.dashboard.catalogue.forms import CategoryForm, StoreForm, ProductForm
 
 
 class ProductListView(ListMixedView, SingleEditorMixin):
@@ -68,7 +68,9 @@ class StoreListView(ListMixedView, SingleEditorMixin):
         return self.edit_handler(request, *args, **kwargs)
 
 
-class ProductFormView(SingleEditMixedView):
+class ProductFormView(SingleEditMixedView, SingleEditorMixin):
     template_name = 'dashboard/catalogue/product_form.html'
     model = Product
     context_object_name = 'product'
+    form_type = ProductForm
+    pk_sing = 'pk'

@@ -24,7 +24,15 @@ class SingleEditMixedView(JsonResponseMixin, UpdateView):
             context = self.get_context_data(object=self.object)
             return JsonResponseMixin.render_to_response_json(self, context)
         else:
-            return super(SingleEditMixedView,self).get(self, request, *args, **kwargs)
+            return super(SingleEditMixedView, self).get(self, request, *args, **kwargs)
+
+    def get_object(self):
+        pk = self.kwargs.get(self.pk_sing, None)
+        if pk == '' or pk == '0':
+            return self.model()
+        elif pk is None:
+            return None
+        return self.model.objects.get(pk=pk)
 
     def convert_context_to_json(self, context, extract_from_queryset=None):
         source = context[self.context_object_name]
@@ -44,8 +52,7 @@ class ListMixedView(JsonResponseMixin, ListView):
                 # When pagination is enabled and object_list is a queryset,
                 # it's better to do a cheap query than to load the unpaginated
                 # queryset in memory.
-                if (self.get_paginate_by(self.object_list) is not None
-                    and hasattr(self.object_list, 'exists')):
+                if self.get_paginate_by(self.object_list) is not None and hasattr(self.object_list, 'exists'):
                     is_empty = not self.object_list.exists()
                 else:
                     is_empty = len(self.object_list) == 0
