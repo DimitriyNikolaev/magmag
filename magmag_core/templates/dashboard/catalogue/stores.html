@@ -3,11 +3,7 @@
     //@ sourceURL=dynamicStoreScript.js
     Ext.onReady(init_page);
     function init_page(){
-        Ext.define('Store',{
-            extend: 'Ext.data.Model',
-            fields: ['id', 'name', 'phone', 'address'],
-            idProperty: 'id'
-        });
+
 
         var store = new Ext.data.JsonStore({
             storeId: 'storesListStore',

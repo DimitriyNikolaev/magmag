@@ -5,11 +5,7 @@
     var product_link_template = '{% url "magmag:dashboard:product" "0" "template" %}';
     Ext.onReady(init_page);
     function init_page(){
-        Ext.define('Product',{
-            extend: 'Ext.data.Model',
-            fields: ['id', 'name', 'image', 'slug', 'date_added', 'article'],
-            idProperty: 'id'
-        });
+
 
         var store = new Ext.data.JsonStore({
             storeId: 'productsListStore',

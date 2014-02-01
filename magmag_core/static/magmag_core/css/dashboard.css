@@ -6,3 +6,5 @@ html,body {height:100%}
 .dashboard-grid .x-column-header-text {white-space: normal;}
 
 .wndFormDialog .x-window-item { padding: 15px; }
+
+.pnlFormDetail .x-panel-body-default { padding: 15px; }

@@ -2,7 +2,23 @@
 <script>
     //@ sourceURL={{ current_path }}.js
     Ext.onReady(init_page);
-    function init_page(){
+    function init_page()
+    {
+        var categories_store = new Ext.data.TreeStore({
+            storeId: 'productCategoryTreeStore',
+            model: 'Category',
+            //autoLoad: true,
+            proxy: {
+                type: 'ajax',
+                url: '{% url "magmag:dashboard:categories" "json" %}',
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    totalProperty: 'total'
+                }
+            }
+        });
+        categories_store.load();
         var tab = Ext.getCmp('{{ current_path }}');
         if (tab)
         {
@@ -29,24 +45,78 @@
                                     {
                                         xtype: 'panel',
                                         flex: 3,
+                                        layout:'form',
+                                        cls:'pnlFormDetail',
                                         items:[
                                             {
+                                                xtype: 'hidden',
+                                                id:'{{ current_path  }}_hdnId',
+                                                name: 'id'
+                                            },{
                                                 xtype: 'textfield',
+                                                id:'{{ current_path  }}_txtName',
                                                 fieldLabel: '{% trans 'Name' %}',
-                                                name: 'name'
-
-                                            },
-                                            {
+                                                name: 'name',
+                                                allowBlank: false
+                                            },{
+                                                xtype: 'textfield',
+                                                id:'{{ current_path  }}_txtArticle',
+                                                fieldLabel: '{% trans 'Article' %}',
+                                                name: 'article',
+                                                allowBlank: false
+                                            },Ext.create('Ext.ux.TreePicker', {
+                                                store: categories_store,
+                                                displayField: 'name',
+                                                valueField: 'id',
+                                                id:'{{ current_path  }}_cmbCategory',
+                                                name: 'category',
+                                                fieldLabel: '{% trans "Category" %}',
+                                                allowBlank: false
+                                            }),{
+                                                xtype: 'textfield',
+                                                id:'{{ current_path  }}_txtSlug',
+                                                fieldLabel: '{% trans 'Slug' %}',
+                                                name: 'slug',
+                                                allowBlank: false
+                                            },{
                                                 xtype: 'textareafield',
+                                                id:'{{ current_path  }}_txtDescription',
                                                 fieldLabel: '{% trans 'Description' %}',
                                                 name: 'description'
-                                            }
+                                            },
+
                                         ]
                                     },
                                     {
                                         xtype: 'panel',
                                         flex:2,
-                                        items:[]
+                                        cls:'pnlFormDetail',
+                                        items:[
+                                            {
+                                                xtype: 'filefield',
+                                                name: 'image',
+                                                id: '{{ current_path  }}_ffImage',
+                                                fieldLabel: '{% trans "Image" %}',
+                                                buttonText: '{% trans "Select" %}...',
+                                                labelWidth: 50,
+                                                width:270,
+                                                icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/image_add.png',
+                                                listeners: {
+                                                    change: function(uploader, value, eOpts) {
+                                                        var container = Ext.getCmp('{{ current_path  }}_pnlImagePreview');
+                                                        if (container){
+                                                            container.removeAll(true);
+                                                            readImages(uploader.fileInputEl.dom, container);
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                xtype: 'panel',
+                                                collapsible: false,
+                                                id:'{{ current_path  }}_pnlImagePreview'
+                                            }
+                                        ]
                                     }
                                 ]
 
@@ -54,37 +124,41 @@
                             {
                                 xtype: 'panel',
                                 id:'{{ current_path  }}_productImages',
-                                region: 'east',
+                                region: 'south',
                                 title:'{% trans 'Images' %}',
                                 border: true,
-                                width: '40%'
+                                height: '60%'
+
 
                             },
                             {
                                 xtype: 'panel',
-                                region: 'south',
-                                height: '40%',
-                                layout: {
-                                        type: 'hbox',
-                                        align: 'stretch'
-                                },
+                                region: 'east',
+                                width: '40%',
+                                //layout: {
+                                //        type: 'vbox',
+                                //        align: 'stretch'
+                                //},
+                                id: '{{ current_path }}_productItems',
+                                title: '{% trans 'Product items' %}',
+                                border: true,
                                 items:[
-                                    {
-                                        xtype: 'panel',
-                                        flex:3,
-                                        id: '{{ current_path }}_productItems',
-                                        title: '{% trans 'Product items' %}',
-                                        border: true,
-                                        items:[]
-                                    },
-                                    {
-                                        xtype: 'panel',
-                                        flex:2,
-                                        id: '{{ current_path }}_productItemsRests',
-                                        title: '{% trans 'Rests' %}',
-                                        border: true,
-                                        items:[]
-                                    }
+                                    //{
+                                    //    xtype: 'panel',
+                                    //    flex:3,
+                                    //    id: '{{ current_path }}_productItems',
+                                    //    title: '{% trans 'Product items' %}',
+                                    //    border: true,
+                                    //    items:[]
+                                    //},
+                                    //{
+                                    //    xtype: 'panel',
+                                    //    flex:2,
+                                    //    id: '{{ current_path }}_productItemsRests',
+                                    //    title: '{% trans 'Rests' %}',
+                                    //    border: true,
+                                    //    items:[]
+                                    //}
                                 ]
                             }
 
@@ -94,7 +168,10 @@
                                         text: '{% trans 'Save' %}'
                                     },
                                     {
-                                        text: '{% trans 'Cancel' %}'
+                                        text: '{% trans 'Cancel' %}',
+                                        handle: function(){
+
+                                        }
                                     }
                                 ]
                     }
