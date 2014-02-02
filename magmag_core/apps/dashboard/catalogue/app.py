@@ -4,7 +4,8 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.conf.urls import patterns, url
 from magmag_core.core.application import Application
 from magmag_core.apps.dashboard.nav import Node, register
-from magmag_core.apps.dashboard.catalogue.views import ProductListView, CategoryListView, StoreListView, ProductFormView
+from magmag_core.apps.dashboard.catalogue.views import ProductListView, CategoryListView, StoreListView, ProductFormView, \
+    ProductItemsView
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -21,6 +22,7 @@ class CatalogueApplication(Application):
     categories = CategoryListView
     stores = StoreListView
     product = ProductFormView
+    product_items = ProductItemsView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -31,7 +33,9 @@ class CatalogueApplication(Application):
                                url(r'^stores/(?P<content_type>[-\w]+)$', self.stores.as_view(),
                                    name='stores'),
                                url(r'^product/(?P<pk>\d+)/(?P<content_type>[-\w]+)$', self.product.as_view(),
-                                   name='product')
+                                   name='product'),
+                               url(r'^productitems/(?P<pk>\d+)/(?P<content_type>[-\w]+)$', self.product_items.as_view(),
+                                   name='product_items')
                                )
 
         return self.post_process_urls(urlpatterns)

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 __author__ = 'dimitriy'
-import json
+
 from django.http import HttpResponse
 from django.views.generic import TemplateView, UpdateView
 from magmag_core.view.base_views import SingleEditMixedView, ListMixedView, SingleTreeEditorMixin, SingleEditorMixin
-from magmag_core.apps.catalogue.models import Category, Store, Product
+from magmag_core.apps.catalogue.models import Category, Store, Product, ProductItem
 from magmag_core.apps.dashboard.catalogue.view_models import get_category_tree_model, get_store_model, \
-    get_product_grid_model
+    get_product_grid_model, get_productitem_model
 from magmag_core.apps.catalogue.models_logic import CategoryLogic, StoreLogic, ProductLogic
 from magmag_core.apps.dashboard.catalogue.forms import CategoryForm, StoreForm, ProductForm
 
@@ -74,3 +74,16 @@ class ProductFormView(SingleEditMixedView, SingleEditorMixin):
     context_object_name = 'product'
     form_type = ProductForm
     pk_sing = 'pk'
+    update = ProductLogic.update_instance
+
+    def post(self, request, *args, **kwargs):
+        return self.edit_handler(request, *args, **kwargs)
+
+
+class ProductItemsView(ListMixedView):
+    model = ProductItem
+    converter = get_productitem_model
+    paginate_by = 7
+
+    def get_queryset(self):
+        return ProductItem.objects.all()

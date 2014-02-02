@@ -33,7 +33,15 @@ class BaseLogic(object):
 
 
 class ProductLogic(BaseLogic):
-    pass
+    @staticmethod
+    def update_instance(view, forma):
+        if len(forma.errors) > 0 and forma.is_valid():
+            return False
+        try:
+            instance = forma.save()
+            return True
+        except Exception as x:
+            return False
 
 
 class CategoryLogic(BaseLogic):

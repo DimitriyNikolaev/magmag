@@ -7,6 +7,7 @@ from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 from magmag_core.apps.base_models.path_builder import upload_to_product_path, upload_to_image_product_path
 from magmag_core.apps.catalogue.models import *
+from magmag_core.global_utils.common import get_first
 
 
 class AbstractStore(models.Model):
@@ -64,6 +65,15 @@ class AbstractProduct(models.Model):
     date_added = models.DateField(_('Date_Added'), editable=False, blank=False, null=False,
                                   default=datetime.datetime.today())
     article = models.CharField(_('Article'), max_length=10, db_index=True, blank=False, null=False, default='')
+
+    @property
+    def category(self):
+        if self.pk is None:
+            return None
+        return get_first(self.categories.all(), '')
+    @property
+    def descr(self):
+        return self.description if self.description is not None else ''
 
     @property
     def get_class_name(self):

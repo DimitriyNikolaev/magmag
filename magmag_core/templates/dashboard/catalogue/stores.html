@@ -92,7 +92,7 @@
                                         if(record && form)
                                         {
                                             form.getForm().loadRecord(record);
-                                            updateEl(record, form);
+                                            updateStore(record, form);
                                         }
 
                                     }
@@ -102,7 +102,7 @@
                                     handler: function(grid, rowIndex, colIndex) {
                                         var record = grid.getStore().getAt(rowIndex);
                                         if(record)
-                                            deleteEl(grid, record);
+                                            deleteStore(grid, record);
 
                                     }
                                 }
@@ -148,7 +148,7 @@
     }
 
     // handlers/////////////////////////////////////////////////////////////////////////////////////////////////////////
-    function deleteEl(grid, delEl)
+    function deleteStore(grid, delEl)
     {
         Ext.Ajax.request(
             {
@@ -171,7 +171,7 @@
         );
     }
 
-    function updateEl(record, form)
+    function updateStore(record, form)
     {
         form.getForm().submit({
             clientValidation: true,

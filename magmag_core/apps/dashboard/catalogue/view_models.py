@@ -33,3 +33,14 @@ def get_product_grid_model(view, product):
         'date_added': product.date_added.strftime("%d.%m.%Y"),
         'article': product.article
     }
+
+
+def get_productitem_model(view, productitem):
+    return {
+        'id': productitem.id
+        # 'name': product.name,
+        # 'image': product.image.url if product.image else '',
+        # 'slug': product.slug,
+        # 'date_added': product.date_added.strftime("%d.%m.%Y"),
+        # 'article': product.article
+    }

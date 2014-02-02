@@ -14,3 +14,10 @@ except ImportError:
 def slugify(value):
     value = encoding.smart_unicode(value)
     return dj_slugify(encoding.smart_unicode(unidecode.unidecode(value)))
+
+
+def get_first(iterable, default=None):
+    if iterable:
+        for item in iterable:
+            return item
+    return default

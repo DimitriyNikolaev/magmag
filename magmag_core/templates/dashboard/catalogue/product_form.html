@@ -18,6 +18,23 @@
                 }
             }
         });
+
+        var productItems_store = new Ext.data.JsonStore({
+            storeId: 'product{0}'+ '{% if product.id %} {{ product.id }} {% else %} 0 {% endif %})'+ 'ItemsStore',
+            model: 'ProductItems',
+            proxy: {
+                type: 'ajax',
+                url:{% if product.id %} '{% url "magmag:dashboard:product_items"  pk=product.id content_type="json" %}' {% else %}
+                '{% url "magmag:dashboard:product_items"  pk=0 content_type="json" %}' {% endif %},
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    totalProperty: 'total'
+                }
+            }
+
+        });
+
         categories_store.load();
         var tab = Ext.getCmp('{{ current_path }}');
         if (tab)
@@ -51,18 +68,21 @@
                                             {
                                                 xtype: 'hidden',
                                                 id:'{{ current_path  }}_hdnId',
+                                                value: {% if product.id %} {{ product.id }} {% else %} 0 {% endif %},
                                                 name: 'id'
                                             },{
                                                 xtype: 'textfield',
                                                 id:'{{ current_path  }}_txtName',
                                                 fieldLabel: '{% trans 'Name' %}',
                                                 name: 'name',
+                                                value: '{{ product.name }}',
                                                 allowBlank: false
                                             },{
                                                 xtype: 'textfield',
                                                 id:'{{ current_path  }}_txtArticle',
                                                 fieldLabel: '{% trans 'Article' %}',
                                                 name: 'article',
+                                                value: '{{ product.article }}',
                                                 allowBlank: false
                                             },Ext.create('Ext.ux.TreePicker', {
                                                 store: categories_store,
@@ -71,20 +91,22 @@
                                                 id:'{{ current_path  }}_cmbCategory',
                                                 name: 'category',
                                                 fieldLabel: '{% trans "Category" %}',
-                                                allowBlank: false
+                                                allowBlank: false,
+                                                value: {% if product.category %}{{ product.category.id }}{% else %}''{% endif %}
                                             }),{
                                                 xtype: 'textfield',
                                                 id:'{{ current_path  }}_txtSlug',
                                                 fieldLabel: '{% trans 'Slug' %}',
                                                 name: 'slug',
+                                                value: '{{ product.slug }}',
                                                 allowBlank: false
                                             },{
                                                 xtype: 'textareafield',
                                                 id:'{{ current_path  }}_txtDescription',
                                                 fieldLabel: '{% trans 'Description' %}',
-                                                name: 'description'
-                                            },
-
+                                                name: 'description',
+                                                value: '{{ product.descr }}'
+                                            }
                                         ]
                                     },
                                     {
@@ -109,12 +131,20 @@
                                                             readImages(uploader.fileInputEl.dom, container);
                                                         }
                                                     }
-                                                }
+                                                },
+                                                value: {% if product.image %} '{{ product.image.url }}' {% else %} '' {% endif %}
                                             },
                                             {
                                                 xtype: 'panel',
                                                 collapsible: false,
-                                                id:'{{ current_path  }}_pnlImagePreview'
+                                                id:'{{ current_path  }}_pnlImagePreview',
+                                                items:[
+                                                    {
+                                                        xtype:'image',
+                                                        src: {% if product.image %} '{{ product.image.url }}' {% else %} '' {% endif %},
+                                                        height:150
+                                                    }
+                                                ]
                                             }
                                         ]
                                     }
@@ -135,50 +165,94 @@
                                 xtype: 'panel',
                                 region: 'east',
                                 width: '40%',
-                                //layout: {
-                                //        type: 'vbox',
-                                //        align: 'stretch'
-                                //},
+                                layout: 'fit',
                                 id: '{{ current_path }}_productItems',
                                 title: '{% trans 'Product items' %}',
                                 border: true,
                                 items:[
-                                    //{
-                                    //    xtype: 'panel',
-                                    //    flex:3,
-                                    //    id: '{{ current_path }}_productItems',
-                                    //    title: '{% trans 'Product items' %}',
-                                    //    border: true,
-                                    //    items:[]
-                                    //},
-                                    //{
-                                    //    xtype: 'panel',
-                                    //    flex:2,
-                                    //    id: '{{ current_path }}_productItemsRests',
-                                    //    title: '{% trans 'Rests' %}',
-                                    //    border: true,
-                                    //    items:[]
-                                    //}
+                                    {
+                                        xtype:'grid',
+                                        layout: 'fit',
+                                        store: productItems_store,
+                                        multiSelect: false,
+                                        autoScroll: true,
+                                        cls: 'dashboard-grid',
+                                        columns: [
+                                            {
+                                                text: '{% trans "Name" %}',
+                                                flex: 2,
+                                                sortable: true,
+                                                dataIndex: 'id'
+
+                                            }
+                                        ],
+                                        plugins: [{
+                                            ptype: 'rowexpander',
+                                            rowBodyTpl : [
+                                                '<p><b>Company:</b> {id}</p><br>'
+                                            ]
+                                        }],
+                                        bbar:{
+                                            xtype: 'pagingtoolbar',
+                                            store: productItems_store,
+                                            displayInfo: true
+                                        }
+                                    }
+
                                 ]
                             }
 
                         ],
                         buttons:[
-                                    {
-                                        text: '{% trans 'Save' %}'
-                                    },
-                                    {
-                                        text: '{% trans 'Cancel' %}',
-                                        handle: function(){
+                            {
+                                text: '{% trans 'Save' %}',
+                                handler: function(){
+                                    updateProduct(Ext.getCmp('{{ current_path  }}_productMainForm'));
+                                }
 
-                                        }
-                                    }
-                                ]
+                            },
+                            {
+                                text: '{% trans 'Cancel' %}',
+                                handler: function(){
+
+                                }
+                            }
+                        ]
                     }
 
                 ]
             });
             tab.add(container);
         }
+    }
+
+//////handler
+function updateProduct(form)
+    {
+        if(form)
+        {
+            form.getForm().submit({
+                clientValidation: true,
+                url: '{{ current_path }}',
+                method: 'POST',
+                params: {
+                    action: 'update',
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                success: function(form, action) {
+                    var tab = Ext.getCmp('{{ current_path }}');
+                    if (tab)
+                    {
+                        tab.ownerCt.remove(tab.id);
+                    }
+                },
+                failure: function(form, action) {
+                    if (action.failureType == 'server')
+                        alert('fail');
+                }
+            });
+        }
+        else
+            alert('Save fail');
     }
 </script>

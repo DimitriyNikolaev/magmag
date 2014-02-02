@@ -3,3 +3,4 @@ psycopg2
 Pillow
 South
 django-mptt
+unidecode
