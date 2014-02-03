@@ -100,10 +100,10 @@ class AbstractProductItem(models.Model):
     size = models.CharField(_('Size'), max_length=5, db_index=True)
 
     def __unicode__(self):
-        return '%s - %s' % self.color, self.size
+        return '%s - %s' % (self.color, self.size,)
 
     def __str__(self):
-        return '%s - %s' % self.color, self.size
+        return '%s - %s' % (self.color, self.size,)
 
     class Meta:
         abstract = True
@@ -121,6 +121,7 @@ class AbstractStockItem(models.Model):
 
     class Meta:
         abstract = True
+        unique_together = ('product_item', 'store')
         verbose_name = _('StockItem')
         verbose_name_plural = _('StockItems')
 

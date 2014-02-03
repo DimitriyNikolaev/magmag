@@ -20,8 +20,9 @@
         });
 
         var productItems_store = new Ext.data.JsonStore({
-            storeId: 'product{0}'+ '{% if product.id %} {{ product.id }} {% else %} 0 {% endif %})'+ 'ItemsStore',
+            storeId: 'product_' + '{% if product.id %} {{ product.id }} {% else %} 0 {% endif %}' + '_ItemsStore',
             model: 'ProductItems',
+            autoLoad: true,
             proxy: {
                 type: 'ajax',
                 url:{% if product.id %} '{% url "magmag:dashboard:product_items"  pk=product.id content_type="json" %}' {% else %}
@@ -179,10 +180,16 @@
                                         cls: 'dashboard-grid',
                                         columns: [
                                             {
-                                                text: '{% trans "Name" %}',
+                                                text: '{% trans "Color" %}',
                                                 flex: 2,
                                                 sortable: true,
-                                                dataIndex: 'id'
+                                                dataIndex: 'color'
+
+                                            },{
+                                                text: '{% trans "Size" %}',
+                                                flex: 2,
+                                                sortable: true,
+                                                dataIndex: 'size'
 
                                             }
                                         ],

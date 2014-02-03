@@ -35,12 +35,16 @@ def get_product_grid_model(view, product):
     }
 
 
-def get_productitem_model(view, productitem):
+def get_product_item_model(view, product_item):
     return {
-        'id': productitem.id
-        # 'name': product.name,
-        # 'image': product.image.url if product.image else '',
-        # 'slug': product.slug,
-        # 'date_added': product.date_added.strftime("%d.%m.%Y"),
-        # 'article': product.article
+        'id': product_item.id,
+        'color': product_item.color,
+        'size': product_item.size,
+        'rests': [
+            {'id': rest.id,
+             'item_id':  product_item.id,
+             'store_id': rest.store.id,
+             'store_name': rest.store.name,
+             'count': rest.count}
+            for rest in product_item.stock_items.all()]
     }

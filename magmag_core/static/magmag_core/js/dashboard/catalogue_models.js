@@ -18,6 +18,11 @@ Ext.define('Product',{
         });
 Ext.define('ProductItems',{
             extend: 'Ext.data.Model',
-            fields: ['id'],
+            fields: [
+                {name:'id', type:'int'},
+                {name:'color', type:'string'},
+                {name:'size', type:'string'},
+                {name:'rests', type:'auto'},
+            ],
             idProperty: 'id'
         });

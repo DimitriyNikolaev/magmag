@@ -80,7 +80,7 @@ class SingleEditorMixin(object):
         pk = self.request.POST.get(self.pk_sing)
         if pk == '':
             return None
-        return self.model.objects.get(pk=pk)
+        return self.model.objects.select_related().get(pk=pk)
 
     def edit_handler(self, request, *arg, **kwargs):
         action = request.POST.get('action', '').lower()

@@ -6,7 +6,7 @@ from django.views.generic import TemplateView, UpdateView
 from magmag_core.view.base_views import SingleEditMixedView, ListMixedView, SingleTreeEditorMixin, SingleEditorMixin
 from magmag_core.apps.catalogue.models import Category, Store, Product, ProductItem
 from magmag_core.apps.dashboard.catalogue.view_models import get_category_tree_model, get_store_model, \
-    get_product_grid_model, get_productitem_model
+    get_product_grid_model, get_product_item_model
 from magmag_core.apps.catalogue.models_logic import CategoryLogic, StoreLogic, ProductLogic
 from magmag_core.apps.dashboard.catalogue.forms import CategoryForm, StoreForm, ProductForm
 
@@ -81,9 +81,11 @@ class ProductFormView(SingleEditMixedView, SingleEditorMixin):
 
 
 class ProductItemsView(ListMixedView):
+    context_object_name = 'product_items'
     model = ProductItem
-    converter = get_productitem_model
+    converter = get_product_item_model
     paginate_by = 7
 
     def get_queryset(self):
-        return ProductItem.objects.all()
+        pk = self.kwargs.get('pk', None)
+        return list(ProductItem.objects.filter(product=pk).prefetch_related('stock_items__store'))
