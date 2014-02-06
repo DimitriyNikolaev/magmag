@@ -79,6 +79,13 @@
                                                 value: '{{ product.name }}',
                                                 allowBlank: false
                                             },{
+                                                xtype: 'numberfield',
+                                                id: '{{ current_path }}_numPrice',
+                                                fieldLabel: '{% trans 'Price' %}',
+                                                name: 'price',
+                                                value: {{ product.price }},
+                                                allowBlank: false
+                                            },{
                                                 xtype: 'textfield',
                                                 id:'{{ current_path  }}_txtArticle',
                                                 fieldLabel: '{% trans 'Article' %}',
@@ -107,6 +114,12 @@
                                                 fieldLabel: '{% trans 'Description' %}',
                                                 name: 'description',
                                                 value: '{{ product.descr }}'
+                                            },{
+                                                xtype:'checkbox',
+                                                id:'{{ current_path  }}_chbHidden',
+                                                fieldLabel: '{% trans 'Hide from site' %}',
+                                                name: 'hidden',
+                                                value: {{ product.hidden|lower }}
                                             }
                                         ]
                                     },
@@ -195,14 +208,36 @@
                                         ],
                                         plugins: [{
                                             ptype: 'rowexpander',
-                                            rowBodyTpl : [
-                                                '<p><b>Company:</b> {id}</p><br>'
-                                            ]
+                                            rowBodyTpl: ['<div id="restsExpandPanel" class="ux-row-expander-box"></div>']
                                         }],
-                                        bbar:{
-                                            xtype: 'pagingtoolbar',
-                                            store: productItems_store,
-                                            displayInfo: true
+                                        viewConfig: {
+                                            stripeRows: false,
+                                            listeners:{
+                                                expandbody: function(rowNode, record, expandRow, eOpts)
+                                                            {
+                                                                alert('expand');
+                                                            }
+                                            }
+                                        },
+                                        //bbar:{
+                                        //    xtype: 'pagingtoolbar',
+                                        //    store: productItems_store,
+                                        //    displayInfo: true
+                                        //},
+                                        tbar:{
+                                            xtype: 'toolbar',
+                                            items:[
+                                                {
+                                                    icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/add.png',
+                                                    text: '{% trans "Add" %}',
+                                                    tooltip: '{% trans "Add" %}',
+                                                    handler: function() {
+                                                        alert('add');
+                                                    }
+                                                },{
+                                                    xtype: 'tbfill'
+                                                }
+                                            ]
                                         }
                                     }
 
@@ -233,7 +268,7 @@
         }
     }
 
-//////handler
+//////handler///////////////////////////////////////////////////////////////////////////////////////////////////////////
 function updateProduct(form)
     {
         if(form)
@@ -261,5 +296,11 @@ function updateProduct(form)
         }
         else
             alert('Save fail');
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //piGrid method and handlers
+    var purchaseItemExpandRow = function(rowNode, record, expandRow, eOpts)
+    {
+        alert('expand');
     }
 </script>

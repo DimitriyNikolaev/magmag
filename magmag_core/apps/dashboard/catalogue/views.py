@@ -84,7 +84,7 @@ class ProductItemsView(ListMixedView):
     context_object_name = 'product_items'
     model = ProductItem
     converter = get_product_item_model
-    paginate_by = 7
+    #paginate_by = 7
 
     def get_queryset(self):
         pk = self.kwargs.get('pk', None)
