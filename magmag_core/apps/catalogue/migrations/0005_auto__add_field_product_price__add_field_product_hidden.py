@@ -51,7 +51,7 @@ class Migration(SchemaMigration):
             'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.files.ImageField', [], {'blank': 'True', 'null': 'True', 'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '255'}),
-            'price': ('django.db.models.fields.DecimalField', [], {'max_digits': '5', 'default': '0', 'decimal_places': '2'}),
+            'price': ('django.db.models.fields.DecimalField', [], {'max_digits': '8', 'default': '0', 'decimal_places': '2'}),
             'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255'})
         },
         'catalogue.productimage': {

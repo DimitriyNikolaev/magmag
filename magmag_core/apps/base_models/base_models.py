@@ -65,7 +65,7 @@ class AbstractProduct(models.Model):
     date_added = models.DateField(_('Date_Added'), editable=False, blank=False, null=False,
                                   default=datetime.datetime.today())
     article = models.CharField(_('Article'), max_length=10, db_index=True, blank=False, null=False, default='')
-    price = models.DecimalField(_('Price'), blank=False, null=False, default=0, max_digits=5, decimal_places=2)
+    price = models.DecimalField(_('Price'), blank=False, null=False, default=0, max_digits=8, decimal_places=2)
     hidden = models.BooleanField(_('Hidden'), blank=False, null=False, default=False)
 
     @property
