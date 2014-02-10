@@ -48,3 +48,13 @@ def get_product_item_model(view, product_item):
              'count': rest.count}
             for rest in product_item.stock_items.all()]
     }
+
+
+def get_product_image_model(view, product_image):
+    return {
+        'id': product_image.id,
+        'src': product_image.original.url if product_image.original else '/static/magmag_core/img/add_large.png',
+        'caption': product_image.caption,
+        'order': product_image.display_order,
+        'deleted': False
+    }

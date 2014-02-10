@@ -36,6 +36,30 @@
 
         });
 
+        var productImages_store = new Ext.data.JsonStore({
+            storeId: 'product_' + '{% if product.id %} {{ product.id }} {% else %} 0 {% endif %}' + '_ImageStore',
+            model: 'Image',
+            autoLoad: true,
+            proxy: {
+                type: 'ajax',
+                url:{% if product.id %} '{% url "magmag:dashboard:product_images"  pk=product.id content_type="json" %}' {% else %}
+                '{% url "magmag:dashboard:product_images"  pk=0 content_type="json" %}' {% endif %},
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    totalProperty: 'total'
+                }
+            },
+            sorters: [
+                {
+                    property: 'order'
+                }
+            ]
+
+        });
+
+
+
         categories_store.load();
         var tab = Ext.getCmp('{{ current_path }}');
         if (tab)
@@ -171,7 +195,39 @@
                                 region: 'south',
                                 title:'{% trans 'Images' %}',
                                 border: true,
-                                height: '60%'
+                                height: '60%',
+                                cls: 'images-view',
+                                items:[
+                                    {
+                                        xtype: 'dataview',
+                                        store: productImages_store,
+                                        tpl:new Ext.XTemplate(
+                                            '<tpl for=".">',
+                                                '<div class="thumb-wrap upload-image">',
+                                                    '<label>',
+                                                        '<input type="text" id="image_caption_{id}" value="{caption}" class="x-form-field x-form-text image-caption" />',
+                                                    '</label>',
+                                                    '<div class="thumb image-input">',
+                                                        '<img id="image_{id}" src="{src}" alt="thumbnail"/>',
+                                                        '<div class="input-field">',
+                                                            '<label>',
+                                                                '<input type="file" id="image_input_{id}" onchange="readURL(this)"  />',
+                                                            '</label>',
+                                                        '</div>',
+                                                    '</div>',
+                                                    '<label class="image-deleted"> {% trans 'Delete:' %}',
+                                                        '<input type="checkbox" id="image_deleted_{id}" value="{deleted}" class="x-form-field x-form-checkbox x-form-cb" />',
+                                                    '</label>',
+                                                '</div>',
+                                            '</tpl>',
+                                            '<div class="x-clear"></div>'
+                                        ),
+                                        itemSelector: 'div.thumb-wrap',
+                                        emptyText: '{% trans 'No images available' %}'
+                                    }
+                                ],
+                                trackOver: true,
+                                overItemCls: 'x-item-over'
 
 
                             },

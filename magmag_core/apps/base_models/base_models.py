@@ -159,6 +159,12 @@ class AbstractProductImage(models.Model):
                        1 will be the primary image for a product"""))
     date_created = models.DateTimeField(_("Date Created"), auto_now_add=True)
 
+    def __unicode__(self):
+        return self.caption
+
+    def __str__(self):
+        return self.caption
+
     class Meta:
         abstract = True
         unique_together = ("product", "display_order")

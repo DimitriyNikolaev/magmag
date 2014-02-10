@@ -5,7 +5,7 @@ from django.conf.urls import patterns, url
 from magmag_core.core.application import Application
 from magmag_core.apps.dashboard.nav import Node, register
 from magmag_core.apps.dashboard.catalogue.views import ProductListView, CategoryListView, StoreListView, ProductFormView, \
-    ProductItemsView
+    ProductItemsView, ProductImagesView
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -23,6 +23,7 @@ class CatalogueApplication(Application):
     stores = StoreListView
     product = ProductFormView
     product_items = ProductItemsView
+    product_images = ProductImagesView
 
     def get_urls(self):
         urlpatterns = patterns('',
@@ -35,7 +36,9 @@ class CatalogueApplication(Application):
                                url(r'^product/(?P<pk>\d+)/(?P<content_type>[-\w]+)$', self.product.as_view(),
                                    name='product'),
                                url(r'^productitems/(?P<pk>\d+)/(?P<content_type>[-\w]+)$', self.product_items.as_view(),
-                                   name='product_items')
+                                   name='product_items'),
+                               url(r'^productimages/(?P<pk>\d+)/(?P<content_type>[-\w]+)$', self.product_images.as_view(),
+                                   name='product_images')
                                )
 
         return self.post_process_urls(urlpatterns)

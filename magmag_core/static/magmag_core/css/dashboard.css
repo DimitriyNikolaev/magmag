@@ -8,3 +8,92 @@ html,body {height:100%}
 .wndFormDialog .x-window-item { padding: 15px; }
 
 .pnlFormDetail .x-panel-body-default { padding: 15px; }
+
+/*----------------image-view------------------------------------------------------------------------------------------*/
+.images-view .x-panel-body{
+    background: white;
+    font: 11px Arial, Helvetica, sans-serif;
+}
+.images-view .thumb{
+    background: #dddddd;
+    padding: 3px;
+    padding-bottom: 0;
+    margin-bottom: 5px;
+}
+
+.x-quirks .images-view .thumb {
+    padding-bottom: 3px;
+}
+
+/*.images-view .thumb img{
+    height: 60px;
+    width: 80px;
+}*/
+.images-view .thumb-wrap{
+    float: left;
+    margin: 4px;
+    margin-right: 0;
+    padding: 5px;
+}
+.images-view .thumb-wrap span {
+
+    display: block;
+    overflow: hidden;
+    text-align: center;
+    width: 86px; // for ie to ensure that the text is centered
+}
+
+.images-view .x-item-over{
+    border:1px solid #dddddd;
+    background: #efefef url('../img/over.gif') repeat-x left top;
+    padding: 4px;
+}
+
+.images-view .x-item-selected{
+    background: #eff5fb url('../img/selected.gif') no-repeat right bottom;
+    border:1px solid #99bbe8;
+    padding: 4px;
+}
+.images-view .x-item-selected .thumb{
+    background:transparent;
+}
+
+.images-view .loading-indicator {
+    font-size:11px;
+    background-image:url('../js/extjs/resources/themes/images/default/grid/loading.gif');
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left:20px;
+    margin:10px;
+}
+
+.x-view-selector {
+    position:absolute;
+    left:0;
+    top:0;
+    width:0;
+    border:1px dotted;
+    opacity: .5;
+    -moz-opacity: .5;
+    filter:alpha(opacity=50);
+    zoom:1;
+    background-color:#c3daf9;
+    border-color:#3399bb;
+}
+
+.upload-image{*zoom:1;margin:0;}.upload-image:before,.upload-image:after{display:table;content:"";}
+.upload-image:after{clear:both;}
+.upload-image div{background:#fff;position:relative;width:200px;height:200px;z-index:200;}
+.upload-image img{position:absolute;margin:auto;top:0;max-height:200px;max-width:200px;width:auto;height:auto;left:0;}
+.upload-image .image-input{z-index:800;}
+.upload-image .input-field{position:relative;z-index:1000;opacity:0;}
+.upload-image .input-field input{position:relative;border-width:0 0 100px 200px;filter:alpha(opacity=0);-moz-transform:translate(-100px, 0) scale(1);direction:ltr;cursor:pointer;width:200px;height:200px;}
+@-moz-document url-prefix() {
+    .upload-image .input-field input{position:absolute !important;}
+    .upload-image .input-field label{border-width:0 0 100px 200px;filter:alpha(opacity=0);direction:ltr;cursor:pointer;width:200px;height:200px;}
+}
+.upload-image .image-caption {width:200px; margin-bottom: 5px;}
+.upload-image .image-deleted {font-size: 13px; line-height: 23px;}
+.upload-image .image-deleted input{margin-left: 13px;}
+
+/*----------------end-image-view------------------------------------------------------------------------------------------*/
