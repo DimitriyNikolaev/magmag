@@ -10,7 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding field 'Product.price'
         db.add_column('catalogue_product', 'price',
-                      self.gf('django.db.models.fields.DecimalField')(max_digits=5, default=0, decimal_places=2),
+                      self.gf('django.db.models.fields.DecimalField')(max_digits=8, default=0, decimal_places=2),
                       keep_default=False)
 
         # Adding field 'Product.hidden'
