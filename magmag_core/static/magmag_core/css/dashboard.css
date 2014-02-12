@@ -9,6 +9,8 @@ html,body {height:100%}
 
 .pnlFormDetail .x-panel-body-default { padding: 15px; }
 
+.pnlMainProductInfo .x-box-inner{ overflow-y: auto; }
+
 /*----------------image-view------------------------------------------------------------------------------------------*/
 .images-view .x-panel-body{
     background: white;

@@ -12,7 +12,7 @@ function readImages(input, container) {
                     reader.onload = function (e) {
                         var box = Ext.create('Ext.Img', {
                             src: e.target.result,
-                            height: 150
+                            height: 200
                             //width: 120
 
                         });

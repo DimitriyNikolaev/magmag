@@ -83,12 +83,15 @@
                                         align: 'stretch'
                                 },
                                 border:true,
+                                autoScroll:true,
+                                cls:'pnlMainProductInfo',
                                 items:[
                                     {
                                         xtype: 'panel',
                                         flex: 3,
                                         layout:'form',
                                         cls:'pnlFormDetail',
+                                        minHeight: 280,
                                         items:[
                                             {
                                                 xtype: 'hidden',
@@ -139,6 +142,25 @@
                                                 name: 'description',
                                                 value: '{{ product.descr }}'
                                             },{
+                                                xtype: 'filefield',
+                                                name: 'image',
+                                                id: '{{ current_path  }}_ffImage',
+                                                fieldLabel: '{% trans "Preview" %}',
+                                                buttonText: '{% trans "Select" %}...',
+                                                //labelWidth: 50,
+                                                //width:270,
+                                                icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/image_add.png',
+                                                listeners: {
+                                                    change: function(uploader, value, eOpts) {
+                                                        var container = Ext.getCmp('{{ current_path  }}_pnlImagePreview');
+                                                        if (container){
+                                                            container.removeAll(true);
+                                                            readImages(uploader.fileInputEl.dom, container);
+                                                        }
+                                                    }
+                                                },
+                                                value: {% if product.image %} '{{ product.image.url }}' {% else %} '' {% endif %}
+                                            },{
                                                 xtype:'checkbox',
                                                 id:'{{ current_path  }}_chbHidden',
                                                 fieldLabel: '{% trans 'Hide from site' %}',
@@ -151,27 +173,8 @@
                                         xtype: 'panel',
                                         flex:2,
                                         cls:'pnlFormDetail',
+                                        minHeight: 280,
                                         items:[
-                                            {
-                                                xtype: 'filefield',
-                                                name: 'image',
-                                                id: '{{ current_path  }}_ffImage',
-                                                fieldLabel: '{% trans "Image" %}',
-                                                buttonText: '{% trans "Select" %}...',
-                                                labelWidth: 50,
-                                                width:270,
-                                                icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/image_add.png',
-                                                listeners: {
-                                                    change: function(uploader, value, eOpts) {
-                                                        var container = Ext.getCmp('{{ current_path  }}_pnlImagePreview');
-                                                        if (container){
-                                                            container.removeAll(true);
-                                                            readImages(uploader.fileInputEl.dom, container);
-                                                        }
-                                                    }
-                                                },
-                                                value: {% if product.image %} '{{ product.image.url }}' {% else %} '' {% endif %}
-                                            },
                                             {
                                                 xtype: 'panel',
                                                 collapsible: false,
@@ -211,7 +214,7 @@
                                                         '<img id="image_{id}" src="{src}" alt="thumbnail"/>',
                                                         '<div class="input-field">',
                                                             '<label>',
-                                                                '<input type="file" id="image_input_{id}" onchange="readURL(this)"  />',
+                                                                '<input type="file" id="image_input_{id}" onchange="readURL(this); addNewProductImage();"  />',
                                                             '</label>',
                                                         '</div>',
                                                     '</div>',
@@ -358,5 +361,20 @@ function updateProduct(form)
     var purchaseItemExpandRow = function(rowNode, record, expandRow, eOpts)
     {
         alert('expand');
+    }
+
+    var addNewProductImage = function()
+    {
+
+        var dview = Ext.getCmp('{{ current_path  }}_productImages');
+        var store = dview.getStore();
+        store.add(Ext.ModelManager.create({
+                    id: 0,
+                    src: '/static/magmag_core/img/add_large.png',
+                    caption: '',
+                    order: 2,
+                    deleted: false
+                }, 'Image'));
+        dview.refresh( );
     }
 </script>
