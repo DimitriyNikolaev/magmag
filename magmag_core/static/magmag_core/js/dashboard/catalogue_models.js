@@ -26,6 +26,17 @@ Ext.define('ProductItems',{
             ],
             idProperty: 'id'
         });
+Ext.define('ProductItemRest',{
+            extend: 'Ext.data.Model',
+            fields: [
+                {name:'id', type:'int'},
+                {name:'item_id', type:'int'},
+                {name:'store_id', type:'int'},
+                {name:'store_name', type:'string'},
+                {name:'count', type:'int'}
+            ],
+            idProperty: 'id'
+        });
 Ext.define('Image', {
     extend: 'Ext.data.Model',
     fields: [

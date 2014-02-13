@@ -91,7 +91,7 @@
                                         flex: 3,
                                         layout:'form',
                                         cls:'pnlFormDetail',
-                                        minHeight: 280,
+                                        minHeight: 310,
                                         items:[
                                             {
                                                 xtype: 'hidden',
@@ -173,7 +173,7 @@
                                         xtype: 'panel',
                                         flex:2,
                                         cls:'pnlFormDetail',
-                                        minHeight: 280,
+                                        minHeight: 310,
                                         items:[
                                             {
                                                 xtype: 'panel',
@@ -200,10 +200,12 @@
                                 border: true,
                                 height: '60%',
                                 cls: 'images-view',
+                                autoScroll:true,
                                 items:[
                                     {
                                         xtype: 'dataview',
                                         store: productImages_store,
+                                        id: '{{ current_path  }}_imagesDataView',
                                         tpl:new Ext.XTemplate(
                                             '<tpl for=".">',
                                                 '<div class="thumb-wrap upload-image">',
@@ -214,7 +216,7 @@
                                                         '<img id="image_{id}" src="{src}" alt="thumbnail"/>',
                                                         '<div class="input-field">',
                                                             '<label>',
-                                                                '<input type="file" id="image_input_{id}" onchange="readURL(this); addNewProductImage();"  />',
+                                                                '<input type="file" id="image_input_{id}" onchange="if(readURL(this,{id})) addNewProductImage();"  />',
                                                             '</label>',
                                                         '</div>',
                                                     '</div>',
@@ -227,6 +229,7 @@
                                         ),
                                         itemSelector: 'div.thumb-wrap',
                                         emptyText: '{% trans 'No images available' %}'
+
                                     }
                                 ],
                                 trackOver: true,
@@ -267,14 +270,15 @@
                                         ],
                                         plugins: [{
                                             ptype: 'rowexpander',
-                                            rowBodyTpl: ['<div id="restsExpandPanel" class="ux-row-expander-box"></div>']
+                                            expandOnDblClick: false,
+                                            rowBodyTpl: ['<div id="restsExpandPanel{id}" class="ux-row-expander-box"></div>']
                                         }],
                                         viewConfig: {
                                             stripeRows: false,
                                             listeners:{
                                                 expandbody: function(rowNode, record, expandRow, eOpts)
                                                             {
-                                                                alert('expand');
+                                                                purchaseItemExpandRow(rowNode, record, expandRow, eOpts);
                                                             }
                                             }
                                         },
@@ -315,7 +319,11 @@
                             {
                                 text: '{% trans 'Cancel' %}',
                                 handler: function(){
-
+                                    var tab = Ext.getCmp('{{ current_path }}');
+                                    if (tab)
+                                    {
+                                        tab.ownerCt.remove(tab.id);
+                                    }
                                 }
                             }
                         ]
@@ -332,6 +340,10 @@ function updateProduct(form)
     {
         if(form)
         {
+
+            var dview = Ext.getCmp('{{ current_path  }}_imagesDataView');
+
+
             form.getForm().submit({
                 clientValidation: true,
                 url: '{{ current_path }}',
@@ -360,21 +372,83 @@ function updateProduct(form)
     //piGrid method and handlers
     var purchaseItemExpandRow = function(rowNode, record, expandRow, eOpts)
     {
-        alert('expand');
+        var restPlaceHolder = document.getElementById('restsExpandPanel' + record.data.id);
+
+        if (restPlaceHolder.childNodes.length == 0 && record.data.rests.length > 0) {
+            var productItemRests_store = new Ext.data.Store({
+            storeId: 'productItemRests_' + record.data.id + '_Store',
+            model: 'ProductItemRest',
+            data: record.data.rests
+            });
+
+            var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
+                clicksToEdit: 1
+            });
+
+            var panel = new Ext.panel.Panel({
+                layout: 'fit',
+                border: false,
+                renderTo: restPlaceHolder.id,
+                items:[
+                    {
+                        xtype: 'grid',
+                        layout: 'fit',
+                        border: false,
+                        hideHeaders: true,
+                        store: productItemRests_store,
+                        columns:[
+                                {
+                                    text: '{% trans "Store" %}',
+                                    flex: 1,
+                                    sortable: true,
+                                    dataIndex: 'store_name'
+
+                                },{
+                                    text: '{% trans "Count" %}',
+                                    flex: 1,
+                                    sortable: true,
+                                    dataIndex: 'count',
+                                    editable: true,
+                                    field:{
+                                        xtype: 'numberfield',
+                                        allowBlank: false,
+                                        minValue:0
+                                    }
+                                }
+                        ],
+                        plugins:[cellEditing]
+                    }
+                ]
+            });
+        }
+
     }
 
     var addNewProductImage = function()
     {
-
-        var dview = Ext.getCmp('{{ current_path  }}_productImages');
+        var dview = Ext.getCmp('{{ current_path  }}_imagesDataView');
         var store = dview.getStore();
         store.add(Ext.ModelManager.create({
-                    id: 0,
+                    id: -store.data.length,
                     src: '/static/magmag_core/img/add_large.png',
                     caption: '',
-                    order: 2,
+                    order: store.data.length,
                     deleted: false
                 }, 'Image'));
-        dview.refresh( );
+        //dview.refresh( );
+    }
+
+    function readURL(input, imgid) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            var imgprevId = 'image_'+imgid;
+            reader.onload = function (e) {
+                document.getElementById(imgprevId).src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+            if(document.getElementById(imgprevId).src.indexOf('/static/magmag_core/img/add_large.png') != -1)
+                return true;
+        }
+        return false;
     }
 </script>
