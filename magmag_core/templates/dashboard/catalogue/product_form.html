@@ -383,6 +383,7 @@ function updateProduct(form)
 
             var cellEditing = Ext.create('Ext.grid.plugin.CellEditing', {
                 clicksToEdit: 1
+
             });
 
             var panel = new Ext.panel.Panel({
@@ -416,7 +417,13 @@ function updateProduct(form)
                                     }
                                 }
                         ],
-                        plugins:[cellEditing]
+                        plugins:[cellEditing],
+                        listeners:{
+                            edit: function( editor, e, eOpts ){
+                                alert('ok');
+                            }
+                        }
+
                     }
                 ]
             });
@@ -430,7 +437,7 @@ function updateProduct(form)
         var store = dview.getStore();
         store.add(Ext.ModelManager.create({
                     id: -store.data.length,
-                    src: '/static/magmag_core/img/add_large.png',
+                    src: '{{ STATIC_URL }}magmag_core/img/add_large.png',
                     caption: '',
                     order: store.data.length,
                     deleted: false
@@ -446,7 +453,7 @@ function updateProduct(form)
                 document.getElementById(imgprevId).src = e.target.result;
             }
             reader.readAsDataURL(input.files[0]);
-            if(document.getElementById(imgprevId).src.indexOf('/static/magmag_core/img/add_large.png') != -1)
+            if(document.getElementById(imgprevId).src.indexOf('{{ STATIC_URL }}magmag_core/img/add_large.png') != -1)
                 return true;
         }
         return false;
