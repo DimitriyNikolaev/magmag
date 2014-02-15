@@ -9,6 +9,7 @@ from magmag_core.apps.dashboard.catalogue.view_models import get_category_tree_m
     get_product_grid_model, get_product_item_model, get_product_image_model
 from magmag_core.apps.catalogue.models_logic import CategoryLogic, StoreLogic, ProductLogic
 from magmag_core.apps.dashboard.catalogue.forms import CategoryForm, StoreForm, ProductForm
+from magmag_core.global_utils.json import serialize_list
 
 
 class ProductListView(ListMixedView, SingleEditorMixin):
@@ -75,6 +76,19 @@ class ProductFormView(SingleEditMixedView, SingleEditorMixin):
     form_type = ProductForm
     pk_sing = 'pk'
     update = ProductLogic.update_instance
+
+    def get_context_data(self, **kwargs):
+        context = super(ProductFormView, self).get_context_data(**kwargs)
+        context['stores'] = serialize_list(self, get_store_model, list(Store.objects.all()))
+        context['product_items'] = serialize_list(self, get_product_item_model,
+                                                  list(ProductItem.objects.
+                                                       filter(product=self.object.pk).
+                                                       prefetch_related('stock_items__store')))
+
+        res = list(ProductImage.objects.filter(product=self.object.pk))
+        res.append(ProductImage(id=0, caption='', display_order=len(res)+1))
+        context['product_images'] = serialize_list(self, get_product_image_model, res)
+        return context
 
     def post(self, request, *args, **kwargs):
         return self.edit_handler(request, *args, **kwargs)

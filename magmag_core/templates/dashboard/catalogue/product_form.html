@@ -5,9 +5,9 @@
     function init_page()
     {
         var categories_store = new Ext.data.TreeStore({
-            storeId: 'productCategoryTreeStore',
+            id: 'productCategoryTreeStore',
             model: 'Category',
-            //autoLoad: true,
+            autoLoad: true,
             proxy: {
                 type: 'ajax',
                 url: '{% url "magmag:dashboard:categories" "json" %}',
@@ -19,31 +19,52 @@
             }
         });
 
-        var productItems_store = new Ext.data.JsonStore({
-            storeId: 'product_' + '{% if product.id %} {{ product.id }} {% else %} 0 {% endif %}' + '_ItemsStore',
-            model: 'ProductItems',
+        Ext.create('Ext.data.JsonStore',{
+            id: 'stores_{{ product.identifier }}_Store',
+            storeId: 'stores_{{ product.identifier }}_Store',
+            model: 'Store',
             autoLoad: true,
             proxy: {
-                type: 'ajax',
-                url:{% if product.id %} '{% url "magmag:dashboard:product_items"  pk=product.id content_type="json" %}' {% else %}
-                '{% url "magmag:dashboard:product_items"  pk=0 content_type="json" %}' {% endif %},
+                type: 'memory',
                 reader: {
                     type: 'json',
                     root: 'data',
                     totalProperty: 'total'
                 }
-            }
+            },
+            data: {{ stores|safe }}
+
+        });
+
+
+        var productItems_store = new Ext.data.JsonStore({
+            id: 'product_{{ product.identifier }}_ItemsStore',
+            storeId: 'product_{{ product.identifier }}_ItemsStore',
+            model: 'ProductItems',
+            autoLoad: true,
+            proxy: {
+                type: 'memory',//'ajax',
+                //url:{% if product.id %} '{% url "magmag:dashboard:product_items"  pk=product.id content_type="json" %}' {% else %}
+                //'{% url "magmag:dashboard:product_items"  pk=0 content_type="json" %}' {% endif %},
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    totalProperty: 'total'
+                }
+            },
+            data: {{ product_items|safe }}
 
         });
 
         var productImages_store = new Ext.data.JsonStore({
-            storeId: 'product_' + '{% if product.id %} {{ product.id }} {% else %} 0 {% endif %}' + '_ImageStore',
+            id: 'product_{{ product.identifier }}_ImageStore',
+            storeId: 'product_{{ product.identifier }}_ImageStore',
             model: 'Image',
             autoLoad: true,
             proxy: {
-                type: 'ajax',
-                url:{% if product.id %} '{% url "magmag:dashboard:product_images"  pk=product.id content_type="json" %}' {% else %}
-                '{% url "magmag:dashboard:product_images"  pk=0 content_type="json" %}' {% endif %},
+                type: 'memory',
+                //url:{% if product.id %} '{% url "magmag:dashboard:product_images"  pk=product.id content_type="json" %}' {% else %}
+                //'{% url "magmag:dashboard:product_images"  pk=0 content_type="json" %}' {% endif %},
                 reader: {
                     type: 'json',
                     root: 'data',
@@ -54,8 +75,8 @@
                 {
                     property: 'order'
                 }
-            ]
-
+            ],
+            data: {{ product_images|safe }}
         });
 
 
@@ -96,7 +117,7 @@
                                             {
                                                 xtype: 'hidden',
                                                 id:'{{ current_path  }}_hdnId',
-                                                value: {% if product.id %} {{ product.id }} {% else %} 0 {% endif %},
+                                                value: {{ product.identifier }},
                                                 name: 'id'
                                             },{
                                                 xtype: 'textfield',
@@ -210,18 +231,18 @@
                                             '<tpl for=".">',
                                                 '<div class="thumb-wrap upload-image">',
                                                     '<label>',
-                                                        '<input type="text" id="image_caption_{id}" value="{caption}" class="x-form-field x-form-text image-caption" />',
+                                                        '<input type="text" id="image_caption_{{ product.identifier }}_{id}" value="{caption}" class="x-form-field x-form-text image-caption" />',
                                                     '</label>',
                                                     '<div class="thumb image-input">',
-                                                        '<img id="image_{id}" src="{src}" alt="thumbnail"/>',
+                                                        '<img id="image_{{ product.identifier }}_{id}" src="{src}" alt="thumbnail"/>',
                                                         '<div class="input-field">',
                                                             '<label>',
-                                                                '<input type="file" id="image_input_{id}" onchange="if(readURL(this,{id})) addNewProductImage();"  />',
+                                                                '<input type="file" id="image_input_{{ product.identifier }}_{id}" onchange="if(readURL_{{ product.identifier }}(this,{id})) addNewProductImage_{{ product.identifier }}();"  />',
                                                             '</label>',
                                                         '</div>',
                                                     '</div>',
                                                     '<label class="image-deleted"> {% trans 'Delete:' %}',
-                                                        '<input type="checkbox" id="image_deleted_{id}" value="{deleted}" class="x-form-field x-form-checkbox x-form-cb" />',
+                                                        '<input type="checkbox" id="image_deleted_{{ product.identifier }}_{id}" value="{deleted}" class="x-form-field x-form-checkbox x-form-cb" />',
                                                     '</label>',
                                                 '</div>',
                                             '</tpl>',
@@ -253,6 +274,7 @@
                                         multiSelect: false,
                                         autoScroll: true,
                                         cls: 'dashboard-grid',
+                                        id: '{{ current_path }}_productItemsGrid',
                                         columns: [
                                             {
                                                 text: '{% trans "Color" %}',
@@ -278,7 +300,7 @@
                                             listeners:{
                                                 expandbody: function(rowNode, record, expandRow, eOpts)
                                                             {
-                                                                purchaseItemExpandRow(rowNode, record, expandRow, eOpts);
+                                                                purchaseItemExpandRow_{{ product.identifier }}(rowNode, record, expandRow, eOpts);
                                                             }
                                             }
                                         },
@@ -295,7 +317,7 @@
                                                     text: '{% trans "Add" %}',
                                                     tooltip: '{% trans "Add" %}',
                                                     handler: function() {
-                                                        alert('add');
+                                                        addNewPurchaseItem_{{ product.identifier }}(Ext.getCmp('{{ current_path }}_productItemsGrid'));
                                                     }
                                                 },{
                                                     xtype: 'tbfill'
@@ -312,7 +334,7 @@
                             {
                                 text: '{% trans 'Save' %}',
                                 handler: function(){
-                                    updateProduct(Ext.getCmp('{{ current_path  }}_productMainForm'));
+                                    updateProduct_{{ product.identifier }}(Ext.getCmp('{{ current_path  }}_productMainForm'));
                                 }
 
                             },
@@ -336,7 +358,7 @@
     }
 
 //////handler///////////////////////////////////////////////////////////////////////////////////////////////////////////
-function updateProduct(form)
+function updateProduct_{{ product.identifier }}(form)
     {
         if(form)
         {
@@ -370,9 +392,10 @@ function updateProduct(form)
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //piGrid method and handlers
-    var purchaseItemExpandRow = function(rowNode, record, expandRow, eOpts)
+    var purchaseItemExpandRow_{{ product.identifier }} = function(rowNode, record, expandRow, eOpts)
     {
         var restPlaceHolder = document.getElementById('restsExpandPanel' + record.data.id);
+        var strStores = Ext.data.StoreManager.lookup('stores_{{ product.identifier }}_Store');
 
         if (restPlaceHolder.childNodes.length == 0 && record.data.rests.length > 0) {
             var productItemRests_store = new Ext.data.Store({
@@ -402,7 +425,17 @@ function updateProduct(form)
                                     text: '{% trans "Store" %}',
                                     flex: 1,
                                     sortable: true,
-                                    dataIndex: 'store_name'
+                                    dataIndex: 'store_id',
+                                    field:{
+                                        xtype:'combo',
+                                        store: strStores,
+                                        displayField: 'name',
+                                        valueField: 'id',
+                                        mode:'local'
+                                    },
+                                    renderer: function(value, metaData, record, rowIndex, colIndex, store, view){
+                                        return record.data.store_name;
+                                    }
 
                                 },{
                                     text: '{% trans "Count" %}',
@@ -420,7 +453,27 @@ function updateProduct(form)
                         plugins:[cellEditing],
                         listeners:{
                             edit: function( editor, e, eOpts ){
-                                alert('ok');
+
+                                var recordtoupdate = Ext.getCmp('{{ current_path }}_productItemsGrid').getStore().getById(e.record.data.item_id);
+                                if(recordtoupdate)
+                                {
+
+                                    for(var i = 0; i < recordtoupdate.data.rests.length; i++)
+                                    {
+                                        if(recordtoupdate.data.rests[i].id == e.record.data.id)
+                                        {
+                                            recordtoupdate.data.rests[i][e.field] = e.value;
+                                            if (e.field == 'store_id')
+                                            {
+                                                var strs = Ext.data.StoreManager.lookup('stores_{{ product.identifier }}_Store');
+                                                var selected = strs.getById(e.value);
+                                                recordtoupdate.data.rests[i]['store_name'] = selected.data.name;
+                                                e.record.data.store_name = selected.data.name;
+                                            }
+                                            e.record.commit();
+                                        }
+                                    }
+                                }
                             }
                         }
 
@@ -431,7 +484,12 @@ function updateProduct(form)
 
     }
 
-    var addNewProductImage = function()
+    var addNewPurchaseItem_{{ product.identifier }} = function(grid)
+    {
+
+    }
+
+    var addNewProductImage_{{ product.identifier }} = function()
     {
         var dview = Ext.getCmp('{{ current_path  }}_imagesDataView');
         var store = dview.getStore();
@@ -445,10 +503,10 @@ function updateProduct(form)
         //dview.refresh( );
     }
 
-    function readURL(input, imgid) {
+    function readURL_{{ product.identifier }}(input, imgid) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-            var imgprevId = 'image_'+imgid;
+            var imgprevId = 'image_{{ product.identifier }}_'+imgid;
             reader.onload = function (e) {
                 document.getElementById(imgprevId).src = e.target.result;
             }

@@ -78,6 +78,10 @@ class AbstractProduct(models.Model):
         return self.description if self.description is not None else ''
 
     @property
+    def identifier(self):
+        return self.id if self.id is not None else 0
+
+    @property
     def get_class_name(self):
         return self.__class__.__name__
 
