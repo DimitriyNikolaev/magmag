@@ -87,6 +87,8 @@ class ProductFormView(SingleEditMixedView, SingleEditorMixin):
                                                        prefetch_related('stock_items__store')))
 
         res = list(ProductImage.objects.filter(product=self.object.pk))
+        for idx, val in enumerate(res):
+            val.display_order = idx
         res.append(ProductImage(id=0, caption='', display_order=len(res)))
         context['product_images'] = serialize_list(self, get_product_image_model, res)
         return context
@@ -114,4 +116,4 @@ class ProductImagesView(FormsetEditorMixin, View):
         self.formsets = {'image_formset': self.image_formset}
 
     def post(self, request, *args, **kwargs):
-        return self.edit_handler(request, *args, **kwargs)
+        return HttpResponse(self.edit_handler(request, *args, **kwargs), content_type="application/json")

@@ -129,8 +129,8 @@ class FormsetEditorMixin(object):
         if is_valid:
             for formset in formsets.values():
                 formset.save()
-
-        return 'Uploaded'
+        res = {'success': True, 'msg': 'images saved'}
+        return json.dumps(res, ensure_ascii=False)
 
 
 

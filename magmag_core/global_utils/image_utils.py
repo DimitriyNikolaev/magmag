@@ -31,8 +31,8 @@ def get_preview(original_image, field):
         content_type = original_image.content_type
     else:
         content_type = u'image/jpeg'
-
-    return InMemoryUploadedFile(thumb, field, name, content_type, thumb.len, original_image.charset)
+    length = thumb.getbuffer().nbytes
+    return InMemoryUploadedFile(thumb, field, name, content_type, length, original_image.charset)
 
 
 def get_thumbnail(original_image,field):
@@ -69,4 +69,5 @@ def get_thumbnail(original_image,field):
     else:
         content_type = u'image/jpeg'
     original_image.seek(0)
-    return InMemoryUploadedFile(thumb, field, name, content_type, thumb.len, original_image.charset)
+    length = thumb.getbuffer().nbytes
+    return InMemoryUploadedFile(thumb, field, name, content_type, length, original_image.charset)

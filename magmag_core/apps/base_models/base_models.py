@@ -171,7 +171,7 @@ class AbstractProductImage(models.Model):
 
     class Meta:
         abstract = True
-        unique_together = ("product", "display_order")
+        #unique_together = ("product", "display_order")
         ordering = ["display_order"]
         verbose_name = _('Product Image')
         verbose_name_plural = _('Product Images')

@@ -389,14 +389,10 @@ function updateProduct_{{ product.identifier }}(form)
                     product_items: jsonProductItems
                 },
                 success: function(form, action) {
-                    var url = '{% url "magmag:dashboard:product_images"  pk='0' %}'.replace('0' , action.result.result.id)
+                    var url = '{% url "magmag:dashboard:product_images"  pk='0' %}'.replace('0' , action.result.result.id);
                     commit_images(url, action.result.result.id);
 
-                    var tab = Ext.getCmp('{{ current_path }}');
-                    if (tab)
-                    {
-                        tab.ownerCt.remove(tab.id);
-                    }
+
                 },
                 failure: function(form, action) {
                     if (action.failureType == 'server')
@@ -420,7 +416,7 @@ function updateProduct_{{ product.identifier }}(form)
 
         var dviewstore = Ext.getCmp('{{ current_path  }}_imagesDataView').getStore();
 
-        formData.append('images-TOTAL_FORMS',dviewstore.data.items.length);
+        formData.append('images-TOTAL_FORMS',dviewstore.data.items.length-1);
         formData.append('images-INITIAL_FORMS',dviewstore.totalCount-1);
         formData.append('images-MAX_NUM_FORMS', 1000);
 
@@ -434,17 +430,29 @@ function updateProduct_{{ product.identifier }}(form)
             formData.append(inpCaption.name, inpCaption.value);
             var inpFile = document.getElementById('image_input_{{ product.identifier }}_'+img.data.id);
             formData.append(inpFile.name, inpFile.files[0]);
+            formData.append('images-'+i+'-display_order', i);
             var inpDelete = document.getElementById('image_deleted_{{ product.identifier }}_'+img.data.id);
-            formData.append(inpDelete.name, inpDelete.value);
+            formData.append(inpDelete.name, inpDelete.checked);
         //});
         }
         var xhr = new XMLHttpRequest();
         xhr.open('POST', url, true);
         xhr.onload = function(oEvent) {
-            if (oReq.status == 200) {
-              alert('uploaded!!!')
+            if (oEvent.target.status == 200) {
+                var res = Ext.JSON.decode(oEvent.target.response);
+                if (res.success)
+                {
+                    var tab = Ext.getCmp('{{ current_path }}');
+                    if (tab)
+                    {
+                        tab.ownerCt.remove(tab.id);
+                    }
+                }
+                else
+                    Ext.Msg.show(res.msg);
+
             } else {
-              alert("Error");
+              Ext.Msg.show('{% trans "Sorry. Internal server error" %}');
             }
         };
         xhr.send(formData);

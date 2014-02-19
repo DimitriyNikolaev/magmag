@@ -24,26 +24,24 @@ class ProductForm(ModelForm):
 class ProductImageForm(ModelForm):
     class Meta:
         model = ProductImage
-        exclude = ('display_order', 'preview', 'thumbnail',)
+        exclude = ('preview', 'thumbnail',)
 
     def save(self, *args, **kwargs):
         # # We infer the display order of the image based on the order of the
         # # image fields within the formset.
+
         kwargs['commit'] = False
         obj = super(ProductImageForm, self).save(*args, **kwargs)
         if not obj.preview:
             preview = get_preview(self.cleaned_data['original'], 'preview')
             obj.preview.save(preview.name, preview)
-            self.cleaned_data['image'].seek(0)
+            self.cleaned_data['original'].seek(0)
             thumbnail = get_thumbnail(self.cleaned_data['original'], 'thumbnail')
-            obj.thumbnail.save(thumbnail.name,thumbnail)
-
-        obj.display_order = self.get_display_order()
+            obj.thumbnail.save(thumbnail.name, thumbnail)
         obj.save()
         return obj
 
-    def get_display_order(self):
-        return self.prefix.split('-').pop()
+
 
 
 BaseProductImageFormSet = inlineformset_factory(
