@@ -40,7 +40,7 @@
         var productItems_store = new Ext.data.JsonStore({
             id: 'product_{{ product.identifier }}_ItemsStore',
             storeId: 'product_{{ product.identifier }}_ItemsStore',
-            model: 'ProductItems',
+            model: 'ProductItem',
             autoLoad: true,
             proxy: {
                 type: 'memory',//'ajax',
@@ -63,8 +63,6 @@
             autoLoad: true,
             proxy: {
                 type: 'memory',
-                //url:{% if product.id %} '{% url "magmag:dashboard:product_images"  pk=product.id content_type="json" %}' {% else %}
-                //'{% url "magmag:dashboard:product_images"  pk=0 content_type="json" %}' {% endif %},
                 reader: {
                     type: 'json',
                     root: 'data',
@@ -96,8 +94,8 @@
                         items:[
                             {
                                 xtype:'form',
-                                id: '{{ current_path  }}_productMainForm',
                                 title: '{% trans 'Main info' %}',
+                                id: '{{ current_path  }}_productMainForm',
                                 region:'center',
                                 layout: {
                                         type: 'hbox',
@@ -230,19 +228,20 @@
                                         tpl:new Ext.XTemplate(
                                             '<tpl for=".">',
                                                 '<div class="thumb-wrap upload-image">',
+                                                    '<input name="images-{order}-id" type="hidden" id="image_id_{{ product.identifier }}_{id}" value="{id}"/>',
                                                     '<label>',
-                                                        '<input type="text" id="image_caption_{{ product.identifier }}_{id}" value="{caption}" class="x-form-field x-form-text image-caption" />',
+                                                        '<input name="images-{order}-caption" type="text" id="image_caption_{{ product.identifier }}_{id}" value="{caption}" class="x-form-field x-form-text image-caption" />',
                                                     '</label>',
                                                     '<div class="thumb image-input">',
                                                         '<img id="image_{{ product.identifier }}_{id}" src="{src}" alt="thumbnail"/>',
                                                         '<div class="input-field">',
                                                             '<label>',
-                                                                '<input type="file" id="image_input_{{ product.identifier }}_{id}" onchange="if(readURL_{{ product.identifier }}(this,{id})) addNewProductImage_{{ product.identifier }}();"  />',
+                                                                '<input value="{src}" name="images-{order}-original" type="file" id="image_input_{{ product.identifier }}_{id}" onchange="if(readURL_{{ product.identifier }}(this,{id})) addNewProductImage_{{ product.identifier }}();"  />',
                                                             '</label>',
                                                         '</div>',
                                                     '</div>',
                                                     '<label class="image-deleted"> {% trans 'Delete:' %}',
-                                                        '<input type="checkbox" id="image_deleted_{{ product.identifier }}_{id}" value="{deleted}" class="x-form-field x-form-checkbox x-form-cb" />',
+                                                        '<input name="images-{order}-DELETE" type="checkbox" id="image_deleted_{{ product.identifier }}_{id}" value="{deleted}" class="x-form-field x-form-checkbox x-form-cb" />',
                                                     '</label>',
                                                 '</div>',
                                             '</tpl>',
@@ -250,7 +249,6 @@
                                         ),
                                         itemSelector: 'div.thumb-wrap',
                                         emptyText: '{% trans 'No images available' %}'
-
                                     }
                                 ],
                                 trackOver: true,
@@ -280,13 +278,21 @@
                                                 text: '{% trans "Color" %}',
                                                 flex: 2,
                                                 sortable: true,
-                                                dataIndex: 'color'
+                                                dataIndex: 'color',
+                                                field:{
+                                                    xtype: 'textfield',
+                                                    allowBlank: false
+                                                }
 
                                             },{
                                                 text: '{% trans "Size" %}',
                                                 flex: 2,
                                                 sortable: true,
-                                                dataIndex: 'size'
+                                                dataIndex: 'size',
+                                                field:{
+                                                    xtype: 'textfield',
+                                                    allowBlank: false
+                                                }
 
                                             }
                                         ],
@@ -294,13 +300,16 @@
                                             ptype: 'rowexpander',
                                             expandOnDblClick: false,
                                             rowBodyTpl: ['<div id="restsExpandPanel{id}" class="ux-row-expander-box"></div>']
-                                        }],
+                                        }, new Ext.grid.plugin.CellEditing( {
+                                                clicksToEdit: 1
+                                            })
+                                        ],
                                         viewConfig: {
                                             stripeRows: false,
                                             listeners:{
                                                 expandbody: function(rowNode, record, expandRow, eOpts)
                                                             {
-                                                                purchaseItemExpandRow_{{ product.identifier }}(rowNode, record, expandRow, eOpts);
+                                                                productItemExpandRow_{{ product.identifier }}(rowNode, record, expandRow, eOpts);
                                                             }
                                             }
                                         },
@@ -315,9 +324,9 @@
                                                 {
                                                     icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/add.png',
                                                     text: '{% trans "Add" %}',
-                                                    tooltip: '{% trans "Add" %}',
+                                                    tooltip: '{% trans "Add new item" %}',
                                                     handler: function() {
-                                                        addNewPurchaseItem_{{ product.identifier }}(Ext.getCmp('{{ current_path }}_productItemsGrid'));
+                                                        addNewProductItem_{{ product.identifier }}(Ext.getCmp('{{ current_path }}_productItemsGrid'));
                                                     }
                                                 },{
                                                     xtype: 'tbfill'
@@ -362,8 +371,12 @@ function updateProduct_{{ product.identifier }}(form)
     {
         if(form)
         {
-
-            var dview = Ext.getCmp('{{ current_path  }}_imagesDataView');
+            var store = Ext.getCmp('{{ current_path }}_productItemsGrid').getStore();
+            var items = [];
+            Ext.Array.each(store.data.items, function(item){
+                items.push(item.data);
+            });
+            var jsonProductItems = Ext.JSON.encode(items);
 
 
             form.getForm().submit({
@@ -372,9 +385,13 @@ function updateProduct_{{ product.identifier }}(form)
                 method: 'POST',
                 params: {
                     action: 'update',
-                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    product_items: jsonProductItems
                 },
                 success: function(form, action) {
+                    var url = '{% url "magmag:dashboard:product_images"  pk='0' %}'.replace('0' , action.result.result.id)
+                    commit_images(url, action.result.result.id);
+
                     var tab = Ext.getCmp('{{ current_path }}');
                     if (tab)
                     {
@@ -386,13 +403,57 @@ function updateProduct_{{ product.identifier }}(form)
                         alert('fail');
                 }
             });
+
+
+
         }
         else
             alert('Save fail');
     }
+
+
+    var commit_images = function(url, id){
+
+        var formData = new FormData();
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        formData.append('id', id);
+
+        var dviewstore = Ext.getCmp('{{ current_path  }}_imagesDataView').getStore();
+
+        formData.append('images-TOTAL_FORMS',dviewstore.data.items.length);
+        formData.append('images-INITIAL_FORMS',dviewstore.totalCount-1);
+        formData.append('images-MAX_NUM_FORMS', 1000);
+
+        for(var i = 0; i < dviewstore.data.items.length-1; i++){
+            var img = dviewstore.data.items[i];
+        //Ext.Array.each(dviewstore.data.items, function(img){
+
+            var inpId = document.getElementById('image_id_{{ product.identifier }}_'+img.data.id);
+            formData.append(inpId.name, inpId.value > 0 ? inpId.value : '');
+            var inpCaption = document.getElementById('image_caption_{{ product.identifier }}_'+img.data.id);
+            formData.append(inpCaption.name, inpCaption.value);
+            var inpFile = document.getElementById('image_input_{{ product.identifier }}_'+img.data.id);
+            formData.append(inpFile.name, inpFile.files[0]);
+            var inpDelete = document.getElementById('image_deleted_{{ product.identifier }}_'+img.data.id);
+            formData.append(inpDelete.name, inpDelete.value);
+        //});
+        }
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.onload = function(oEvent) {
+            if (oReq.status == 200) {
+              alert('uploaded!!!')
+            } else {
+              alert("Error");
+            }
+        };
+        xhr.send(formData);
+    }
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //piGrid method and handlers
-    var purchaseItemExpandRow_{{ product.identifier }} = function(rowNode, record, expandRow, eOpts)
+    var productItemExpandRow_{{ product.identifier }} = function(rowNode, record, expandRow, eOpts)
     {
         var restPlaceHolder = document.getElementById('restsExpandPanel' + record.data.id);
         var strStores = Ext.data.StoreManager.lookup('stores_{{ product.identifier }}_Store');
@@ -470,7 +531,7 @@ function updateProduct_{{ product.identifier }}(form)
                                                 recordtoupdate.data.rests[i]['store_name'] = selected.data.name;
                                                 e.record.data.store_name = selected.data.name;
                                             }
-                                            e.record.commit();
+                                            //e.record.commit();
                                         }
                                     }
                                 }
@@ -484,11 +545,34 @@ function updateProduct_{{ product.identifier }}(form)
 
     }
 
-    var addNewPurchaseItem_{{ product.identifier }} = function(grid)
+    var addNewProductItem_{{ product.identifier }} = function(grid)
     {
 
-    }
+        var rests = [];
+        var strs = Ext.data.StoreManager.lookup('stores_{{ product.identifier }}_Store');
+        Ext.Array.each(strs.data.items, function(s){
+            rests.push(
+                    Ext.ModelManager.create({
+                    id: -rests.length,
+                    item_id: {{ product.identifier }},
+                    store_id: s.data.id,
+                    store_name: s.data.name,
+                    count:0
+                }, 'ProductItemRest')
+            )
+        })
 
+        var store = grid.getStore();
+        store.add(
+              Ext.ModelManager.create({
+                    id: -store.data.length,
+                    color: '{% trans "Color" %}',
+                    size: '{% trans "Size" %}',
+                    rests: rests
+                }, 'ProductItem')
+        );
+    }
+/////images handlers
     var addNewProductImage_{{ product.identifier }} = function()
     {
         var dview = Ext.getCmp('{{ current_path  }}_imagesDataView');

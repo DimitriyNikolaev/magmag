@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
 __author__ = 'dimitriy'
 
+import json
 from magmag_core.apps.catalogue.models import Category, Store
+
 
 
 class BaseLogic(object):
     @staticmethod
     def update_instance(view, forma):
         if len(forma.errors) > 0 and forma.is_valid():
-            return False
+            return False, None
         try:
             instance = forma.save()
-            return True
+            return True, None
         except Exception as x:
-            return False
+            return False, None
 
     @staticmethod
     def delete_instance(view, src_id):
@@ -22,11 +24,11 @@ class BaseLogic(object):
             if src_node:
                 try:
                     src_node.delete()
-                    return True
+                    return True, None
                 except Exception as x:
-                    return False
+                    return False, None
         else:
-            return False
+            return False, None
 
     class Meta:
         abstract = True
@@ -36,12 +38,12 @@ class ProductLogic(BaseLogic):
     @staticmethod
     def update_instance(view, forma):
         if len(forma.errors) > 0 and forma.is_valid():
-            return False
+            return False, None
         try:
             instance = forma.save()
-            return True
+            return True, {'id': instance.id}
         except Exception as x:
-            return False
+            return False, None
 
 
 class CategoryLogic(BaseLogic):
@@ -54,9 +56,9 @@ class CategoryLogic(BaseLogic):
         if src_node:
             try:
                 src_node.move_to(target_node, 'last-child')
-                return True
+                return True, None
             except Exception as x:
-                return False
+                return False, None
 
     @staticmethod
     def delete_instance(view, src_id):
@@ -64,9 +66,9 @@ class CategoryLogic(BaseLogic):
         if src_node:
             try:
                 src_node.delete()
-                return True
+                return True, None
             except Exception as x:
-                return False
+                return False, None
 
 
 class StoreLogic(BaseLogic):

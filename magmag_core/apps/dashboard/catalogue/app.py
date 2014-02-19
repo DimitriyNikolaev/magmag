@@ -37,7 +37,7 @@ class CatalogueApplication(Application):
                                    name='product'),
                                url(r'^productitems/(?P<pk>\d+)/(?P<content_type>[-\w]+)$', self.product_items.as_view(),
                                    name='product_items'),
-                               url(r'^productimages/(?P<pk>\d+)/(?P<content_type>[-\w]+)$', self.product_images.as_view(),
+                               url(r'^productimages/(?P<pk>\d+)$', self.product_images.as_view(),
                                    name='product_images')
                                )
 

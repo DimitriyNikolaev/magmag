@@ -88,7 +88,7 @@ class SingleEditorMixin(object):
             del_id = request.POST.get('delElId', 0).lower()
             if self.delete is not None:
                 deleted = self.delete(del_id)
-                return HttpResponse('success' if deleted else 'failure')
+                return HttpResponse('success' if deleted[0] else 'failure')
             else:
                 return HttpResponse('success' if False else 'Undefined object form')
         elif action == 'update':
@@ -96,12 +96,63 @@ class SingleEditorMixin(object):
             form_kwargs.update({'instance': self.get_object()})
             if self.form_type is not None and self.update is not None:
                 form = self.form_type(**form_kwargs)
-                success = self.update(form)
-                return HttpResponse(json.dumps({'success': success, 'msg': 'success'}),
+                res = self.update(form)
+                return HttpResponse(json.dumps({'success': res[0], 'msg': 'success', 'result': res[1]}),
                                     content_type='application/json')
             else:
                 return HttpResponse(json.dumps({'success': False, 'msg': 'Undefined object form'}),
                                     content_type='application/json')
+
+
+class FormsetEditorMixin(object):
+    update = None
+    base_model = None
+    pk_sing = 'id'
+    formsets = {}
+
+    def get_object(self):
+        pk = self.request.POST.get(self.pk_sing)
+        if pk == '':
+            return None
+        return self.base_model.objects.select_related().get(pk=pk)
+
+    def edit_handler(self, request, *arg, **kwargs):
+        formsets = {}
+        instance = self.get_object()
+        for ctx_name, formset_class in self.formsets.items():
+            formsets[ctx_name] = formset_class(self.base_model,
+                                               self.request.user,
+                                               self.request.POST,
+                                               self.request.FILES,
+                                               instance=instance)
+        is_valid = all([formset.is_valid() for formset in formsets.values()])
+        if is_valid:
+            for formset in formsets.values():
+                formset.save()
+
+        return 'Uploaded'
+
+
+
+        # action = request.POST.get('action', '').lower()
+        # if action == 'delete':
+        #     del_id = request.POST.get('delElId', 0).lower()
+        #     if self.delete is not None:
+        #         deleted = self.delete(del_id)
+        #         return HttpResponse('success' if deleted else 'failure')
+        #     else:
+        #         return HttpResponse('success' if False else 'Undefined object form')
+        # elif action == 'update':
+        #     form_kwargs = {'data': self.request.POST, 'files': self.request.FILES}
+        #     form_kwargs.update({'instance': self.get_object()})
+        #     if self.form_type is not None and self.update is not None:
+        #         form = self.form_type(**form_kwargs)
+        #         success = self.update(form)
+        #         return HttpResponse(json.dumps({'success': success, 'msg': 'success'}),
+        #                             content_type='application/json')
+        #     else:
+        #         return HttpResponse(json.dumps({'success': False, 'msg': 'Undefined object form'}),
+        #                             content_type='application/json')
 
 
 class SingleTreeEditorMixin(SingleEditorMixin):
@@ -114,7 +165,7 @@ class SingleTreeEditorMixin(SingleEditorMixin):
             target_id = request.POST.get('targetElId', 0).lower()
             if self.move is not None:
                 moved = self.move(src_id, target_id)
-                return HttpResponse('success' if moved else 'failure')
+                return HttpResponse('success' if moved[0] else 'failure')
             else:
                 return HttpResponse('success' if False else 'Undefined object form')
         elif action == 'update':
@@ -124,8 +175,8 @@ class SingleTreeEditorMixin(SingleEditorMixin):
             form_kwargs.update({'instance': self.get_object()})
             if self.form_type is not None and self.update is not None:
                 form = self.form_type(**form_kwargs)
-                success = self.update(form)
-                return HttpResponse(json.dumps({'success': success, 'msg': 'success'}),
+                res = self.update(form)
+                return HttpResponse(json.dumps({'success': res[0], 'msg': 'success'}),
                                     content_type='application/json')
             else:
                 return HttpResponse(json.dumps({'success': False, 'msg': 'Undefined object form'}),

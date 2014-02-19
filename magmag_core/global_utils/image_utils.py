@@ -2,13 +2,14 @@
 __author__ = 'dimitriy'
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from PIL import Image
-from io import StringIO
+from io import StringIO, BytesIO
 from django.conf import settings
 import os
 
+
 def get_preview(original_image, field):
-    f = StringIO(original_image.read())
-    thumb = StringIO()
+    f = BytesIO(original_image.read())
+    thumb = BytesIO()
 
     img = Image.open(f)
 
@@ -23,25 +24,25 @@ def get_preview(original_image, field):
     img = img.resize((width, height), Image.ANTIALIAS)
     img.save(thumb, 'JPEG')
     if hasattr(original_image, 'path'):
-        name = 'preview_%s' %  os.path.basename(original_image.path)
+        name = 'preview_%s' % os.path.basename(original_image.path)
     else:
-        name = 'preview_%s' %  original_image.name
+        name = 'preview_%s' % original_image.name
     if hasattr(original_image, 'content_type'):
-        content_type =  original_image.content_type
+        content_type = original_image.content_type
     else:
         content_type = u'image/jpeg'
 
     return InMemoryUploadedFile(thumb, field, name, content_type, thumb.len, original_image.charset)
 
+
 def get_thumbnail(original_image,field):
-    f = StringIO(original_image.read())
-    thumb = StringIO()
+    f = BytesIO(original_image.read())
+    thumb = BytesIO()
 
     img = Image.open(f)
 
     if img.mode != "RGB":
         img = img.convert("RGB")
-
 
     if img.size[0] > img.size[1]:
         height = settings.THUMBNAIL_HEIGHT

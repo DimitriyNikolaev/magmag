@@ -2,13 +2,14 @@
 __author__ = 'dimitriy'
 
 from django.http import HttpResponse
-from django.views.generic import TemplateView, UpdateView
-from magmag_core.view.base_views import SingleEditMixedView, ListMixedView, SingleTreeEditorMixin, SingleEditorMixin
+from django.views.generic import View
+from magmag_core.view.base_views import SingleEditMixedView, ListMixedView, SingleTreeEditorMixin, SingleEditorMixin, \
+    FormsetEditorMixin
 from magmag_core.apps.catalogue.models import Category, Store, Product, ProductItem, ProductImage
 from magmag_core.apps.dashboard.catalogue.view_models import get_category_tree_model, get_store_model, \
     get_product_grid_model, get_product_item_model, get_product_image_model
 from magmag_core.apps.catalogue.models_logic import CategoryLogic, StoreLogic, ProductLogic
-from magmag_core.apps.dashboard.catalogue.forms import CategoryForm, StoreForm, ProductForm
+from magmag_core.apps.dashboard.catalogue.forms import CategoryForm, StoreForm, ProductForm, ProductImageFormSet
 from magmag_core.global_utils.json import serialize_list
 
 
@@ -86,7 +87,7 @@ class ProductFormView(SingleEditMixedView, SingleEditorMixin):
                                                        prefetch_related('stock_items__store')))
 
         res = list(ProductImage.objects.filter(product=self.object.pk))
-        res.append(ProductImage(id=0, caption='', display_order=len(res)+1))
+        res.append(ProductImage(id=0, caption='', display_order=len(res)))
         context['product_images'] = serialize_list(self, get_product_image_model, res)
         return context
 
@@ -105,14 +106,12 @@ class ProductItemsView(ListMixedView):
         return list(ProductItem.objects.filter(product=pk).prefetch_related('stock_items__store'))
 
 
-class ProductImagesView(ListMixedView):
-    context_object_name = 'product_items'
-    model = ProductImage
-    converter = get_product_image_model
-    #paginate_by = 7
+class ProductImagesView(FormsetEditorMixin, View):
+    base_model = Product
+    image_formset = ProductImageFormSet
 
-    def get_queryset(self):
-        pk = self.kwargs.get('pk', None)
-        res = list(ProductImage.objects.filter(product=pk))
-        res.append(ProductImage(id=0, caption='', display_order=len(res)+1))
-        return res
+    def __init__(self, *args, **kwargs):
+        self.formsets = {'image_formset': self.image_formset}
+
+    def post(self, request, *args, **kwargs):
+        return self.edit_handler(request, *args, **kwargs)

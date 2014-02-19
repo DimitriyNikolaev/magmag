@@ -16,7 +16,7 @@ Ext.define('Product',{
             fields: ['id', 'name', 'image', 'slug', 'date_added', 'article'],
             idProperty: 'id'
         });
-Ext.define('ProductItems',{
+Ext.define('ProductItem',{
             extend: 'Ext.data.Model',
             fields: [
                 {name:'id', type:'int'},
