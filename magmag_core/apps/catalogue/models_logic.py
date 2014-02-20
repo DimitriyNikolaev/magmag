@@ -2,7 +2,7 @@
 __author__ = 'dimitriy'
 
 import json
-from magmag_core.apps.catalogue.models import Category, Store
+from magmag_core.apps.catalogue.models import Category, Store, ProductItem, StockItem
 
 
 
@@ -37,10 +37,24 @@ class BaseLogic(object):
 class ProductLogic(BaseLogic):
     @staticmethod
     def update_instance(view, forma):
-        if len(forma.errors) > 0 and forma.is_valid():
+        if not forma.is_valid():
             return False, None
         try:
+            items = json.loads(forma.data['product_items'])
             instance = forma.save()
+            for item in items:
+                p_item = ProductItem(
+                    pk=item['id'] if item['id'] > 0 else None,
+                    color=item['color'],
+                    size=item['size']
+                )
+                instance.items.add(p_item)
+                for rest in item['rests']:
+                    p_rest = StockItem(
+                        pk=rest['id'] if rest['id'] > 0 else None,
+                        count=rest['count'])
+                    p_rest.store = Store(rest['store_id'])
+                    p_item.stock_items.add(p_rest)
             return True, {'id': instance.id}
         except Exception as x:
             return False, None

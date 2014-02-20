@@ -217,7 +217,7 @@
                                 region: 'south',
                                 title:'{% trans 'Images' %}',
                                 border: true,
-                                height: '60%',
+                                height: '50%',
                                 cls: 'images-view',
                                 autoScroll:true,
                                 items:[
@@ -294,6 +294,34 @@
                                                     allowBlank: false
                                                 }
 
+                                            },{
+                                                xtype: 'actioncolumn',
+                                                items:[
+                                                    {
+                                                        icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/add.png',
+                                                        tooltip: '{% trans "Add new" %}',
+                                                        handler: function(grid, rowIndex, colIndex) {
+                                                            var record = grid.getStore().getAt(rowIndex);
+                                                            if(record)
+                                                            {
+                                                                var rest = {
+                                                                    id: -record.data.rests.length,
+                                                                    item_id: record.data.id,
+                                                                    store_id: null,
+                                                                    store_name: '',
+                                                                    count: 0
+                                                                };
+                                                                record.data.rests.push(rest);
+                                                                var innergrid = Ext.getCmp('{{ current_path }}_product_item_rests_'+record.data.id);
+                                                                if(innergrid){
+                                                                    innergrid.getStore().loadData(record.data.rests);
+                                                                    //innergrid.refresh();
+                                                                }
+                                                            }
+
+                                                        }
+                                                    }
+                                                ]
                                             }
                                         ],
                                         plugins: [{
@@ -486,6 +514,7 @@ function updateProduct_{{ product.identifier }}(form)
                     {
                         xtype: 'grid',
                         layout: 'fit',
+                        id: '{{ current_path }}_product_item_rests_'+record.data.id,
                         border: false,
                         hideHeaders: true,
                         store: productItemRests_store,
@@ -539,7 +568,7 @@ function updateProduct_{{ product.identifier }}(form)
                                                 recordtoupdate.data.rests[i]['store_name'] = selected.data.name;
                                                 e.record.data.store_name = selected.data.name;
                                             }
-                                            //e.record.commit();
+                                            e.record.commit();
                                         }
                                     }
                                 }
@@ -560,14 +589,13 @@ function updateProduct_{{ product.identifier }}(form)
         var strs = Ext.data.StoreManager.lookup('stores_{{ product.identifier }}_Store');
         Ext.Array.each(strs.data.items, function(s){
             rests.push(
-                    Ext.ModelManager.create({
+                    {
                     id: -rests.length,
                     item_id: {{ product.identifier }},
                     store_id: s.data.id,
                     store_name: s.data.name,
                     count:0
-                }, 'ProductItemRest')
-            )
+                });
         })
 
         var store = grid.getStore();

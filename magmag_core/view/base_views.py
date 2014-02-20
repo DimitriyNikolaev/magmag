@@ -125,12 +125,16 @@ class FormsetEditorMixin(object):
                                                self.request.POST,
                                                self.request.FILES,
                                                instance=instance)
-        is_valid = all([formset.is_valid() for formset in formsets.values()])
-        if is_valid:
-            for formset in formsets.values():
-                formset.save()
-        res = {'success': True, 'msg': 'images saved'}
-        return json.dumps(res, ensure_ascii=False)
+        try:
+            is_valid = all([formset.is_valid() for formset in formsets.values()])
+            if is_valid:
+                for formset in formsets.values():
+                    formset.save()
+            res = {'success': True, 'msg': 'images saved'}
+            return json.dumps(res, ensure_ascii=False)
+        except Exception as x:
+            res = {'success': False, 'msg': 'images not saved'}
+            return json.dumps(res, ensure_ascii=False)
 
 
 
