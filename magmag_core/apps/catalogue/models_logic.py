@@ -41,7 +41,9 @@ class ProductLogic(BaseLogic):
             return False, None
         try:
             items = json.loads(forma.data['product_items'])
+            category = Category.objects.get(pk=forma.data['category'])
             instance = forma.save()
+            ProductLogic.add_to_single_category(instance, category)
             for item in items:
                 p_item = ProductItem(
                     pk=item['id'] if item['id'] > 0 else None,
@@ -58,6 +60,13 @@ class ProductLogic(BaseLogic):
             return True, {'id': instance.id}
         except Exception as x:
             return False, None
+    @staticmethod
+    def add_to_single_category(instance, category):
+        if category:
+            categories = instance.categories.all()
+            for cat in categories:
+                cat.products.remove(instance)
+            category.products.add(instance)
 
 
 class CategoryLogic(BaseLogic):
