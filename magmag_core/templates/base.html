@@ -1,9 +1,18 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 <head>
+    {% block meta %}
+        <meta name="keywords" content="" />
+        <meta name="description" content="" />
+    {% endblock %}
     <title></title>
+    {% block stylesheets %}
+        <link href="{{ STATIC_URL }}magmag_core/css/styles.css" rel="stylesheet" type="text/css" media="screen" />
+    {% endblock %}
 </head>
 <body>
-{% block layout %}{% endblock %}
+{% block layout %}
+
+{% endblock %}
 </body>
 </html>
