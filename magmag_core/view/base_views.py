@@ -62,7 +62,7 @@ class ListMixedView(JsonResponseMixin, ListView):
             context = self.get_context_data(object_list=self.object_list)
             return JsonResponseMixin.render_to_response_json(self, context)
         else:
-            return super(ListMixedView,self).get(self, request, *args, **kwargs)
+            return super(ListMixedView, self).get(self, request, *args, **kwargs)
 
     def convert_context_to_json(self, context, extract_from_queryset=None):
         source = [self.converter(n) for n in context[self.context_object_name]]
@@ -186,4 +186,4 @@ class SingleTreeEditorMixin(SingleEditorMixin):
                 return HttpResponse(json.dumps({'success': False, 'msg': 'Undefined object form'}),
                                     content_type='application/json')
         else:
-            return super(SingleTreeEditorMixin).edit_handler(self, request, *arg, **kwargs)
+            return super(SingleTreeEditorMixin, self).edit_handler(request, *arg, **kwargs)

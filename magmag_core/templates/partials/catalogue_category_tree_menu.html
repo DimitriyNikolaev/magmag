@@ -1,0 +1,24 @@
+<div class="catalogue-tree">
+    <ul>
+    {% for item in categories %}
+        {% if item == "in" %}
+            <div class="catalogue-tree-branch">
+                <ul>
+        {% else %}
+            {% if item == "out" %}
+                </ul>
+                <div class="cb"> </div>
+            </div>
+                </li>
+            {% elif item != '' %}
+                <li>
+                    <a href='#'>{{item.name}}</a>
+                {% if item.leaf %}
+                </li>
+                {% endif %}
+
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    </ul>
+</div>

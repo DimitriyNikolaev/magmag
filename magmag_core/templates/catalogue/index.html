@@ -1,5 +1,46 @@
 {% extends "layout.html" %}
 
 {% block content_wrapper %}
-    Catalogue
+    <aside class="left-sidebar-category-tree">
+        <div class="catalogue-tree">
+            <ul>
+            {% for item in categories %}
+                {% if item == "in" %}
+                    <div class="catalogue-tree-branch">
+                        <ul>
+                {% else %}
+                    {% if item == "out" %}
+                        </ul>
+                        <div class="cb"> </div>
+                    </div>
+                        </li>
+                    {% elif item != '' %}
+                        <li>
+                            <a href='{% url "magmag:catalogue:slug-catalogue-category" item.slug %}'>{{item.name}}</a>
+                        {% if item.leaf %}
+                        </li>
+                        {% endif %}
+
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            </ul>
+        </div>
+        </aside>
+        <section class="catlogue-list" >
+            <div class="product-container">
+                {% for product in products %}
+                    <div>
+                        {% if product.image %}
+                            <img class="catalogue-preview" src="{{ product.image.url }}"/>
+                        {% else %}
+                            <img src="{{ STATIC_URL }}/magmag_core/img/no_image.jpg"/>
+                        {% endif %}
+                        <div class="catalogue-product-name">{{ product.name }}</div>
+                        <div class="catalogue-product-name">{{ product.price }}</div>
+
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
 {% endblock %}

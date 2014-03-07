@@ -3,6 +3,7 @@ from django.core.context_processors import csrf
 from django.conf import settings
 __author__ = 'dimitriy'
 
+
 def user_metadata(request):
     avatar = "/static/fiesta_core/img/default_avatar.png"
     #if request.user.is_authenticated():

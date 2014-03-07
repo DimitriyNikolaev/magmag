@@ -13,7 +13,7 @@ Ext.define('Store',{
         });
 Ext.define('Product',{
             extend: 'Ext.data.Model',
-            fields: ['id', 'name', 'image', 'slug', 'date_added', 'article'],
+            fields: ['id', 'name', 'image', 'slug', 'date_added', 'article', 'hidden'],
             idProperty: 'id'
         });
 Ext.define('ProductItem',{

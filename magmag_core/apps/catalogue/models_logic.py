@@ -93,6 +93,28 @@ class CategoryLogic(BaseLogic):
             except Exception as x:
                 return False, None
 
+    @staticmethod
+    def get_category_nav(categories=None):
+        root = False
+        if categories is None:
+            root = True
+            #get the root categories
+            categories = Category.objects.filter(parent=None)
+            categories[0].active = True
+        else:
+            yield 'in'
+
+        for category in categories:
+            yield category
+            subcats = Category.objects.select_related().filter(parent=category)
+            if len(subcats):
+                category.leaf = False
+                for x in CategoryLogic.get_category_nav(subcats):
+                    yield x
+            else:
+                category.leaf=True
+        yield '' if root else 'out'
+
 
 class StoreLogic(BaseLogic):
     pass

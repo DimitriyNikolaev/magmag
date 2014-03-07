@@ -48,7 +48,7 @@ body {
 	width: 1000px;
 	margin: 0 auto;
 	height: 100%;
-    background-color: #E4B281;
+    background-color: #FFFFFF;
     padding: 7px;
     border-radius: 7px;
 }
@@ -57,7 +57,7 @@ body {
 /* Header
 -----------------------------------------------------------------------------*/
 .header {
-	/*height: 250px;*/
+	height: 130px;
     margin-bottom: 2px;
 }
 .header img{
@@ -65,22 +65,10 @@ body {
 }
 /* Left Sidebar
 -----------------------------------------------------------------------------*/
-.left-sidebar {
-	float: left;
-	width: 250px;
-	background: -webkit-linear-gradient(#B9675B, #2B1719); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#6F4C28, #C79D57); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#6F4C28, #C79D57); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#B9675B, #2B1719); /* Standard syntax */
-    border: 2px solid;
-    border-radius: 7px;
-    border-color: #1E0802;
-}
+
 /* content
 -----------------------------------------------------------------------------*/
 .content_wrapper {
-    margin-left: 280px;
-    padding-bottom: 50px;
 }
 
 /* Footer
@@ -89,7 +77,6 @@ body {
 	width: 1000px;
 	margin: -80px auto 0;
 	height: 80px;
-	background: #BFF08E;
 	position: relative;
 }
 
@@ -155,3 +142,55 @@ nav li {
 .top-menu a {
     color: #0B0200;
 }
+
+/*catalog tree menu
+-----------------------------------------------------------------------------*/
+.left-sidebar-category-tree {
+	float: left;
+	width: 160px;
+}
+.catalogue-tree{
+    margin: 5px 0px;
+    background: -webkit-linear-gradient(#B9675B, #2B1719); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#6F4C28, #C79D57); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#6F4C28, #C79D57); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#B9675B, #2B1719); /* Standard syntax */
+    border: 2px solid;
+    border-radius: 7px;
+    border-color: #1E0802;
+    display: inline-block;
+    width: 150px;
+}
+.catalogue-tree li{ padding: 0px 0 0px 6px; position: relative; border-bottom: 2px solid; border-color: #1E0802;}
+.catalogue-tree li:last-child{border: none;}
+.catalogue-tree li a {display: block; padding: 4px 10px; color: #0B0200; font-weight: bold; text-decoration:none}
+.catalogue-tree li > div{display: none; position: absolute;  top:-10%; margin-left: 80%; }
+.catalogue-tree li:hover > div{ display: block; }
+.catalogue-tree li > a:hover, .catalogue-tree li.current > a{color:#FFC000; }
+.catalogue-tree li ul { white-space: nowrap;}
+.catalogue-tree li > div li{padding: 0; display: block; float: none;}
+.catalogue-tree li:first-child > div{margin-left: -6px;}
+
+.catalogue-tree-branch{
+    margin: 5px;
+    background: -webkit-linear-gradient(#B9675B, #2B1719); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#6F4C28, #C79D57); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#6F4C28, #C79D57); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#B9675B, #2B1719); /* Standard syntax */
+    border: 2px solid;
+    border-radius: 7px;
+    border-color: #1E0802;
+    display: inline-block;
+    width: 150px;
+}
+
+/* ctalogue
+-----------------------------------------------------------------------------*/
+.catlogue-list {
+    margin-left: 180px;
+    padding-bottom: 50px;
+}
+.product-container > div{display: inline-block; margin: 5px 10px; height: 240px; width: 180px;}
+.product-container .catalogue-preview {height: 220px; width: 180px;}
+.product-container .catalogue-product-name {font-size: 14px; font-weight: bold; text-align: center;}
+

@@ -31,7 +31,8 @@ def get_product_grid_model(view, product):
         'image': product.image.url if product.image else '',
         'slug': product.slug,
         'date_added': product.date_added.strftime("%d.%m.%Y"),
-        'article': product.article
+        'article': product.article,
+        'hidden': product.hidden
     }
 
 

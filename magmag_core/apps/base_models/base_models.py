@@ -36,6 +36,7 @@ class AbstractCategory(MPTTModel):
     parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
     tree = TreeManager()
     products = models.ManyToManyField('Product', blank=True, verbose_name=_("products"), related_name='categories')
+    leaf = False
 
     def __unicode__(self):
         return self.name
