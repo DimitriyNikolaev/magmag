@@ -50,18 +50,21 @@ body {
 	height: 100%;
     background-color: #FFFFFF;
     padding: 7px;
-    border-radius: 7px;
+
 }
 
 
 /* Header
 -----------------------------------------------------------------------------*/
 .header {
-	height: 130px;
+	height: 139px;
     margin-bottom: 2px;
+    background-image: url(../img/header_background.png);
 }
 .header img{
-    border-radius: 7px;
+    position: relative;
+    top: 20px;
+    left: 296px;
 }
 /* Left Sidebar
 -----------------------------------------------------------------------------*/
@@ -75,22 +78,20 @@ body {
 -----------------------------------------------------------------------------*/
 .footer {
 	width: 1000px;
-	margin: -80px auto 0;
+	margin: 0 auto 0;
 	height: 80px;
 	position: relative;
+    background-color: #FFFFFF;
+    padding: 7px;
 }
 
 /*nav menu
 -----------------------------------------------------------------------------*/
 nav {
-    margin-bottom: 7px;
-    border: 2px solid;
-    border-radius: 7px;
-    border-color: #1E0802;
-    background: -webkit-linear-gradient(#B9675B, #2B1719); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#6F4C28, #C79D57); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#6F4C28, #C79D57); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#B9675B, #2B1719); /* Standard syntax */
+    margin-bottom: 17px;
+    background-color: #FEF1E1;
+    border: 1px solid;
+    border-color: #64544E;
 }
 nav a {
     text-decoration: none;
@@ -111,14 +112,10 @@ nav li {
 .top-menu li {
     display: inline-block;
     padding: 10px 30px;
-    margin: 0;
 }
 
-.top-menu li:hover {
-    background: -webkit-linear-gradient(#C87A53, #A15845); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#A0723E, #ECC678); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#A0723E, #ECC678); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#C87A53, #A15845); /* Standard syntax */
+.top-menu li:hover > a {
+    color: #54270C;
 }
 
 .top-menu li.active {
@@ -133,6 +130,12 @@ nav li {
     border-bottom-left-radius: 7px;
     border-top-left-radius: 7px;
 }
+
+.top-menu > li.last {
+    border-bottom-right-radius: 7px;
+    border-top-right-radius: 7px;
+}
+
 .top-menu li.separator{
     width: 2px;
     background-color: #1E0802;
@@ -140,7 +143,7 @@ nav li {
 }
 
 .top-menu a {
-    color: #0B0200;
+    color: #321106;
 }
 
 /*catalog tree menu
@@ -148,49 +151,147 @@ nav li {
 .left-sidebar-category-tree {
 	float: left;
 	width: 160px;
+    position: relative;
 }
+
+.left-sidebar-category-tree > img{
+    position: absolute;
+    display: block;
+}
+.left-sidebar-category-tree .catalogue_corner-top{
+    left:-7px;
+    top:-16px;
+}
+.left-sidebar-category-tree .catalogue_corner-bottom{
+    left:76px;
+    bottom: -11px;
+}
+
 .catalogue-tree{
-    margin: 5px 0px;
-    background: -webkit-linear-gradient(#B9675B, #2B1719); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#6F4C28, #C79D57); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#6F4C28, #C79D57); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#B9675B, #2B1719); /* Standard syntax */
-    border: 2px solid;
-    border-radius: 7px;
-    border-color: #1E0802;
+    margin: 5px 0;
+    background-color: #FEF1E1;
     display: inline-block;
     width: 150px;
+    border: 1px solid;
+    border-color: #64544E;
 }
-.catalogue-tree li{ padding: 0px 0 0px 6px; position: relative; border-bottom: 2px solid; border-color: #1E0802;}
+.catalogue-tree li{ padding: 7px 0 7px 25px; position: relative;}
 .catalogue-tree li:last-child{border: none;}
-.catalogue-tree li a {display: block; padding: 4px 10px; color: #0B0200; font-weight: bold; text-decoration:none}
+.catalogue-tree li a {display: block; padding: 4px 10px; color: #321106; text-decoration:none; font: 14px 'Oswald', sans-serif;}
 .catalogue-tree li > div{display: none; position: absolute;  top:-10%; margin-left: 80%; }
 .catalogue-tree li:hover > div{ display: block; }
-.catalogue-tree li > a:hover, .catalogue-tree li.current > a{color:#FFC000; }
+.catalogue-tree li > a:hover, .catalogue-tree li.current > a{ color: #54270C; }
 .catalogue-tree li ul { white-space: nowrap;}
 .catalogue-tree li > div li{padding: 0; display: block; float: none;}
 .catalogue-tree li:first-child > div{margin-left: -6px;}
 
 .catalogue-tree-branch{
     margin: 5px;
-    background: -webkit-linear-gradient(#B9675B, #2B1719); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#6F4C28, #C79D57); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#6F4C28, #C79D57); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#B9675B, #2B1719); /* Standard syntax */
-    border: 2px solid;
-    border-radius: 7px;
-    border-color: #1E0802;
+    background-color: #FEF1E1;
     display: inline-block;
     width: 150px;
 }
 
 /* ctalogue
 -----------------------------------------------------------------------------*/
-.catlogue-list {
+.catalogue-list {
     margin-left: 180px;
     padding-bottom: 50px;
 }
-.product-container > div{display: inline-block; margin: 5px 10px; height: 240px; width: 180px;}
-.product-container .catalogue-preview {height: 220px; width: 180px;}
-.product-container .catalogue-product-name {font-size: 14px; font-weight: bold; text-align: center;}
+.product-container > div
+{
+    display: inline-block;
+    margin: 5px 10px 20px 10px;
+    height: 325px;
+    width: 370px;
+    background-color: #FEF1E1;
+    border: 1px solid;
+    border-color: #64544E;
+}
+.product-container .catalogue-preview {height: 260px; width: 370px;}
+.product-container .catalogue-product-name { font-size: 14px; font-weight: bold;  color: #321106;  text-align: center;}
+.product-container .catalogue-product-name img {vertical-align: middle;}
+.product-container .catalogue-product-price {font-size: 16px; font-weight: bold;  color: #321106;  text-align: center;}
+
+
+/*basket
+-----------------------------------------------------------------------------*/
+.basket { margin-left: 432px; position: relative;}
+.basket .basket-link { display: inline;}
+.basket .basket-items { display: inline;}
+.basket:hover > .basket-details { display: block;}
+.basket .basket-details
+{
+    position: absolute;
+    display: none;
+    top:36px;
+    right: 0px;
+    border: 2px solid;
+    border-radius: 7px;
+    border-color: #1E0802;
+
+
+}
+.basket-details > div {position: relative; padding: 10px 20px;}
+/*.basket-details .basket-purchase { position: relative}*/
+.basket-details .basket-checkout
+{
+    padding: 10px 80px;
+    background: -webkit-linear-gradient(#B9675B, #2B1719); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient(#6F4C28, #C79D57); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient(#6F4C28, #C79D57); /* For Firefox 3.6 to 15 */
+    background: linear-gradient(#B9675B, #2B1719); /* Standard syntax */
+    margin-bottom: 10px;
+    display: block;
+}
+.basket-details .basket-total {margin-bottom: 10px; text-align: right;}
+
+
+/*product details
+-----------------------------------------------------------------------------*/
+.image-galery {
+    width: 50%;
+    float: left;
+    position: relative;
+}
+.product-details{
+    margin-left: 50%;
+    padding: 0 20px;
+    color: #321106;
+}
+
+.product-name{
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.product-size-list{
+    display: inline-block;
+}
+
+.product-size-list li{
+    display: inline;
+    float: left;
+    margin-right: 5px;
+}
+.product-size-list input{
+    display: none;
+}
+.product-size-list input:checked + div{
+    background-color: #64544E;
+}
+.product-size-list li div{
+    width: 30px;
+    height: 30px;
+    background-color: #FEF1E1;
+    border: 1px solid;
+    border-color: #64544E;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30px;
+    cursor: pointer;
+}
+
+
+
 

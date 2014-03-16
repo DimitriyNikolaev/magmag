@@ -2,6 +2,7 @@
 
 {% block content_wrapper %}
     <aside class="left-sidebar-category-tree">
+        <img class="catalogue_corner-top" src="{{ STATIC_URL }}magmag_core/img/rocaille_top.png"/>
         <div class="catalogue-tree">
             <ul>
             {% for item in categories %}
@@ -26,18 +27,23 @@
             {% endfor %}
             </ul>
         </div>
+        <img class="catalogue_corner-bottom" src="{{ STATIC_URL }}magmag_core/img/rocaille_bottom.png"/>
         </aside>
-        <section class="catlogue-list" >
+        <section class="catalogue-list" >
             <div class="product-container">
                 {% for product in products %}
                     <div>
                         {% if product.image %}
-                            <img class="catalogue-preview" src="{{ product.image.url }}"/>
+                            <a href="{% url "magmag:catalogue:slug-catalogue-product" product.slug %}"><img class="catalogue-preview" src="{{ product.image.url }}"/></a>
                         {% else %}
-                            <img src="{{ STATIC_URL }}/magmag_core/img/no_image.jpg"/>
+                            <a href="{% url "magmag:catalogue:slug-catalogue-product" product.slug %}"><img src="{{ STATIC_URL }}/magmag_core/img/no_image.jpg"/></a>
                         {% endif %}
-                        <div class="catalogue-product-name">{{ product.name }}</div>
-                        <div class="catalogue-product-name">{{ product.price }}</div>
+                        <div class="catalogue-product-name">
+                                <img style="margin-right: 10px;" src="{{ STATIC_URL }}magmag_core/img/left_name.png"/>
+                                {{ product.name }}
+                                <img style="margin-left: 10px;" src="{{ STATIC_URL }}magmag_core/img/right_name.png"/>
+                        </div>
+                        <div class="catalogue-product-price">{{ product.price|floatformat:"0"  }}p.</div>
 
                     </div>
                 {% endfor %}

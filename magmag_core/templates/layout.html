@@ -1,19 +1,47 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+{% block scripts %}
+    <script src="{{ STATIC_URL }}magmag_core/js/basket/basket.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var basket = new Basket('{{ site_domain }}');
+
+        if(!basket.checkSupportHtml5Storage())
+            alert("Storage unsupported");
+        else{
+            basket.getPurchaseItem(3);
+        }
+
+    </script>
+{% endblock %}
+
 {% block layout %}
     <div id="wrapper" class="wrapper">
         <header class="header">
-            {% comment %}<img src="{{ STATIC_URL }}magmag_core/img/header.png"/>{% endcomment %}
+            <a href="/"><img src="{{ STATIC_URL }}magmag_core/img/header.png"/></a>
         </header>
         {% block navmenu %}
             <nav>
                 <ul class="top-menu">
-                    <li class="first active"><a href="/catalogue/">{% trans "Catalogue" %}</a></li>
-                    <li class="separator">&nbsp</li>
+                    <li><a href="/catalogue/">{% trans "Catalogue" %}</a></li>
                     <li><a href="/about/">{% trans "About us" %}</a></li>
-                    <li class="separator">&nbsp</li>
                     <li><a href="/contact/">{% trans "Contact" %}</a></li>
+                    <li class="basket last">
+                        <div>
+                            <a class="basket-link" href="#">{% trans "My shopping bug" %}</a>
+                            <div class="basket-items">(0)</div>
+                        </div>
+
+                        <div class="basket-details">
+                            <div>
+                                <div class="basket-purchase">
+
+                                </div>
+                                <div class="basket-total">{% trans "Total: " %}<strong>0</strong>{% trans "$" %}</div>
+                                <a class="basket-checkout" href="#">{% trans "Checkout" %}</a>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </nav>
         {% endblock %}
@@ -23,7 +51,7 @@
             {% endblock %}
         </section>
     </div>
-    <footer class="footer">
-        <strong>Footer:</strong> Mus elit Morbi mus enim lacus at quis Nam eget morbi. Et semper urna urna non at cursus dolor vestibulum neque enim. Tellus interdum at laoreet laoreet lacinia lacinia sed Quisque justo quis. Hendrerit scelerisque lorem elit orci tempor tincidunt enim Phasellus dignissim tincidunt. Nunc vel et Sed nisl Vestibulum odio montes Aliquam volutpat pellentesque. Ut pede sagittis et quis nunc gravida porttitor ligula.
-    </footer><!-- .footer -->
+ {% comment %}   <footer class="footer">
+        Created by
+    </footer><!-- .footer -->{% endcomment %}
 {% endblock %}
