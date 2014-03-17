@@ -43,6 +43,7 @@ body {
 	width: 100%;
 	height: 100%;
     background-image: url(../img/fon.png);
+    min-height: 740px;
 }
 .wrapper {
 	width: 1000px;
@@ -72,6 +73,7 @@ body {
 /* content
 -----------------------------------------------------------------------------*/
 .content_wrapper {
+
 }
 
 /* Footer
@@ -253,6 +255,7 @@ nav li {
     width: 50%;
     float: left;
     position: relative;
+    height: auto;
 }
 .product-details{
     margin-left: 50%;

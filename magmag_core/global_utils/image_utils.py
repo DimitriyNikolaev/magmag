@@ -16,8 +16,12 @@ def get_preview(original_image, field):
     if img.mode != "RGB":
         img = img.convert("RGB")
 
-    width = settings.PREVIEW_IMG__WIDTH
-    height = int(round(width*img.size[1]/img.size[0]))
+    if img.size[0] < img.size[1]:
+        height = settings.PREVIEW_IMG_HEIGHT
+        width = int(round(img.size[0]*height/img.size[1]))
+    else:
+        width = settings.PREVIEW_IMG__WIDTH
+        height = int(round(width*img.size[1]/img.size[0]))
     # Метод thumb не используется, т.к. он не увеличивает размер изображения,
     # если оно меньше требуемого
     # img = img.crop((0, 0, min(img.size), min(img.size)))

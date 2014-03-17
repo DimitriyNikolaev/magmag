@@ -12,6 +12,8 @@
             var inputid = this.id.replace('alt-','#');
             $(inputid).prop("checked","true");
         });
+
+
     })
     </script>
 
@@ -21,26 +23,62 @@
 <aside class="image-galery">
     {% if product.images.all|length > 1 %}
         <div id="product_slides_{{product.id  }}" class="flexslider">
-                    <ul class="slides">
-                    {% for img in product.images.all %}
-                        <li data-thumb="{{ img.thumbnail.url }}">
-                            {% if img.preview %}
-                                    <img src="{{ img.preview.url }}" >
-                                    {% if img.caption %}
-                                        <div class="flex-caption">{{ img.caption }}</div>
-                                    {% endif %}
-                            {% elif img.original %}
-                                <div><img src="{{ img.original.url }}"/></div>
+            <ul class="slides">
+            {% for img in product.images.all %}
+                <li data-thumb="{{ img.thumbnail.url }}">
+                    {% if img.preview %}
+                            <img src="{{ img.preview.url }}" >
+                            {% if img.caption %}
+                                <div class="flex-caption">{{ img.caption }}</div>
                             {% endif %}
-                        </li>
-                    {% endfor %}
-                    </ul>
-                </div>
-                <script>
-                    $(window).load(function() {
-                        $('.flexslider').flexslider({animation: "slide",smoothHeight: true, slideshow: false, controlNav: "thumbnails"});
-                    });
-                </script>
+                    {% elif img.original %}
+                        <div><img src="{{ img.original.url }}"/></div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <div id="product_slidesnav_{{product.id  }}" class="flexslider navcarusel">
+            <ul class="slides">
+            {% for img in product.images.all %}
+                <li>
+                    {% if img.thumbnail %}
+                            <img src="{{ img.thumbnail.url }}" >
+
+                    {% elif img.original %}
+                        <div><img style="width: 150px; height: 150px;" src="{{ img.original.url }}"/></div>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
+        <script>
+
+            $(window).load(function() {
+
+                $('#product_slidesnav_{{product.id  }}').flexslider({
+                    animation: "slide",
+                    controlNav: false,
+                    animationLoop: false,
+                    slideshow: false,
+                    itemWidth: 150,
+                    itemMargin: 5,
+                    prevText: '',
+                    nextText: '',
+                    asNavFor: '#product_slides_{{product.id  }}'
+                });
+
+                $('#product_slides_{{product.id  }}').flexslider({
+                    animation: "slide",
+                    smoothHeight: true,
+                    slideshow: false,
+                    controlNav: false,
+                    prevText: '',
+                    nextText: '',
+                    sync:'#product_slidesnav_{{product.id  }}'
+                });
+            });
+        </script>
     {% endif %}
 </aside>
 <section class="product-details">
