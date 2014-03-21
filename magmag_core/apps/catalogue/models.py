@@ -22,7 +22,10 @@ class ProductImage(AbstractProductImage):
 
 
 class ProductItem(AbstractProductItem):
-    pass
+
+    @property
+    def hash_name(self):
+        return str(hash(self.color)).replace('-', '_') + str(hash(self.size)).replace('-', '_')
 
 
 class StockItem(AbstractStockItem):

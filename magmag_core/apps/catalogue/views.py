@@ -56,4 +56,8 @@ class ProductView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(ProductView, self).get_context_data(**kwargs)
+        context['images'] = list(self.object.images.all())
+        context['items'] = list(self.object.items.all())
+        context['sizes'] = dict((str(hash(s)).replace('-', '_'), s) for s in set([el.size for el in context['items']]))
+        context['colors'] = dict((str(hash(c)).replace('-', '_'), c) for c in set([el.color for el in context['items']]))
         return context

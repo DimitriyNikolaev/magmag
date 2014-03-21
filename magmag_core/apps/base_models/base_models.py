@@ -112,6 +112,7 @@ class AbstractProductItem(models.Model):
     def __str__(self):
         return '%s - %s' % (self.color, self.size,)
 
+
     class Meta:
         abstract = True
         ordering = ['size']

@@ -29,7 +29,8 @@ function Basket(store_name) {
     };
 
     this.setPurchaseItem = function(id, data){
-        localStorage.set(this.prefix+id, JSON.stringify(data))
+        localStorage.setItem(this.prefix+id, JSON.stringify(data))
+        this.updateContainer();
     };
     this.removePurchaseItem = function(id){
         localStorage.removeItem(this.prefix+id);
@@ -53,6 +54,10 @@ function Basket(store_name) {
             }
         }
         return pis;
+    };
+
+    this.updateContainer = function(){
+      alert('updated');
     };
 }
 

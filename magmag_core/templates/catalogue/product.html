@@ -11,20 +11,45 @@
         $('.product-size-list li div').click(function(e){
             var inputid = this.id.replace('alt-','#');
             $(inputid).prop("checked","true");
+            enable_btnadd();
+        });
+        $('.product-color-list li div').click(function(e){
+            var inputid = this.id.replace('alt-','#');
+            $(inputid).prop("checked","true");
+            enable_btnadd();
         });
 
+        var enable_btnadd = function(){
+            if ($('input[name=size]:checked').length > 0 && $('input[name=color]:checked').length > 0 && $('.btn-add').hasClass('btn-disabled')) {
+                $('.btn-add').removeClass('btn-disabled');
+                $('.btn-add').click(function(e){
+                    var size = $("input:radio[name=size]:checked").val();
+                    var color = $("input:radio[name=color]:checked").val();
 
+                    var item = items[color+size];
+                    if(typeof(item) !== 'undefined' && item != null && typeof(basket) !== 'undefined' && basket != null)
+                    {
+                        basket.setPurchaseItem(item.id, item);
+                    }
+                });
+            }
+        }
     })
+    var items = {
+    {% for item in items %}
+        {{  item.hash_name }}: { id: {{ item.id }}, product: '{{ product.name }}', image: '{{ product.image.url }}', price: {{ product.price }}, color: '{{ item.color }}', size: '{{ item.size }}' },
+    {% endfor %}
+    };
     </script>
 
 {% endblock %}
 
 {% block content_wrapper %}
 <aside class="image-galery">
-    {% if product.images.all|length > 1 %}
+    {% if images|length > 1 %}
         <div id="product_slides_{{product.id  }}" class="flexslider">
             <ul class="slides">
-            {% for img in product.images.all %}
+            {% for img in images %}
                 <li data-thumb="{{ img.thumbnail.url }}">
                     {% if img.preview %}
                             <img src="{{ img.preview.url }}" >
@@ -40,7 +65,7 @@
         </div>
         <div id="product_slidesnav_{{product.id  }}" class="flexslider navcarusel">
             <ul class="slides">
-            {% for img in product.images.all %}
+            {% for img in images %}
                 <li>
                     {% if img.thumbnail %}
                             <img src="{{ img.thumbnail.url }}" >
@@ -85,17 +110,34 @@
     <h1 class="product-name">{{ product.name }}</h1>
     <p>{{ product.description }}</p>
     <div>{% trans "Please select size and color and press Add to order " %}</div>
-    <div>
-        <ul class="product-size-list">
-            {% for item in product.items.all %}
-            <li>
-                <input name="size" type="radio" id="sizeid-{{ item.size }}" value="{{ item.size }}"/>
-                <div id="alt-sizeid-{{ item.size }}">
-                    <strong>{{ item.size }}</strong>
-                </div>
-            </li>
-            {% endfor %}
-        </ul>
+    <div class="color-size-container">
+        <div>
+            <ul class="product-size-list">
+                {% for key, item in sizes.items %}
+                <li>
+                    <input name="size" type="radio" id="sizeid-{{ key }}" value="{{ key }}" {% if size|length == 1 %} checked="true" {% endif %}/>
+                    <div id="alt-sizeid-{{ key }}">
+                        <strong>{{ item }}</strong>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <ul class="product-color-list">
+                {% for key, item in colors.items %}
+                <li>
+                    <input name="color" type="radio" id="colorid-{{ key }}" value="{{ key }}" {% if colors|length == 1 %} checked="true" {% endif %}/>
+                    <div id="alt-colorid-{{ key }}">
+                        <strong>{{ item }}</strong>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="product-add-to-cart-container">
+        <div class="btn-add btn-disabled">Add to order</div>
     </div>
 </section>
 {% endblock %}

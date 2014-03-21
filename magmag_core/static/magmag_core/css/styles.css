@@ -251,38 +251,18 @@ nav li {
 
 /*product details
 -----------------------------------------------------------------------------*/
-.image-galery {
-    width: 50%;
-    float: left;
-    position: relative;
-    height: auto;
-}
-.product-details{
-    margin-left: 50%;
-    padding: 0 20px;
-    color: #321106;
-}
+.image-galery { width: 50%; float: left; position: relative; height: auto; }
+.product-details{  margin-left: 50%; padding: 0 20px; color: #321106; }
 
-.product-name{
-    font-size: 18px;
-    font-weight: bold;
-}
+.product-name{ font-size: 18px; font-weight: bold; }
 
-.product-size-list{
-    display: inline-block;
-}
+.color-size-container{ float: left; }
+.color-size-container ul { display: inline-block; }
 
-.product-size-list li{
-    display: inline;
-    float: left;
-    margin-right: 5px;
-}
-.product-size-list input{
-    display: none;
-}
-.product-size-list input:checked + div{
-    background-color: #64544E;
-}
+.product-size-list{ display: inline-block; }
+.product-size-list li{ display: inline; float: left; margin-right: 5px; }
+.product-size-list input{ display: none; }
+.product-size-list input:checked + div{ background-color: #64544E; color: #FEF1E1; }
 .product-size-list li div{
     width: 30px;
     height: 30px;
@@ -293,6 +273,41 @@ nav li {
     vertical-align: middle;
     line-height: 30px;
     cursor: pointer;
+}
+.product-color-list input{ display: none; }
+.product-color-list input:checked + div{ background-color: #64544E; color: #FEF1E1; }
+.product-color-list li div{
+
+    height: 30px;
+    background-color: #FEF1E1;
+    border: 1px solid;
+    border-color: #64544E;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30px;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0 7px;
+}
+
+.product-add-to-cart-container{ float: right; height: 70px;}
+
+.btn-add{
+    width: 100px;
+    height: 30px;
+    background-color: #FEF1E1;
+    border: 1px solid;
+    border-color: #64544E;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.btn-disabled {
+    cursor: default;
+    background-color: #ffffff;
 }
 
 
