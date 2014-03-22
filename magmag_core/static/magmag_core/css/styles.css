@@ -73,7 +73,7 @@ body {
 /* content
 -----------------------------------------------------------------------------*/
 .content_wrapper {
-
+    margin-top: 17px;
 }
 
 /* Footer
@@ -87,10 +87,26 @@ body {
     padding: 7px;
 }
 
+/*btn
+-----------------------------------------------------------------------------*/
+.btn{
+    width: 100px;
+    height: 30px;
+    background-color: #FEF1E1;
+    border: 1px solid;
+    border-color: #64544E;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30px;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    color: #321106;
+}
+
 /*nav menu
 -----------------------------------------------------------------------------*/
 nav {
-    margin-bottom: 17px;
     background-color: #FEF1E1;
     border: 1px solid;
     border-color: #64544E;
@@ -221,32 +237,22 @@ nav li {
 .basket { margin-left: 432px; position: relative;}
 .basket .basket-link { display: inline;}
 .basket .basket-items { display: inline;}
-.basket:hover > .basket-details { display: block;}
-.basket .basket-details
-{
-    position: absolute;
-    display: none;
-    top:36px;
-    right: 0px;
-    border: 2px solid;
-    border-radius: 7px;
-    border-color: #1E0802;
 
-
-}
-.basket-details > div {position: relative; padding: 10px 20px;}
+#basket_container{height: 0px; display: none; border:1px solid #64544E; border-top: 0;}
+.basket-details > div {position: relative; padding: 10px 20px; color: #321106;}
 /*.basket-details .basket-purchase { position: relative}*/
 .basket-details .basket-checkout
 {
-    padding: 10px 80px;
-    background: -webkit-linear-gradient(#B9675B, #2B1719); /* For Safari 5.1 to 6.0 */
-    background: -o-linear-gradient(#6F4C28, #C79D57); /* For Opera 11.1 to 12.0 */
-    background: -moz-linear-gradient(#6F4C28, #C79D57); /* For Firefox 3.6 to 15 */
-    background: linear-gradient(#B9675B, #2B1719); /* Standard syntax */
-    margin-bottom: 10px;
+    padding: 10px 20px;
+    margin-bottom: 5px;
     display: block;
+
 }
-.basket-details .basket-total {margin-bottom: 10px; text-align: right;}
+.basket-details .basket-total { display: inline-block; float: right; height: 30px; line-height: 30px; vertical-align: middle;}
+.btn-checkout{
+    float: right;
+    margin-left: 20px;
+}
 
 
 /*product details
@@ -293,23 +299,14 @@ nav li {
 .product-add-to-cart-container{ float: right; height: 70px;}
 
 .btn-add{
-    width: 100px;
-    height: 30px;
-    background-color: #FEF1E1;
-    border: 1px solid;
-    border-color: #64544E;
-    text-align: center;
-    vertical-align: middle;
-    line-height: 30px;
-    cursor: pointer;
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
 .btn-disabled {
     cursor: default;
     background-color: #ffffff;
 }
-
 
 
 

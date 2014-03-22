@@ -2,7 +2,7 @@
  * Created by dimitriy on 08.03.14.
  */
 
-function Basket(store_name) {
+function Basket() {
     this.checkSupportHtml5Storage = function (){
         try {
             return 'localStorage' in window && window['localStorage'] !== null;
@@ -11,7 +11,7 @@ function Basket(store_name) {
         }
     };
 
-    this.prefix = store_name+'_pi_';
+
 
     this.handle_storage = function(e){
         if (!e) { e = window.event; }
@@ -24,8 +24,10 @@ function Basket(store_name) {
       window.attachEvent("onstorage", this.handle_storage);
     }
 
-    this.init = function(container){
-
+    this.init = function(store_name, container, counter){
+        this.prefix = store_name+'_pi_';
+        this.container = container;
+        this.counter = counter;
     };
 
     this.setPurchaseItem = function(id, data){
@@ -50,11 +52,21 @@ function Basket(store_name) {
             {
                 value = localStorage.getItem(key);
                 pis.push(JSON.parse(value));
-                console.log(key, value);
             }
         }
         return pis;
     };
+
+    this.getPIListCount = function(){
+        var count = 0;
+        for (var i=0,key; i < localStorage.length; i++) {
+            key = localStorage.key(i);
+            if(key.indexOf(this.prefix) != -1){
+                count+=1;
+            }
+        }
+        return count;
+    }
 
     this.updateContainer = function(){
       alert('updated');

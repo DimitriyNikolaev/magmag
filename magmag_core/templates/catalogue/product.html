@@ -2,12 +2,21 @@
 {% load i18n %}
 
 {% block extra %}
-    <script src="{{ STATIC_URL }}magmag_core/js/jquery-2.1.0.min.js" type="text/javascript"></script>
     <link rel="stylesheet" href="{{ STATIC_URL }}magmag_core/css/flexslider.css" type="text/css" media="screen" />
     <script src="{{ STATIC_URL }}magmag_core/js/jplugins/jquery.flexslider.js" type="text/javascript"></script>
     <script type="text/javascript">
 
-    $(document).ready(function (){
+
+    var items = {
+    {% for item in items %}
+        {{  item.hash_name }}: { id: {{ item.id }}, product: '{{ product.name }}', image: '{{ product.image.url }}', price: {{ product.price }}, color: '{{ item.color }}', size: '{{ item.size }}' },
+    {% endfor %}
+    };
+    </script>
+
+{% endblock %}
+
+{% block doc_ready %}
         $('.product-size-list li div').click(function(e){
             var inputid = this.id.replace('alt-','#');
             $(inputid).prop("checked","true");
@@ -34,15 +43,8 @@
                 });
             }
         }
-    })
-    var items = {
-    {% for item in items %}
-        {{  item.hash_name }}: { id: {{ item.id }}, product: '{{ product.name }}', image: '{{ product.image.url }}', price: {{ product.price }}, color: '{{ item.color }}', size: '{{ item.size }}' },
-    {% endfor %}
-    };
-    </script>
 
-{% endblock %}
+    {% endblock %}
 
 {% block content_wrapper %}
 <aside class="image-galery">
@@ -137,7 +139,7 @@
         </div>
     </div>
     <div class="product-add-to-cart-container">
-        <div class="btn-add btn-disabled">Add to order</div>
+        <div class="btn btn-disabled btn-add">Add to order</div>
     </div>
 </section>
 {% endblock %}

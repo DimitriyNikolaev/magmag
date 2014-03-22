@@ -3,14 +3,40 @@
 
 {% block scripts %}
     <script src="{{ STATIC_URL }}magmag_core/js/basket/basket.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}magmag_core/js/jquery-2.1.0.min.js" type="text/javascript"></script>
     <script type="text/javascript">
-        var basket = new Basket('{{ site_domain }}');
+        var basket = new Basket();
+        basket.init('{{ site_domain }}', null, null);
 
         if(!basket.checkSupportHtml5Storage())
             alert("Storage unsupported");
         else{
             basket.getPurchaseItem(3);
         }
+    $(document).ready(function (){
+        {% block doc_ready %}
+
+        {% endblock %}
+        $('.basket').hover(
+            function(e){
+                if($('#basket_container').css('display') == 'none' && basket.getPIListCount() > 0){
+                    $('#basket_container').css('display','block');
+                    $('#basket_container').animate({height:300},700);
+                }
+            },
+            null
+        );
+        $('#basket_container').hover(
+            null,null
+            {% comment %}function(e){
+                if($('#basket_container').css('display') == 'block' && basket.getPIListCount() > 0){
+                    $('#basket_container').animate({height:0},700);
+                    setTimeout(function() {$('#basket_container').css('display','none');}, 700);
+                }
+            }{% endcomment %}
+
+        );
+    });
 
     </script>
 {% endblock %}
@@ -29,21 +55,23 @@
                     <li class="basket last">
                         <div>
                             <a class="basket-link" href="#">{% trans "My shopping bug" %}</a>
-                            <div class="basket-items">(0)</div>
-                        </div>
-
-                        <div class="basket-details">
-                            <div>
-                                <div class="basket-purchase">
-
-                                </div>
-                                <div class="basket-total">{% trans "Total: " %}<strong>0</strong>{% trans "$" %}</div>
-                                <a class="basket-checkout" href="#">{% trans "Checkout" %}</a>
-                            </div>
+                            <div id="basket_counter" class="basket-items">(0)</div>
                         </div>
                     </li>
                 </ul>
             </nav>
+        {% endblock %}
+        {% block basket %}
+            <div id="basket_container">
+                <div class="basket-details">
+                    <div class="basket-purchase"></div>
+                    <div class="basket-checkout">
+                        <a class="btn btn-checkout" href="#">{% trans "Checkout" %}</a>
+                        <div class="basket-total">{% trans "Total: " %}<strong>0</strong>{% trans "$" %}</div>
+
+                    </div>
+                </div>
+            </div>
         {% endblock %}
         <section class="content_wrapper">
             {% block content_wrapper %}
