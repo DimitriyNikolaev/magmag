@@ -7,9 +7,9 @@
     <script type="text/javascript">
 
 
-    var items = {
+    var items_{{ product.id }} = {
     {% for item in items %}
-        {{  item.hash_name }}: { id: {{ item.id }}, product: '{{ product.name }}', image: '{{ product.image.url }}', price: {{ product.price }}, color: '{{ item.color }}', size: '{{ item.size }}' },
+        item_{{  item.hash_name }}: { id: {{ item.id }}, product: '{{ product.name }}', image: '{{ product.image.url }}', price: {{ product.price }}, color: '{{ item.color }}', size: '{{ item.size }}' },
     {% endfor %}
     };
     </script>
@@ -31,11 +31,11 @@
         var enable_btnadd = function(){
             if ($('input[name=size]:checked').length > 0 && $('input[name=color]:checked').length > 0 && $('.btn-add').hasClass('btn-disabled')) {
                 $('.btn-add').removeClass('btn-disabled');
-                $('.btn-add').click(function(e){
+                $('#btn_add_{{ product.id  }}').click(function(e){
                     var size = $("input:radio[name=size]:checked").val();
                     var color = $("input:radio[name=color]:checked").val();
 
-                    var item = items[color+size];
+                    var item = items_{{ product.id }}['item_'+color+size];
                     if(typeof(item) !== 'undefined' && item != null && typeof(basket) !== 'undefined' && basket != null)
                     {
                         basket.setPurchaseItem(item.id, item);
@@ -102,7 +102,7 @@
                     controlNav: false,
                     prevText: '',
                     nextText: '',
-                    sync:'#product_slidesnav_{{product.id  }}'
+                    sync:'#product_slidesnav_{{ product.id }}'
                 });
             });
         </script>
@@ -139,7 +139,7 @@
         </div>
     </div>
     <div class="product-add-to-cart-container">
-        <div class="btn btn-disabled btn-add">Add to order</div>
+        <div id="btn_add_{{ product.id  }}" class="btn btn-disabled btn-add">Add to order</div>
     </div>
 </section>
 {% endblock %}

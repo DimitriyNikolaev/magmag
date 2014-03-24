@@ -93,8 +93,7 @@ body {
     width: 100px;
     height: 30px;
     background-color: #FEF1E1;
-    border: 1px solid;
-    border-color: #64544E;
+    border: 1px solid #64544E;
     text-align: center;
     vertical-align: middle;
     line-height: 30px;
@@ -108,8 +107,7 @@ body {
 -----------------------------------------------------------------------------*/
 nav {
     background-color: #FEF1E1;
-    border: 1px solid;
-    border-color: #64544E;
+    border: 1px solid #64544E;
 }
 nav a {
     text-decoration: none;
@@ -157,7 +155,7 @@ nav li {
 .top-menu li.separator{
     width: 2px;
     background-color: #1E0802;
-    padding: 8px 0px;
+    padding: 8px 0;
 }
 
 .top-menu a {
@@ -190,8 +188,7 @@ nav li {
     background-color: #FEF1E1;
     display: inline-block;
     width: 150px;
-    border: 1px solid;
-    border-color: #64544E;
+    border: 1px solid #64544E;
 }
 .catalogue-tree li{ padding: 7px 0 7px 25px; position: relative;}
 .catalogue-tree li:last-child{border: none;}
@@ -223,8 +220,7 @@ nav li {
     height: 325px;
     width: 370px;
     background-color: #FEF1E1;
-    border: 1px solid;
-    border-color: #64544E;
+    border: 1px solid #64544E;
 }
 .product-container .catalogue-preview {height: 260px; width: 370px;}
 .product-container .catalogue-product-name { font-size: 14px; font-weight: bold;  color: #321106;  text-align: center;}
@@ -238,21 +234,23 @@ nav li {
 .basket .basket-link { display: inline;}
 .basket .basket-items { display: inline;}
 
-#basket_container{height: 0px; display: none; border:1px solid #64544E; border-top: 0;}
+#basket_container{height: 0; display: none; border:1px solid #64544E; border-top: 0;}
 .basket-details > div {position: relative; padding: 10px 20px; color: #321106;}
-/*.basket-details .basket-purchase { position: relative}*/
-.basket-details .basket-checkout
-{
-    padding: 10px 20px;
-    margin-bottom: 5px;
+.basket-details .basket-purchase .basket-item { position: relative; display: inline-block; width: 220px; text-align: center; padding: 0 10px;}
+.basket-details .basket-purchase .basket-item img {display: block; height: 130px; width: 200px; margin-bottom: 10px;}
+.basket-details .basket-purchase .basket-item a {
     display: block;
-
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    color: #321106;
+    margin-bottom: 10px;
 }
+.basket-details .basket-checkout { padding: 0 20px; margin-bottom: 5px; display: block; }
 .basket-details .basket-total { display: inline-block; float: right; height: 30px; line-height: 30px; vertical-align: middle;}
-.btn-checkout{
-    float: right;
-    margin-left: 20px;
-}
+.btn-checkout{ float: right; margin-left: 20px; }
+
+.basket-item{}
 
 
 /*product details
@@ -273,8 +271,7 @@ nav li {
     width: 30px;
     height: 30px;
     background-color: #FEF1E1;
-    border: 1px solid;
-    border-color: #64544E;
+    border: 1px solid #64544E;
     text-align: center;
     vertical-align: middle;
     line-height: 30px;
@@ -286,8 +283,7 @@ nav li {
 
     height: 30px;
     background-color: #FEF1E1;
-    border: 1px solid;
-    border-color: #64544E;
+    border: 1px solid #64544E;
     text-align: center;
     vertical-align: middle;
     line-height: 30px;

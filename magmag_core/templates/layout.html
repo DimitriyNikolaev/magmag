@@ -2,18 +2,18 @@
 {% load i18n %}
 
 {% block scripts %}
-    <script src="{{ STATIC_URL }}magmag_core/js/basket/basket.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}magmag_core/js/jquery-2.1.0.min.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}magmag_core/js/utils.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}magmag_core/js/basket/basket.js" type="text/javascript"></script>
     <script type="text/javascript">
-        var basket = new Basket();
-        basket.init('{{ site_domain }}', null, null);
 
+    $(document).ready(function (){
+        var basket = new Basket();
         if(!basket.checkSupportHtml5Storage())
             alert("Storage unsupported");
         else{
-            basket.getPurchaseItem(3);
+            basket.init('{{ site_domain }}', $('.basket-purchase'), $('#basket_counter'), $('#basket_total_sum'));
         }
-    $(document).ready(function (){
         {% block doc_ready %}
 
         {% endblock %}
@@ -22,6 +22,7 @@
                 if($('#basket_container').css('display') == 'none' && basket.getPIListCount() > 0){
                     $('#basket_container').css('display','block');
                     $('#basket_container').animate({height:300},700);
+                    $('#wrapper').height($('#wrapper').height()+300);
                 }
             },
             null
@@ -31,7 +32,12 @@
             {% comment %}function(e){
                 if($('#basket_container').css('display') == 'block' && basket.getPIListCount() > 0){
                     $('#basket_container').animate({height:0},700);
-                    setTimeout(function() {$('#basket_container').css('display','none');}, 700);
+
+                    setTimeout(function() {
+                        $('#basket_container').css('display','none');
+                        $('#wrapper').height('100%');
+
+                    }, 700);
                 }
             }{% endcomment %}
 
@@ -55,7 +61,7 @@
                     <li class="basket last">
                         <div>
                             <a class="basket-link" href="#">{% trans "My shopping bug" %}</a>
-                            <div id="basket_counter" class="basket-items">(0)</div>
+                            <div class="basket-items">(<strong id="basket_counter">0</strong>)</div>
                         </div>
                     </li>
                 </ul>
@@ -67,10 +73,11 @@
                     <div class="basket-purchase"></div>
                     <div class="basket-checkout">
                         <a class="btn btn-checkout" href="#">{% trans "Checkout" %}</a>
-                        <div class="basket-total">{% trans "Total: " %}<strong>0</strong>{% trans "$" %}</div>
+                        <div class="basket-total">{% trans "Total: " %}<strong id="basket_total_sum">0</strong>{% trans "$" %}</div>
 
                     </div>
                 </div>
+            <div class="cb"></div>
             </div>
         {% endblock %}
         <section class="content_wrapper">
@@ -79,7 +86,7 @@
             {% endblock %}
         </section>
     </div>
- {% comment %}   <footer class="footer">
+    <footer class="footer">
         Created by
-    </footer><!-- .footer -->{% endcomment %}
+    </footer><!-- .footer -->
 {% endblock %}
