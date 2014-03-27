@@ -7,12 +7,23 @@
     <script src="{{ STATIC_URL }}magmag_core/js/basket/basket.js" type="text/javascript"></script>
     <script type="text/javascript">
 
+    var basket = new Basket();
+    var tmpl = '<div id="purchase_item_{0}" class="basket-item">' +
+                '<a href="{1}">{2}</a>' +
+                '<img src="{3}" />' +
+                '<div><strong id="pi_count_{0}">{4}</strong> x <strong>{5}</strong><div onclick="deleteItem({0});" class="btn dtn-delete">Delete</div></div>' +
+                '</div>';
+    function deleteItem(id)
+    {
+        basket.removePurchaseItem(id);
+    }
+
     $(document).ready(function (){
-        var basket = new Basket();
+
         if(!basket.checkSupportHtml5Storage())
             alert("Storage unsupported");
         else{
-            basket.init('{{ site_domain }}', $('.basket-purchase'), $('#basket_counter'), $('#basket_total_sum'));
+            basket.init('{{ site_domain }}', $('.basket-purchase'), $('#basket_counter'), $('#basket_total_sum'), tmpl);
         }
         {% block doc_ready %}
 
@@ -28,18 +39,17 @@
             null
         );
         $('#basket_container').hover(
-            null,null
-            {% comment %}function(e){
-                if($('#basket_container').css('display') == 'block' && basket.getPIListCount() > 0){
+            null,
+            function(e){
+                //if($('#basket_container').css('display') == 'block' && basket.getPIListCount() > 0){
                     $('#basket_container').animate({height:0},700);
-
                     setTimeout(function() {
                         $('#basket_container').css('display','none');
                         $('#wrapper').height('100%');
 
                     }, 700);
-                }
-            }{% endcomment %}
+                //}
+            }
 
         );
     });

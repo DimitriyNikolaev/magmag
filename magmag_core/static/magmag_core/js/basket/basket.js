@@ -4,11 +4,6 @@
 
 function Basket() {
 
-    var tmpl = '<div id="purchase_item_{0}" class="basket-item">' +
-                '<a href="{1}">{2}</a>' +
-                '<img src="{3}" />' +
-                '<div><strong id="pi_count_{0}">{4}</strong> x <strong>{5}</strong></div>' +
-                '</div>';
 
     this.checkSupportHtml5Storage = function (){
         try {
@@ -22,7 +17,6 @@ function Basket() {
 
     this.handle_storage = function(e){
         if (!e) { e = window.event; }
-        alert('Yaho');
     };
 
     if (window.addEventListener) {
@@ -31,11 +25,12 @@ function Basket() {
       window.attachEvent("onstorage", this.handle_storage);
     }
 
-    this.init = function(store_name, container, counter, total_sum){
+    this.init = function(store_name, container, counter, total_sum, item_template){
         this.prefix = store_name+'_pi_';
         this.container = container;
         this.counter = counter;
-        this.total_sum = total_sum
+        this.total_sum = total_sum;
+        this.tmpl = item_template;
         this.updateContainer();
     };
 
@@ -51,6 +46,7 @@ function Basket() {
     };
     this.removePurchaseItem = function(id){
         localStorage.removeItem(this.prefix+id);
+        this.updateContainer();
     };
     this.getPurchaseItem = function(id){
         var pi_jsondata = localStorage.getItem(this.prefix+id)
@@ -96,8 +92,15 @@ function Basket() {
                     $('#pi_count_'+item.id).text(item.count);
             }
             else{
-                var block = $(tmpl.format(item.id, '#',item.product, item.image, item.count, item.price));
+                var block = $(this.tmpl.format(item.id, '#',item.product, item.image, item.count, item.price));
                 this.container.append(block);
+            }
+        }
+        var blocks = this.container.children();
+        for(var i = 0; i < blocks.length; i++){
+            var id = blocks[i].id.replace('purchase_item_', '');
+            if(this.getPurchaseItem(id) == null){
+                $(blocks[i]).remove();
             }
         }
         this.counter.text(totalcount);
