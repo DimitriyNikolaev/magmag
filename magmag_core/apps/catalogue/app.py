@@ -1,8 +1,6 @@
 __author__ = 'dimitriy'
 from django.conf.urls import patterns, url
 from magmag_core.apps.catalogue.views import IndexView, CategoryView, ProductView
-
-
 from magmag_core.core.application import Application
 
 

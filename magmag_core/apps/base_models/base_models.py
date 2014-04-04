@@ -10,6 +10,7 @@ from magmag_core.apps.catalogue.models import *
 from magmag_core.global_utils.common import get_first
 
 
+#Catalog----------------------------------------------------------------------------------------------------------------
 class AbstractStore(models.Model):
     name = models.CharField(_('Name'), max_length=64, db_index=True, null=False, blank=False, editable=True)
     phone = models.CharField(_('Phone'), max_length=24)
@@ -101,8 +102,7 @@ class AbstractProduct(models.Model):
 
 
 class AbstractProductItem(models.Model):
-    product = models.ForeignKey(
-        'Product', related_name='items', verbose_name=_("Product"))
+    product = models.ForeignKey('Product', related_name='items', verbose_name=_("Product"))
     color = models.CharField(_('Color'), max_length=64, db_index=True)
     size = models.CharField(_('Size'), max_length=5, db_index=True)
 
@@ -121,10 +121,8 @@ class AbstractProductItem(models.Model):
 
 
 class AbstractStockItem(models.Model):
-    product_item = models.ForeignKey(
-        'ProductItem', related_name='stock_items', verbose_name=_("ProductItem"))
-    store = models.ForeignKey(
-        'Store', related_name='stock_items', verbose_name=_("Store"))
+    product_item = models.ForeignKey('ProductItem', related_name='stock_items', verbose_name=_("ProductItem"))
+    store = models.ForeignKey('Store', related_name='stock_items', verbose_name=_("Store"))
     count = models.PositiveIntegerField(_('Count'), default=0, null=False, blank=False, editable=True)
 
     class Meta:
@@ -133,15 +131,6 @@ class AbstractStockItem(models.Model):
         verbose_name = _('StockItem')
         verbose_name_plural = _('StockItems')
 
-
-class AbstractReservation(models.Model):
-    stock_item = models.ForeignKey(
-        'StockItem', related_name='reservation', verbose_name=_("StockItem"))
-
-    reserve = models.PositiveIntegerField(_('Count'), default=0, null=False, blank=False, editable=True)
-
-    class Meta:
-        abstract = True
 
 
 class AbstractProductImage(models.Model):
@@ -177,3 +166,9 @@ class AbstractProductImage(models.Model):
         ordering = ["display_order"]
         verbose_name = _('Product Image')
         verbose_name_plural = _('Product Images')
+#-----------------------------------------------------------------------------------------------------------------------
+
+
+#Account----------------------------------------------------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------------------------------------------------

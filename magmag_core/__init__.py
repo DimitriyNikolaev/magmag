@@ -4,10 +4,11 @@ import os
 
 MAGMAG_CORE_APPS = [
     'magmag_core',
+    'magmag_core.apps.account',
     'magmag_core.apps.catalogue',
+    'magmag_core.apps.order',
     'magmag_core.apps.dashboard',
-    'magmag_core.apps.dashboard.catalogue',
-
+    'magmag_core.apps.dashboard.catalogue'
 ]
 
 

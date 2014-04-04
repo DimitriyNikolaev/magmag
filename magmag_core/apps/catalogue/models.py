@@ -2,7 +2,7 @@
 __author__ = 'dimitriy'
 
 from magmag_core.apps.base_models.base_models import AbstractCategory, AbstractStore, AbstractProduct, \
-    AbstractProductImage, AbstractProductItem, AbstractStockItem, AbstractReservation
+    AbstractProductImage, AbstractProductItem, AbstractStockItem
 
 
 class Category(AbstractCategory):
@@ -31,6 +31,3 @@ class ProductItem(AbstractProductItem):
 class StockItem(AbstractStockItem):
     pass
 
-
-class Reservation(AbstractReservation):
-    pass

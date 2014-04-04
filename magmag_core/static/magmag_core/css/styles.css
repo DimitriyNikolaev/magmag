@@ -245,16 +245,21 @@ nav li {
     font-weight: bold;
     color: #321106;
     margin-bottom: 10px;
+    margin-top: 5px;
 }
 .basket-details .basket-checkout { padding: 0 20px; margin-bottom: 5px; display: block; }
 .basket-details .basket-total { display: inline-block; float: right; height: 30px; line-height: 30px; vertical-align: middle;}
 .btn-checkout{ float: right; margin-left: 20px; }
 
-.basket-item{}
+.basket-item{
+    border:1px solid #64544E;
+    background-color: #FEF1E1;
+}
 
 .dtn-delete {
     width: 50px;
     margin-left: 20px;
+    border: none;
 }
 
 /*product details

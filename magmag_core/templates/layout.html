@@ -11,7 +11,7 @@
     var tmpl = '<div id="purchase_item_{0}" class="basket-item">' +
                 '<a href="{1}">{2}</a>' +
                 '<img src="{3}" />' +
-                '<div><strong id="pi_count_{0}">{4}</strong> x <strong>{5}</strong><div onclick="deleteItem({0});" class="btn dtn-delete">Delete</div></div>' +
+                '<div><strong id="pi_count_{0}">{4}</strong> x <strong>{5}</strong>{% trans "$" %}<div onclick="deleteItem({0});" class="btn dtn-delete">{% trans "Delete" %}</div></div>' +
                 '</div>';
     function deleteItem(id)
     {
@@ -28,30 +28,35 @@
         {% block doc_ready %}
 
         {% endblock %}
-        $('.basket').hover(
+        $('.basket').click(
             function(e){
-                if($('#basket_container').css('display') == 'none' && basket.getPIListCount() > 0){
-                    $('#basket_container').css('display','block');
-                    $('#basket_container').animate({height:300},700);
-                    $('#wrapper').height($('#wrapper').height()+300);
+                if($('#basket_container').css('display') == 'none'){
+                    if(basket.getPIListCount() > 0){
+                        $('#basket_container').css('display','block');
+                        $('#basket_container').animate({height:300},700);
+                        $('#wrapper').height($('#wrapper').height()+300);
+                    }
                 }
-            },
-            null
-        );
-        $('#basket_container').hover(
-            null,
-            function(e){
-                //if($('#basket_container').css('display') == 'block' && basket.getPIListCount() > 0){
+                else
+                {
                     $('#basket_container').animate({height:0},700);
                     setTimeout(function() {
                         $('#basket_container').css('display','none');
                         $('#wrapper').height('100%');
 
                     }, 700);
+                }
+            }
+        );
+       {% comment %} $('#basket_container').hover(
+            null,
+            function(e){
+                //if($('#basket_container').css('display') == 'block' && basket.getPIListCount() > 0){
+
                 //}
             }
 
-        );
+        );{% endcomment %}
     });
 
     </script>
@@ -82,7 +87,7 @@
                 <div class="basket-details">
                     <div class="basket-purchase"></div>
                     <div class="basket-checkout">
-                        <a class="btn btn-checkout" href="#">{% trans "Checkout" %}</a>
+                        <a class="btn btn-checkout" href="{% url "magmag:order:checkout" %}">{% trans "Checkout" %}</a>
                         <div class="basket-total">{% trans "Total: " %}<strong id="basket_total_sum">0</strong>{% trans "$" %}</div>
 
                     </div>

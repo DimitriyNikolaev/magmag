@@ -6,6 +6,7 @@ from magmag_core.core.application import Application
 
 from magmag_core.apps.dashboard.app import application as dashboard_app
 from magmag_core.apps.catalogue.app import  application as catalogue_app
+from magmag_core.apps.order.app import application as order_app
 
 
 class Magmag(Application):
@@ -13,11 +14,13 @@ class Magmag(Application):
 
     dashboard_app = dashboard_app
     catalogue_app = catalogue_app
+    order_app = order_app
 
     def get_urls(self):
         urlpatterns = patterns('',
                                (r'^dashboard/', include(self.dashboard_app.urls)),
-                               (r'^catalogue/', include(self.catalogue_app.urls))
+                               (r'^catalogue/', include(self.catalogue_app.urls)),
+                               (r'^checkout/', include(self.order_app.urls))
                                )
         return urlpatterns
 
