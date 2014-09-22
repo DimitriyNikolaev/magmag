@@ -1,189 +1,145 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+import mptt.fields
+import magmag_core.apps.base_models.path_builder
 import datetime
-from south.db import db
-from south.v2 import SchemaMigration
-from django.db import models
 
 
-class Migration(SchemaMigration):
+class Migration(migrations.Migration):
 
-    def forwards(self, orm):
-        # Adding model 'Category'
-        db.create_table('catalogue_category', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=255)),
-            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('image', self.gf('django.db.models.fields.files.ImageField')(null=True, max_length=100, blank=True)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(max_length=255)),
-            ('parent', self.gf('mptt.fields.TreeForeignKey')(null=True, related_name='children', to=orm['catalogue.Category'], blank=True)),
-            ('lft', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            ('rght', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            ('tree_id', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-            ('level', self.gf('django.db.models.fields.PositiveIntegerField')(db_index=True)),
-        ))
-        db.send_create_signal('catalogue', ['Category'])
+    dependencies = [
+    ]
 
-        # Adding M2M table for field products on 'Category'
-        m2m_table_name = db.shorten_name('catalogue_category_products')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('category', models.ForeignKey(orm['catalogue.category'], null=False)),
-            ('product', models.ForeignKey(orm['catalogue.product'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['category_id', 'product_id'])
-
-        # Adding model 'Store'
-        db.create_table('catalogue_store', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=64)),
-            ('phone', self.gf('django.db.models.fields.CharField')(max_length=24)),
-            ('address', self.gf('django.db.models.fields.CharField')(max_length=256)),
-        ))
-        db.send_create_signal('catalogue', ['Store'])
-
-        # Adding model 'Product'
-        db.create_table('catalogue_product', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=255)),
-            ('description', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('image', self.gf('django.db.models.fields.files.ImageField')(null=True, max_length=100, blank=True)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(max_length=255)),
-        ))
-        db.send_create_signal('catalogue', ['Product'])
-
-        # Adding model 'ProductImage'
-        db.create_table('catalogue_productimage', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(related_name='images', to=orm['catalogue.Product'])),
-            ('original', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
-            ('preview', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
-            ('thumbnail', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
-            ('caption', self.gf('django.db.models.fields.CharField')(null=True, max_length=200, blank=True)),
-            ('display_order', self.gf('django.db.models.fields.PositiveIntegerField')(default=1)),
-            ('date_created', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-        ))
-        db.send_create_signal('catalogue', ['ProductImage'])
-
-        # Adding unique constraint on 'ProductImage', fields ['product', 'display_order']
-        db.create_unique('catalogue_productimage', ['product_id', 'display_order'])
-
-        # Adding model 'ProductItem'
-        db.create_table('catalogue_productitem', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('product', self.gf('django.db.models.fields.related.ForeignKey')(related_name='items', to=orm['catalogue.Product'])),
-            ('color', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=64)),
-            ('size', self.gf('django.db.models.fields.CharField')(db_index=True, max_length=5)),
-        ))
-        db.send_create_signal('catalogue', ['ProductItem'])
-
-        # Adding model 'StockItem'
-        db.create_table('catalogue_stockitem', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('product_item', self.gf('django.db.models.fields.related.ForeignKey')(related_name='stock_items', to=orm['catalogue.ProductItem'])),
-            ('store', self.gf('django.db.models.fields.related.ForeignKey')(related_name='stock_items', to=orm['catalogue.Store'])),
-            ('count', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-        ))
-        db.send_create_signal('catalogue', ['StockItem'])
-
-        # Adding model 'Reservation'
-        db.create_table('catalogue_reservation', (
-            ('id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('stock_item', self.gf('django.db.models.fields.related.ForeignKey')(related_name='reservation', to=orm['catalogue.StockItem'])),
-            ('reserve', self.gf('django.db.models.fields.PositiveIntegerField')(default=0)),
-        ))
-        db.send_create_signal('catalogue', ['Reservation'])
-
-
-    def backwards(self, orm):
-        # Removing unique constraint on 'ProductImage', fields ['product', 'display_order']
-        db.delete_unique('catalogue_productimage', ['product_id', 'display_order'])
-
-        # Deleting model 'Category'
-        db.delete_table('catalogue_category')
-
-        # Removing M2M table for field products on 'Category'
-        db.delete_table(db.shorten_name('catalogue_category_products'))
-
-        # Deleting model 'Store'
-        db.delete_table('catalogue_store')
-
-        # Deleting model 'Product'
-        db.delete_table('catalogue_product')
-
-        # Deleting model 'ProductImage'
-        db.delete_table('catalogue_productimage')
-
-        # Deleting model 'ProductItem'
-        db.delete_table('catalogue_productitem')
-
-        # Deleting model 'StockItem'
-        db.delete_table('catalogue_stockitem')
-
-        # Deleting model 'Reservation'
-        db.delete_table('catalogue_reservation')
-
-
-    models = {
-        'catalogue.category': {
-            'Meta': {'object_name': 'Category', 'ordering': "['name']"},
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'null': 'True', 'max_length': '100', 'blank': 'True'}),
-            'level': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'lft': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '255'}),
-            'parent': ('mptt.fields.TreeForeignKey', [], {'null': 'True', 'related_name': "'children'", 'to': "orm['catalogue.Category']", 'blank': 'True'}),
-            'products': ('django.db.models.fields.related.ManyToManyField', [], {'to': "orm['catalogue.Product']", 'symmetrical': 'False', 'related_name': "'categories'", 'blank': 'True'}),
-            'rght': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255'}),
-            'tree_id': ('django.db.models.fields.PositiveIntegerField', [], {'db_index': 'True'})
-        },
-        'catalogue.product': {
-            'Meta': {'object_name': 'Product', 'ordering': "['name']"},
-            'description': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'image': ('django.db.models.fields.files.ImageField', [], {'null': 'True', 'max_length': '100', 'blank': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '255'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'max_length': '255'})
-        },
-        'catalogue.productimage': {
-            'Meta': {'object_name': 'ProductImage', 'unique_together': "(('product', 'display_order'),)", 'ordering': "['display_order']"},
-            'caption': ('django.db.models.fields.CharField', [], {'null': 'True', 'max_length': '200', 'blank': 'True'}),
-            'date_created': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'display_order': ('django.db.models.fields.PositiveIntegerField', [], {'default': '1'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'original': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'preview': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'images'", 'to': "orm['catalogue.Product']"}),
-            'thumbnail': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'})
-        },
-        'catalogue.productitem': {
-            'Meta': {'object_name': 'ProductItem', 'ordering': "['size']"},
-            'color': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '64'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'items'", 'to': "orm['catalogue.Product']"}),
-            'size': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '5'})
-        },
-        'catalogue.reservation': {
-            'Meta': {'object_name': 'Reservation'},
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'reserve': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'stock_item': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'reservation'", 'to': "orm['catalogue.StockItem']"})
-        },
-        'catalogue.stockitem': {
-            'Meta': {'object_name': 'StockItem'},
-            'count': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'product_item': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'stock_items'", 'to': "orm['catalogue.ProductItem']"}),
-            'store': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'stock_items'", 'to': "orm['catalogue.Store']"})
-        },
-        'catalogue.store': {
-            'Meta': {'object_name': 'Store', 'ordering': "['name']"},
-            'address': ('django.db.models.fields.CharField', [], {'max_length': '256'}),
-            'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'db_index': 'True', 'max_length': '64'}),
-            'phone': ('django.db.models.fields.CharField', [], {'max_length': '24'})
-        }
-    }
-
-    complete_apps = ['catalogue']
+    operations = [
+        migrations.CreateModel(
+            name='Category',
+            fields=[
+                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
+                ('name', models.CharField(max_length=255, verbose_name='Name', db_index=True)),
+                ('description', models.TextField(blank=True, verbose_name='Description', null=True)),
+                ('image', models.ImageField(upload_to='categories', blank=True, verbose_name='Image', null=True)),
+                ('slug', models.SlugField(max_length=255, verbose_name='Slug')),
+                ('lft', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('rght', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('tree_id', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('level', models.PositiveIntegerField(editable=False, db_index=True)),
+                ('parent', mptt.fields.TreeForeignKey(to='catalogue.Category', related_name='children', blank=True, null=True)),
+            ],
+            options={
+                'abstract': False,
+                'verbose_name_plural': 'Categories',
+                'ordering': ['name'],
+                'verbose_name': 'Category',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Product',
+            fields=[
+                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
+                ('name', models.CharField(max_length=255, verbose_name='Name', db_index=True)),
+                ('description', models.TextField(blank=True, verbose_name='Description', null=True)),
+                ('image', models.ImageField(upload_to=magmag_core.apps.base_models.path_builder.upload_to_product_path, blank=True, verbose_name='Image', null=True)),
+                ('slug', models.SlugField(max_length=255, verbose_name='Slug')),
+                ('date_added', models.DateField(default=datetime.datetime(2014, 9, 22, 20, 47, 25, 260626), verbose_name='Date_Added', editable=False)),
+                ('article', models.CharField(max_length=10, default='', verbose_name='Article', db_index=True)),
+                ('price', models.DecimalField(default=0, max_digits=8, verbose_name='Price', decimal_places=2)),
+                ('hidden', models.BooleanField(default=False, verbose_name='Hidden')),
+            ],
+            options={
+                'abstract': False,
+                'verbose_name_plural': 'Products',
+                'ordering': ['name'],
+                'verbose_name': 'Product',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ProductImage',
+            fields=[
+                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
+                ('original', models.ImageField(upload_to=magmag_core.apps.base_models.path_builder.upload_to_image_product_path, verbose_name='Original')),
+                ('preview', models.ImageField(upload_to=magmag_core.apps.base_models.path_builder.upload_to_image_product_path, verbose_name='Preview')),
+                ('thumbnail', models.ImageField(upload_to=magmag_core.apps.base_models.path_builder.upload_to_image_product_path, verbose_name='Thumbnail')),
+                ('caption', models.CharField(max_length=200, blank=True, verbose_name='Caption', null=True)),
+                ('display_order', models.PositiveIntegerField(default=1, verbose_name='Display Order', help_text='An image with a display order of\n                       1 will be the primary image for a product')),
+                ('date_created', models.DateTimeField(verbose_name='Date Created', auto_now_add=True)),
+                ('product', models.ForeignKey(to='catalogue.Product', verbose_name='Product', related_name='images')),
+            ],
+            options={
+                'abstract': False,
+                'verbose_name_plural': 'Product Images',
+                'ordering': ['display_order'],
+                'verbose_name': 'Product Image',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='ProductItem',
+            fields=[
+                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
+                ('color', models.CharField(max_length=64, verbose_name='Color', db_index=True)),
+                ('size', models.CharField(max_length=5, verbose_name='Size', db_index=True)),
+                ('product', models.ForeignKey(to='catalogue.Product', verbose_name='Product', related_name='items')),
+            ],
+            options={
+                'abstract': False,
+                'verbose_name_plural': 'Items',
+                'ordering': ['size'],
+                'verbose_name': 'Item',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='StockItem',
+            fields=[
+                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
+                ('count', models.PositiveIntegerField(default=0, verbose_name='Count')),
+                ('product_item', models.ForeignKey(to='catalogue.ProductItem', verbose_name='ProductItem', related_name='stock_items')),
+            ],
+            options={
+                'abstract': False,
+                'verbose_name_plural': 'StockItems',
+                'verbose_name': 'StockItem',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='Store',
+            fields=[
+                ('id', models.AutoField(primary_key=True, verbose_name='ID', serialize=False, auto_created=True)),
+                ('name', models.CharField(max_length=64, verbose_name='Name', db_index=True)),
+                ('phone', models.CharField(max_length=24, verbose_name='Phone')),
+                ('address', models.CharField(max_length=256, verbose_name='Address')),
+            ],
+            options={
+                'abstract': False,
+                'verbose_name_plural': 'Stores',
+                'ordering': ['name'],
+                'verbose_name': 'Store',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='stockitem',
+            name='store',
+            field=models.ForeignKey(to='catalogue.Store', verbose_name='Store', related_name='stock_items'),
+            preserve_default=True,
+        ),
+        migrations.AlterUniqueTogether(
+            name='stockitem',
+            unique_together=set([('product_item', 'store')]),
+        ),
+        migrations.AlterUniqueTogether(
+            name='product',
+            unique_together=set([('slug', 'article')]),
+        ),
+        migrations.AddField(
+            model_name='category',
+            name='products',
+            field=models.ManyToManyField(blank=True, verbose_name='products', to='catalogue.Product', related_name='categories'),
+            preserve_default=True,
+        ),
+    ]

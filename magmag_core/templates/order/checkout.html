@@ -2,5 +2,92 @@
 {% load i18n %}
 
 {% block content_wrapper %}
-    checkout
+    <form method="post" action=".">
+    <div class="cb"></div>
+    <section class="checkout-container">
+        <div class="ac-item">
+            <input type="checkbox" id="checkout-1" name="checkout" class="ac-input">
+            <label for="checkout-1" class="ac-label">{% trans "Contact Info" %}</label>
+            <div class="checkout-ac-content">
+                <div>
+                    {% for field in form %}
+                        <div class="checkout-field">
+                            <label for="{{ field.auto_id }}" class="checkout-field-label {% if field.field.required %}checkout-field-required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
+                            <div class="checkout-field-controls">
+                                {{ field }}
+                                {% for error in field.errors %}
+                                    <span class="checkout-field-help-block">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+                                {% if field.help_text %}
+                                    <span class='checkout-field-help-block'>
+                                        {{ field.help_text }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="ac-item">
+            <input type="checkbox" id="checkout-2" name="checkout" class="ac-input">
+            <label for="checkout-2" class="ac-label">{% trans "Purchase items" %}</label>
+            <div class="checkout-ac-content">
+
+            </div>
+        </div>
+        <div class="ac-item">
+            <input type="checkbox" id="checkout-3" name="checkout" class="ac-input">
+            <label for="checkout-3" class="ac-label">{% trans "Address" %}</label>
+            <div class="checkout-ac-content">
+                {{ address_formset.management_form }}
+                {% for address in address_formset %}
+                    {% for field in address %}
+                        <div class="checkout-field">
+                            <label for="{{ field.auto_id }}" class="checkout-field-label {% if field.field.required %}checkout-field-required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
+                            <div class="checkout-field-controls">
+                                {{ field }}
+                                {% for error in field.errors %}
+                                    <span class="checkout-field-help-block">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+                                {% if field.help_text %}
+                                    <span class='checkout-field-help-block'>
+                                        {{ field.help_text }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% comment %}<section>
+        {{ order_formset.management_form }}
+        {% for order in order_formset %}
+            {% for field in order %}
+                <div class="checkout-field">
+                    <label for="{{ field.auto_id }}" class="checkout-field-label {% if field.field.required %}checkout-field-required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
+                    <div class="checkout-field-controls">
+                        {{ field }}
+                        {% for error in field.errors %}
+                            <span class="checkout-field-help-block">
+                                {{ error }}
+                            </span>
+                        {% endfor %}
+                        {% if field.help_text %}
+                            <span class='checkout-field-help-block'>
+                                {{ field.help_text }}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </section>{% endcomment %}
+    </form>
 {% endblock %}

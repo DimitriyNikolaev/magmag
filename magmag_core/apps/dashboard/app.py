@@ -3,7 +3,7 @@ __author__ = 'dimitriy'
 from django.conf.urls import patterns, url, include
 from django.contrib.admin.views.decorators import staff_member_required
 from magmag_core.apps.dashboard.views import IndexView
-from magmag_core.apps.dashboard.catalogue.app import application as catalogue_app
+from magmag_core.apps.dashboard.dashboard_catalogue.app import application as catalogue_app
 
 from magmag_core.core.application import Application
 

@@ -41,6 +41,7 @@ article, aside, details, figcaption, figure, footer, header, hgroup, main, nav, 
 body {
 	font: 12px/18px Arial, sans-serif;
 	width: 100%;
+    min-height: 100%;
 	height: 100%;
     background-image: url(../img/fon.png);
     min-height: 740px;
@@ -48,7 +49,8 @@ body {
 .wrapper {
 	width: 1000px;
 	margin: 0 auto;
-	height: 100%;
+	/*height: 100%;*/
+    min-height: 100%;
     background-color: #FFFFFF;
     padding: 7px;
 
@@ -230,7 +232,7 @@ nav li {
 
 /*basket
 -----------------------------------------------------------------------------*/
-.basket { margin-left: 432px; position: relative;}
+.basket { margin-left: 421px; position: relative;}
 .basket .basket-link { display: inline;}
 .basket .basket-items { display: inline;}
 
@@ -313,5 +315,50 @@ nav li {
     background-color: #ffffff;
 }
 
+/*Checkout
+-----------------------------------------------------------------------------*/
+.checkout-container .ac-input{
+    display: none;
+}
+.checkout-container .ac-item {
+    margin-bottom: 1px;
+    border: 1px solid #64544E;
+}
+.checkout-container .ac-label{
+    display: block;
+    height: 36px;
+    background-color: #FEF1E1;
+    line-height: 36px;
+    vertical-align: middle;
+    padding: 0 30px;
+}
+.checkout-container .checkout-ac-content{
+    height: 0;
+    position: relative;
+    padding: 15px 30px;
+
+    -webkit-transition: height 0.3s ease-in-out;
+}
+.checkout-container .ac-input:checked ~ .checkout-ac-content{
+    height: 200px;
+    -webkit-transition: height 0.5s ease-in-out;
+}
+.checkout-field{
+    margin-bottom: 15px;
+
+}
+.checkout-field .checkout-field-label{
+    display: inline-block;
+    width: 100px;
+}
+.checkout-field .checkout-field-controls{
+    display: inline-block;
+}
+.checkout-field .checkout-field-controls input[type="text"],
+.checkout-field .checkout-field-controls input[type="email"] {
+    width: 300px;
+    height: 24px;
+    line-height: 24px;
+}
 
 

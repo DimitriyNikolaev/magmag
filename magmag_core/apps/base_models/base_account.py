@@ -4,6 +4,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from magmag_core.apps.account.models import *
 
+
 class AbstractProfile(models.Model):
     email = models.EmailField(_("Email"), blank=False, null=False, unique=True)
     phone = models.CharField(_("Phone"), max_length=18, blank=True, null=True)

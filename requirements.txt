@@ -1,6 +1,5 @@
 Django>=1.6
 psycopg2
 Pillow
-South
 django-mptt
 unidecode

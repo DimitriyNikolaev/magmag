@@ -6,10 +6,10 @@ from django.views.generic import View
 from magmag_core.view.base_views import SingleEditMixedView, ListMixedView, SingleTreeEditorMixin, SingleEditorMixin, \
     FormsetEditorMixin
 from magmag_core.apps.catalogue.models import Category, Store, Product, ProductItem, ProductImage
-from magmag_core.apps.dashboard.catalogue.view_models import get_category_tree_model, get_store_model, \
+from magmag_core.apps.dashboard.dashboard_catalogue.view_models import get_category_tree_model, get_store_model, \
     get_product_grid_model, get_product_item_model, get_product_image_model
 from magmag_core.apps.catalogue.models_logic import CategoryLogic, StoreLogic, ProductLogic
-from magmag_core.apps.dashboard.catalogue.forms import CategoryForm, StoreForm, ProductForm, ProductImageFormSet
+from magmag_core.apps.dashboard.dashboard_catalogue.forms import CategoryForm, StoreForm, ProductForm, ProductImageFormSet
 from magmag_core.global_utils.json import serialize_list
 
 

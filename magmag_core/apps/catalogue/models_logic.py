@@ -100,7 +100,8 @@ class CategoryLogic(BaseLogic):
             root = True
             #get the root categories
             categories = Category.objects.filter(parent=None)
-            categories[0].active = True
+            if categories:
+                categories[0].active = True
         else:
             yield 'in'
 

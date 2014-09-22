@@ -4,7 +4,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.conf.urls import patterns, url
 from magmag_core.core.application import Application
 from magmag_core.apps.dashboard.nav import Node, register
-from magmag_core.apps.dashboard.catalogue.views import ProductListView, CategoryListView, StoreListView, ProductFormView, \
+from magmag_core.apps.dashboard.dashboard_catalogue.views import ProductListView, CategoryListView, StoreListView, ProductFormView, \
     ProductItemsView, ProductImagesView
 from django.utils.translation import ugettext_lazy as _
 

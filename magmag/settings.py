@@ -41,8 +41,7 @@ INSTALLED_APPS = ['django.contrib.admin',
                   'django.contrib.contenttypes',
                   'django.contrib.sessions',
                   'django.contrib.messages',
-                  'django.contrib.staticfiles',
-                  'south'
+                  'django.contrib.staticfiles'
                   ]
 INSTALLED_APPS = INSTALLED_APPS + get_core_apps()
 
@@ -66,9 +65,7 @@ TEMPLATE_LOADERS = (
     #django.template.loaders.eggs.Loader',
 )
 
-TEMPLATE_DIRS = (
-    MAGMAG_MAIN_TEMPLATE_DIR
-)
+TEMPLATE_DIRS = (MAGMAG_MAIN_TEMPLATE_DIR, )
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
 
