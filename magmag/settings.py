@@ -126,7 +126,7 @@ THUMBNAIL_HEIGHT = 150
 #     MIDDLEWARE_CLASSES += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
 #     INSTALLED_APPS += ('debug_toolbar',)
 #     DEBUG_TOOLBAR_PANELS = (
-#         #'debug_toolbar.panels.version.VersionDebugPanel', # убрать. только место занимает.
+#         #'debug_toolbar.panels.version.VersionDebugPanel',
 #         'debug_toolbar.panels.timer.TimerPanel',
 #         'debug_toolbar.panels.settings.SettingsPanel',
 #         'debug_toolbar.panels.headers.HeadersPanel',

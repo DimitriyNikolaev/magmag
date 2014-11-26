@@ -1,93 +1,269 @@
 {% extends 'layout.html' %}
 {% load i18n %}
 
+
+
+
+{% block extra %}
+    <script type="text/javascript">
+        function setPIOrderCount(id, count){
+            setPurchaseCount(id, count)
+            $('#json_purchase_pi').val(encodeURIComponent(JSON.stringify(basket.getIdsCountArray())));
+            recalculateTotalSum();
+        }
+        function deletePIOrder(id)
+        {
+            deleteItem(id);
+            $('#order_pi_'+id).remove();
+            $('#json_purchase_pi').val(encodeURIComponent(JSON.stringify(basket.getIdsCountArray())));
+            recalculateTotalSum();
+        }
+        function recalculateTotalSum(){
+            var totalsum = basket.getTotalSum();
+            var delivery_type = $('.checkout-field .checkout-field-controls li input[name="delivery_method"]:checked').val();
+            totalsum = totalsum + delivery_taxes['id_'+delivery_type];
+            $('#order_totalsum').text(totalsum);
+        }
+
+        var delivery_taxes = {
+        {% for tax in delivery_taxes %}
+            id_{{ tax.0 }}:{{ tax.1 }},
+        {% endfor %}
+        };
+    </script>
+{% endblock %}
+
+{% block doc_ready %}
+
+
+
+    $('.checkout-field .checkout-field-controls li input[type="radio"]').change(
+            function(){
+                var val = $( this ).val();
+                $('#delivery_cost').text(delivery_taxes['id_'+val]);
+                recalculateTotalSum();
+            }
+        );
+
+    $('.basket').addClass('hidden');
+{% endblock %}
+
 {% block content_wrapper %}
     <form method="post" action=".">
+    {% csrf_token %}
     <div class="cb"></div>
     <section class="checkout-container">
-        <div class="ac-item">
-            <input type="checkbox" id="checkout-1" name="checkout" class="ac-input">
-            <label for="checkout-1" class="ac-label">{% trans "Contact Info" %}</label>
-            <div class="checkout-ac-content">
-                <div>
-                    {% for field in form %}
-                        <div class="checkout-field">
-                            <label for="{{ field.auto_id }}" class="checkout-field-label {% if field.field.required %}checkout-field-required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
-                            <div class="checkout-field-controls">
-                                {{ field }}
-                                {% for error in field.errors %}
-                                    <span class="checkout-field-help-block">
-                                        {{ error }}
-                                    </span>
-                                {% endfor %}
-                                {% if field.help_text %}
-                                    <span class='checkout-field-help-block'>
-                                        {{ field.help_text }}
-                                    </span>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        <div class="ac-item">
-            <input type="checkbox" id="checkout-2" name="checkout" class="ac-input">
-            <label for="checkout-2" class="ac-label">{% trans "Purchase items" %}</label>
-            <div class="checkout-ac-content">
 
-            </div>
-        </div>
-        <div class="ac-item">
-            <input type="checkbox" id="checkout-3" name="checkout" class="ac-input">
-            <label for="checkout-3" class="ac-label">{% trans "Address" %}</label>
-            <div class="checkout-ac-content">
-                {{ address_formset.management_form }}
-                {% for address in address_formset %}
-                    {% for field in address %}
-                        <div class="checkout-field">
-                            <label for="{{ field.auto_id }}" class="checkout-field-label {% if field.field.required %}checkout-field-required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
+        <div class="tabbed-area adjacent">
+            <input type="radio" name="tab" id="tab-common" checked class="tab-input">
+            <input type="radio" name="tab" id="tab-purchaseitems" class="tab-input">
+            <input type="radio" name="tab" id="tab-delivery" class="tab-input">
+
+            <label id="lbl-tab-common" class="tab-link" for="tab-common">{% trans "Main Info" %}</label>
+            <label id="lbl-tab-purchaseitems" class="tab-link" for="tab-purchaseitems">{% trans "Purchase Items" %}</label>
+            <label id="lbl-tab-delivery" class="tab-link" for="tab-delivery">{% trans "Delivery" %}</label>
+
+            <div id="box-common" class="tab-box">
+                <div class="checkout-content">
+                    <div class="field-container">
+                        <div class="checkout-field" {% if form.email.is_hidden %} style="display:none;" {% endif %}>
+                            <label for="{{ form.email.auto_id }}" class="checkout-field-label {% if form.email.field.required %}checkout-field-required{% endif %}">
+                                {{ form.email.label }}{% if form.email.field.required %} <span>*</span>{% endif %}
+                            </label>
                             <div class="checkout-field-controls">
-                                {{ field }}
-                                {% for error in field.errors %}
-                                    <span class="checkout-field-help-block">
+                                {{ form.email }}
+                                {% for error in form.email.errors %}
+                                    <span class="checkout-field-error-block">
                                         {{ error }}
                                     </span>
                                 {% endfor %}
-                                {% if field.help_text %}
+                                {% if form.email.help_text %}
                                     <span class='checkout-field-help-block'>
-                                        {{ field.help_text }}
+                                        {{ form.email.help_text }}
                                     </span>
                                 {% endif %}
                             </div>
                         </div>
-                    {% endfor %}
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-    {% comment %}<section>
-        {{ order_formset.management_form }}
-        {% for order in order_formset %}
-            {% for field in order %}
-                <div class="checkout-field">
-                    <label for="{{ field.auto_id }}" class="checkout-field-label {% if field.field.required %}checkout-field-required{% endif %}">{{ field.label }}{% if field.field.required %} <span>*</span>{% endif %}</label>
-                    <div class="checkout-field-controls">
-                        {{ field }}
-                        {% for error in field.errors %}
-                            <span class="checkout-field-help-block">
-                                {{ error }}
-                            </span>
-                        {% endfor %}
-                        {% if field.help_text %}
-                            <span class='checkout-field-help-block'>
-                                {{ field.help_text }}
-                            </span>
-                        {% endif %}
+                        <div class="checkout-field">
+                            <label for="{{ form.phone.auto_id }}" class="checkout-field-label {% if form.phone.field.required %}checkout-field-required{% endif %}">
+                                {{ form.phone.label }}{% if form.phone.field.required %} <span>*</span>{% endif %}
+                            </label>
+                            <div class="checkout-field-controls">
+                                {{ form.phone }}
+                                {% for error in form.phone.errors %}
+                                    <span class="checkout-field-error-block">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+                                {% if form.phone.help_text %}
+                                    <span class='checkout-field-help-block'>
+                                        {{ form.phone.help_text }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="checkout-field">
+                            <label for="{{ form.name.auto_id }}" class="checkout-field-label {% if form.name.field.required %}checkout-field-required{% endif %}">
+                                {{ form.name.label }}{% if form.name.field.required %} <span>*</span>{% endif %}
+                            </label>
+                            <div class="checkout-field-controls">
+                                {{ form.name }}
+                                {% for error in form.name.errors %}
+                                    <span class="checkout-field-error-block">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+                                {% if form.name.help_text %}
+                                    <span class='checkout-field-help-block'>
+                                        {{ form.name.help_text }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
                 </div>
-            {% endfor %}
-        {% endfor %}
-    </section>{% endcomment %}
+            </div>
+
+            <div id="box-purchaseitems" class="tab-box">
+{#                <input type="hidden" value="{{ json_purchase_pi }}" id="json_purchase_pi" name="json_purchase_pi">#}
+                {{ form.json_purchase_pi }}
+                <div class="checkout-content">
+                    <div class="field-container">
+                        {% for item in pi_items %}
+                            <div class="purchase-item" id="order_pi_{{ item.product.id }}">
+                                <a href="{% url "magmag:catalogue:slug-catalogue-product"  item.product.slug %}">{{ item.product.name }}</a>
+                                <div>
+                                    <input value="{{ item.count }}" type="number" onchange="setPIOrderCount({{ item.product.id }}, parseInt(this.value))" onkeyup="setPIOrderCount({{ item.product.id }}, parseInt(this.value))"> x <span class="price">{{ item.price }} {% trans "$" %}</span>
+                                    <span onclick="deletePIOrder({{ item.product.id }});" class="btn dtn-delete">{% trans "Delete" %}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        {% for error in form.json_purchase_pi.errors %}
+                            <div class="checkout-field-error-block">
+                                {{ error }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="box-delivery" class="tab-box">
+                <div class="checkout-content">
+                    <div class="field-container">
+                        <div class="checkout-field" >
+                            <label for="{{ form.delivery_method.auto_id }}" class="checkout-field-label {% if form.delivery_method.required %}checkout-field-required{% endif %}">
+                                {{ form.delivery_method.label }}{% if form.delivery_method.field.required %} <span>*</span>{% endif %}
+                            </label>
+                            <div class="checkout-field-controls">
+                                {{ form.delivery_method }}
+                                {% for error in form.delivery_method.errors %}
+                                    <span class="checkout-field-error-block">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+                                {% if form.delivery_method.help_text %}
+                                    <span class='checkout-field-help-block'>
+                                        {{ form.delivery_method.help_text }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="checkout-field" >
+                            <span class="checkout-field-label">{% trans "Deleivery cost" %}</span>
+                            <div style="line-height: 28px;" class="checkout-field-controls">
+                                <span id="delivery_cost">{{ delivery_cost|floatformat }}</span>{% trans "$" %}
+                            </div>
+                        </div>
+                        <div class="checkout-field" >
+                            <label for="{{ form.postal_code.auto_id }}" class="checkout-field-label {% if form.postal_code.required %}checkout-field-required{% endif %}">
+                                {{ form.postal_code.label }}{% if form.postal_code.field.required %} <span>*</span>{% endif %}
+                            </label>
+                            <div class="checkout-field-controls">
+                                {{ form.postal_code }}
+                                {% for error in form.postal_code.errors %}
+                                    <span class="checkout-field-error-block">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+                                {% if form.postal_code.help_text %}
+                                    <span class='checkout-field-help-block'>
+                                        {{ form.postal_code.help_text }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="checkout-field" >
+                            <label for="{{ form.address.auto_id }}" class="checkout-field-label {% if form.address.required %}checkout-field-required{% endif %}">
+                                {{ form.address.label }}{% if form.address.field.required %} <span>*</span>{% endif %}
+                            </label>
+                            <div class="checkout-field-controls">
+                                {{ form.address }}
+                                {% for error in form.address.errors %}
+                                    <span class="checkout-field-error-block">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+                                {% if form.address.help_text %}
+                                    <span class='checkout-field-help-block'>
+                                        {{ form.address.help_text }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="checkout-field" >
+                            <label for="{{ form.receiver_name.auto_id }}" class="checkout-field-label {% if form.receiver_name.required %}checkout-field-required{% endif %}">
+                                {{ form.receiver_name.label }}{% if form.receiver_name.field.required %} <span>*</span>{% endif %}
+                            </label>
+                            <div class="checkout-field-controls">
+                                {{ form.receiver_name }}
+                                {% for error in form.receiver_name.errors %}
+                                    <span class="checkout-field-error-block">
+                                        {{ error }}
+                                    </span>
+                                {% endfor %}
+                                {% if form.receiver_name.help_text %}
+                                    <span class='checkout-field-help-block'>
+                                        {{ form.receiver_name.help_text }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </section>
+    <section class="order-props">
+        <div class="checkout-order">
+            <span>{% trans "Total: " %}</span><span id="order_totalsum">{{ total_sum|floatformat }}</span><span>{% trans "$" %}</span>
+            <input type="submit" class="btn" value="{% trans "Set order" %}">
+        </div>
+        <div class="checkout-field">
+            <label for="{{ form.comment.auto_id }}" class="checkout-field-label {% if form.comment.field.required %}checkout-field-required{% endif %}">
+                {{ form.comment.label }}{% if form.comment.field.required %} <span>*</span>{% endif %}
+            </label>
+            <div class="checkout-field-controls">
+                {{ form.comment }}
+                {% for error in form.comment.errors %}
+                    <span class="checkout-field-error-block">
+                        {{ error }}
+                    </span>
+                {% endfor %}
+                {% if form.comment.help_text %}
+                    <span class='checkout-field-help-block'>
+                        {{ form.comment.help_text }}
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+
+    </section>
     </form>
 {% endblock %}

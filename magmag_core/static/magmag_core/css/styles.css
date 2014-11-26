@@ -238,7 +238,7 @@ nav li {
 
 #basket_container{height: 0; display: none; border:1px solid #64544E; border-top: 0;}
 .basket-details > div {position: relative; padding: 10px 19px; color: #321106;}
-.basket-details .basket-purchase .basket-item { position: relative; display: inline-block; width: 220px; text-align: center; padding: 0 10px;}
+.basket-details .basket-purchase .basket-item { position: relative; display: inline-block; width: 218px; text-align: center; padding: 0 10px;}
 .basket-details .basket-purchase .basket-item img {display: block; height: 150px; width: 220px; margin-bottom: 10px;}
 .basket-details .basket-purchase .basket-item a {
     display: block;
@@ -317,48 +317,120 @@ nav li {
 
 /*Checkout
 -----------------------------------------------------------------------------*/
-.checkout-container .ac-input{
-    display: none;
-}
-.checkout-container .ac-item {
-    margin-bottom: 1px;
+.tab-input{display: none}
+
+.tabbed-area { position: relative; margin-top: 50px; min-height: 300px;}
+.tabbed-area .tab-box {  background: white; min-height: 300px; position: absolute; top: -1px; left: 0; width: 100%; display: none;}
+.tabbed-area .tab-box .checkout-content {
+    background: white; min-height: 300px; position: relative; top: -1px; left: 0;
     border: 1px solid #64544E;
+    /*border-bottom: 1px solid white;*/
+    border-bottom: none;
 }
-.checkout-container .ac-label{
-    display: block;
-    height: 36px;
-    background-color: #FEF1E1;
-    line-height: 36px;
-    vertical-align: middle;
-    padding: 0 30px;
-}
-.checkout-container .checkout-ac-content{
-    height: 0;
+.tab-link{
     position: relative;
-    padding: 15px 30px;
+    top:-29px;
+    padding: 4px 10px;
+    border: 1px solid #64544E;
+    float: left;
+    background: #FEFEFE;
+    width: 25.7%;
+    /*background: -webkit-linear-gradient(#FEFEFE, #EEEEEE); *//* For Safari 5.1 to 6.0 *//*
+    background: -o-linear-gradient(#FEFEFE, #EEEEEE); *//* For Opera 11.1 to 12.0 *//*
+    background: -moz-linear-gradient(#FEFEFE, #EEEEEE); *//* For Firefox 3.6 to 15 *//*
+    background: -ms-linear-gradient(#FEFEFE, #EEEEEE);
+    background: linear-gradient(#FEFEFE, #EEEEEE); *//* Standard syntax */
+    color: #321106;
+}
 
-    -webkit-transition: height 0.3s ease-in-out;
+#tab-delivery:checked ~ #lbl-tab-delivery,
+#tab-purchaseitems:checked ~ #lbl-tab-purchaseitems,
+#tab-common:checked ~ #lbl-tab-common{
+   background-color: #FEF1E1;
+   /*background: -webkit-linear-gradient(#FEFEFE, #FEF1E1); *//* For Safari 5.1 to 6.0 *//*
+   background: -o-linear-gradient(#FEFEFE, #FEF1E1); *//* For Opera 11.1 to 12.0 *//*
+   background: -moz-linear-gradient(#FEFEFE, #FEF1E1); *//* For Firefox 3.6 to 15 *//*
+   background: -ms-linear-gradient(#FEFEFE, #FEF1E1);
+   background: linear-gradient(#FEFEFE, #FEF1E1); *//* Standard syntax */
+   width: 42%;
+   color: #321106;
+   border-bottom: 1px solid white;
 }
-.checkout-container .ac-input:checked ~ .checkout-ac-content{
-    height: 200px;
-    -webkit-transition: height 0.5s ease-in-out;
+.adjacent input:nth-of-type(2):not(:checked) ~ input:nth-of-type(3):not(:checked) ~ .tab-box:nth-of-type(1),
+.adjacent input:nth-of-type(2):checked ~ .tab-box:nth-of-type(2),
+.adjacent input:nth-of-type(3):checked ~ .tab-box:nth-of-type(3)
+{
+  display: block;
 }
-.checkout-field{
-    margin-bottom: 15px;
-
-}
+.checkout-content .field-container{ padding: 20px; }
+.checkout-field{ margin-bottom: 15px; }
 .checkout-field .checkout-field-label{
     display: inline-block;
-    width: 100px;
+    width: 120px;
+    vertical-align: top;
+    height: 28px;
+    line-height: 28px;
+    vertical-align: top;
 }
-.checkout-field .checkout-field-controls{
-    display: inline-block;
-}
+.checkout-field .checkout-field-label:after{ content: ":"; }
+.checkout-field .checkout-field-controls{ display: inline-block; }
+.checkout-field .checkout-field-controls li { display: inline-block; list-style-position: inside; height: 28px; line-height: 28px;}
+
+.checkout-field .checkout-field-controls input[type="checkbox"]{ height: 28px; }
 .checkout-field .checkout-field-controls input[type="text"],
 .checkout-field .checkout-field-controls input[type="email"] {
     width: 300px;
     height: 24px;
     line-height: 24px;
+    border-radius: 0;
+    border: 1px solid #64544E;
 }
+.checkout-field-error-block{
+    color: #C03246;
+}
+.checkout-field .checkout-field-controls textarea{
+    width: 300px;
+    height: 46px;
+    border-radius: 0;
+    border: 1px solid #64544E;
+}
+.order-props{
+    background: white;
+    border: 1px solid #64544E;
+    /*border-left: 1px solid #64544E;
+    border-right: 1px solid #64544E;*/
+    border-top: none;
+    padding: 20px;
+    position: relative;
+    top: -1px;
+
+}
+.purchase-item{
+    display: block;
+    font-size: 14px; font-weight: bold;  color: #321106;
+    text-align: center;
+}
+.purchase-item a {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    color: #321106;
+    width: 740px;
+    margin-bottom: 10px;
+    margin-top: 5px;
+    white-space: nowrap;
+    text-align: left;
+}
+.purchase-item .btn-delete { width: 50px; display: inline-block;}
+.purchase-item div{
+    display: inline-block;
+    width: 200px;
+}
+.purchase-item div input{width: 30px; height: 23px;}
+
+.checkout-order{ float: right; }
+
+.checkout-order span{ margin-right: 15px; }
 
 

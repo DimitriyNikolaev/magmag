@@ -13,6 +13,8 @@
                 '<img src="{3}" />' +
                 '<div><strong id="pi_count_{0}">{4}</strong> x <strong>{5}</strong>{% trans "$" %}<div onclick="deleteItem({0});" class="btn dtn-delete">{% trans "Delete" %}</div></div>' +
                 '</div>';
+
+    var delta_height = 0;
     function deleteItem(id)
     {
         basket.removePurchaseItem(id);
@@ -32,9 +34,12 @@
             function(e){
                 if($('#basket_container').css('display') == 'none'){
                     if(basket.getPIListCount() > 0){
+                        var row_count = Math.floor(basket.getPIListCount()/4)
+                        row_count = basket.getPIListCount()/4 > row_count? row_count+1 : row_count
+                        delta_height = 240 * row_count + 50;
                         $('#basket_container').css('display','block');
-                        $('#basket_container').animate({height:300},700);
-                        $('#wrapper').height($('#wrapper').height()+300);
+                        $('#basket_container').animate({height:delta_height},700);
+                        $('#wrapper').height($('#wrapper').height()+delta_height);
                     }
                 }
                 else
@@ -42,7 +47,7 @@
                     $('#basket_container').animate({height:0},700);
                     setTimeout(function() {
                         $('#basket_container').css('display','none');
-                        $('#wrapper').height('100%');
+                        $('#wrapper').height($('#wrapper').height()-delta_height);
 
                     }, 700);
                 }

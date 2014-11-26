@@ -1,20 +1,37 @@
 __author__ = 'dimitriy'
 
-from django.views.generic import CreateView, TemplateView
-from magmag_core.apps.order.forms import ProfileForm, AddressInlineFormset, OrderInlineFormset
+from django.views.generic import CreateView, TemplateView, FormView
+
+from django.core.urlresolvers import reverse
+from django.http import HttpResponseRedirect
+from magmag_core.apps.order.forms import CheckoutForm
+from magmag_core.apps.order.models_logic import OrderCheckout
 
 
-class CheckoutView(CreateView):
+class CheckoutView(FormView):
     template_name = 'order/checkout.html'
-    form_class = ProfileForm
+    form_class = CheckoutForm
+    success_url = 'magmag:order:thank_you'
+    process_form = OrderCheckout.process_form
+
+    def __init__(self, *args, **kwargs):
+        super(CheckoutView, self).__init__(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         ctx = super(CheckoutView, self).get_context_data(**kwargs)
-        if 'address_formset' not in ctx:
-            ctx['address_formset'] = AddressInlineFormset()
-        if 'order_formset' not in ctx:
-            ctx['order_formset'] = OrderInlineFormset()
+
         return ctx
+
+    def form_valid(self, form):
+        order_data = self.process_form(form)
+        OrderCheckout.send_confirmation(order_data)
+        return self.get_success_response(order_data)
+
+    def get_success_response(self, order_data):
+        return HttpResponseRedirect(self.get_success_url(order_data))
+
+    def get_success_url(self, order_data):
+        return reverse(self.success_url, args=(order_data[2].slug,))
 
 
 class ThankYouView(TemplateView):
