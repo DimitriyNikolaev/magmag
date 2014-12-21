@@ -3,6 +3,7 @@
     //@ sourceURL=dynamicProductsScript.js
 
     var product_link_template = '{% url "magmag:dashboard:product" "0" "template" %}';
+    var public_product_link_template = '{% url "magmag:catalogue:catalogue-product" "0" %}';
     Ext.onReady(init_page);
     function init_page(){
 
@@ -63,7 +64,8 @@
                                 text: '{% trans "Slug" %}',
                                 flex: 2,
                                 dataIndex: 'slug',
-                                sortable: false
+                                sortable: false,
+                                renderer: product_slug_renderer
                             },{
                                 xtype: 'actioncolumn',
                                 flex:1,
@@ -145,4 +147,12 @@
         );
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function product_slug_renderer(value, metaData, record, rowIndex, colIndex, store, view)
+{
+    if (value != '') {
+        var linktoproduct = public_product_link_template.replace('0', value);
+        return '<a target="_blank" href="' + linktoproduct + '">' + value + '</a>'
+    }
+    return value;
+}
 </script>

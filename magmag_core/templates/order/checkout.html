@@ -20,7 +20,7 @@
         }
         function recalculateTotalSum(){
             var totalsum = basket.getTotalSum();
-            var delivery_type = $('.checkout-field .checkout-field-controls li input[name="delivery_method"]:checked').val();
+            var delivery_type = $('.checkout-field .checkout-field-controls .delivery-choice input[name="delivery_method"]:checked').val();
             totalsum = totalsum + delivery_taxes['id_'+delivery_type];
             $('#order_totalsum').text(totalsum);
         }
@@ -37,7 +37,7 @@
 
 
 
-    $('.checkout-field .checkout-field-controls li input[type="radio"]').change(
+    $('.checkout-field .checkout-field-controls .delivery-choice input[type="radio"]').change(
             function(){
                 var val = $( this ).val();
                 $('#delivery_cost').text(delivery_taxes['id_'+val]);
@@ -128,15 +128,25 @@
 {#                <input type="hidden" value="{{ json_purchase_pi }}" id="json_purchase_pi" name="json_purchase_pi">#}
                 {{ form.json_purchase_pi }}
                 <div class="checkout-content">
-                    <div class="field-container">
+                    <div class="field-container-items">
                         {% for item in pi_items %}
-                            <div class="purchase-item" id="order_pi_{{ item.product.id }}">
-                                <a href="{% url "magmag:catalogue:slug-catalogue-product"  item.product.slug %}">{{ item.product.name }}</a>
+                            <div id="order_pi_{{ item.product_item.id }}" class="purchase-item">
+                                <a href="{% url "magmag:catalogue:slug-catalogue-product"  item.product_item.product.slug %}">{{ item.product_item.product.name }}</a>
+                                <img src="{{ item.product_item.product.image.url }}" />
                                 <div>
-                                    <input value="{{ item.count }}" type="number" onchange="setPIOrderCount({{ item.product.id }}, parseInt(this.value))" onkeyup="setPIOrderCount({{ item.product.id }}, parseInt(this.value))"> x <span class="price">{{ item.price }} {% trans "$" %}</span>
-                                    <span onclick="deletePIOrder({{ item.product.id }});" class="btn dtn-delete">{% trans "Delete" %}</span>
+                                    <strong>{{ item.count }}</strong> x <strong>{{ item.price }}</strong>{% trans "$" %}
+                                    <div onclick="deletePIOrder({{ item.product_item.id }});" class="btn dtn-delete">{% trans "Delete" %}</div>
                                 </div>
                             </div>
+
+
+                            {% comment %}<div class="purchase-item" id="order_pi_{{ item.product_item.id }}">
+                                <a href="{% url "magmag:catalogue:slug-catalogue-product"  item.product_item.product.slug %}">{{ item.product_item.product.name }}</a>
+                                <div>
+                                    <input value="{{ item.count }}" type="number" onchange="setPIOrderCount({{ item.product_item.id }}, parseInt(this.value))" onkeyup="setPIOrderCount({{ item.product_item.id }}, parseInt(this.value))"> x <span class="price">{{ item.price }} {% trans "$" %}</span>
+                                    <span onclick="deletePIOrder({{ item.product_item.id }});" class="btn dtn-delete">{% trans "Delete" %}</span>
+                                </div>
+                            </div>{% endcomment %}
                         {% endfor %}
                         {% for error in form.json_purchase_pi.errors %}
                             <div class="checkout-field-error-block">
@@ -156,7 +166,18 @@
                                 {{ form.delivery_method.label }}{% if form.delivery_method.field.required %} <span>*</span>{% endif %}
                             </label>
                             <div class="checkout-field-controls">
-                                {{ form.delivery_method }}
+                                {% comment %}{{ form.delivery_method }}{% endcomment %}
+                                {% for radio in form.delivery_method %}
+                                <div class="delivery-choice">
+                                    {{ radio.tag }}
+                                    <div>
+                                        <label for="{{ radio.id_for_label }}">
+                                            <img src="{{ STATIC_URL }}magmag_core/img/{% if radio.choice_value == '1'%}mailofrussia.png{% elif radio.choice_value == '2'%}ems.png{% elif radio.choice_value == '3'%}pickup.png{% elif radio.choice_value == '4'%}courier.png{% endif %}"/>
+                                            <span>{{ radio.choice_label }}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
                                 {% for error in form.delivery_method.errors %}
                                     <span class="checkout-field-error-block">
                                         {{ error }}

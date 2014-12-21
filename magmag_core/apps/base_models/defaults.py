@@ -13,6 +13,13 @@ MAGMAG_ORDER_STATUSES = (
 MAGMAG_DELIVERY_METHODS = (
     (1, _("Post")),
     (2, _("EMS")),
-    (3, _("Metro")),
+    (3, _("Pickup")),
     (4, _("Courier"))
 )
+
+MAGMAG_DELIVERY_COSTS = {
+    1: 350,
+    2: 450,
+    3: 0,
+    4: 300
+}

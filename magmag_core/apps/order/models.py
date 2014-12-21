@@ -18,7 +18,11 @@ class Delivery(AbstractDelivery):
 
 
 class PurchaseItem(AbstractPurchaseItem):
-    pass
+    def initialize(self, count, product_item):
+        self.price = product_item.product.price
+        self.count = count
+        self.product_item = product_item
+        return self
 
 
 class Reservation(AbstractReservation):

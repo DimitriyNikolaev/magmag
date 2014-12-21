@@ -15,7 +15,6 @@ from urllib import unquote
 from magmag_core.apps.order.models import Order
 
 
-
 class CheckoutForm(forms.Form):
     email = forms.EmailField(required=True, widget=forms.TextInput(attrs={'placeholder': u'mail@example.com'}))
     phone = forms.CharField(required=False, label=_('Phone'),
@@ -30,7 +29,8 @@ class CheckoutForm(forms.Form):
                                     widget=forms.TextInput(
                                         attrs={'placeholder': u'Заполните, если получатель-другое лицо'}))
     delivery_method = forms.TypedChoiceField(required=True, coerce=int, label=_('Delivery method'),
-                                        choices=MAGMAG_DELIVERY_METHODS, widget=forms.RadioSelect(), initial=3)
+                                             choices=MAGMAG_DELIVERY_METHODS,
+                                             widget=forms.RadioSelect(attrs={'class': 'hidden'}), initial=3)
     comment = forms.CharField(required=False, label=_('Comment'),
                               widget=forms.Textarea(attrs={'placeholder': u'комментарии для магазина или курьера'}))
     json_purchase_pi = forms.CharField(widget=forms.HiddenInput(attrs={'id': u'json_purchase_pi'}))

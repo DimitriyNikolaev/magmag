@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'dimitriy'
 
-import json
+#import json
+import simplejson as json
 from django.http import HttpResponse
 from django.views.generic import ListView, UpdateView
 from django.http import Http404

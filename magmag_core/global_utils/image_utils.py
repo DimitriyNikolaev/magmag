@@ -10,6 +10,8 @@ import os
 def get_preview(original_image, field):
     f = BytesIO(original_image.read())
     thumb = BytesIO()
+    # f = StringIO(original_image.read())
+    # thumb = StringIO()
 
     img = Image.open(f)
 
@@ -35,13 +37,15 @@ def get_preview(original_image, field):
         content_type = original_image.content_type
     else:
         content_type = u'image/jpeg'
-    length = thumb.getbuffer().nbytes
+    length = len(thumb.getvalue())
     return InMemoryUploadedFile(thumb, field, name, content_type, length, original_image.charset)
 
 
 def get_thumbnail(original_image,field):
     f = BytesIO(original_image.read())
     thumb = BytesIO()
+    # f = StringIO(original_image.read())
+    # thumb = StringIO()
 
     img = Image.open(f)
 
@@ -73,5 +77,5 @@ def get_thumbnail(original_image,field):
     else:
         content_type = u'image/jpeg'
     original_image.seek(0)
-    length = thumb.getbuffer().nbytes
+    length = len(thumb.getvalue())
     return InMemoryUploadedFile(thumb, field, name, content_type, length, original_image.charset)

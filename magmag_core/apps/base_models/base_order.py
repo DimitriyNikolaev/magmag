@@ -4,7 +4,7 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from magmag_core.apps.order.models import *
 from magmag_core.apps.account.models import Profile, Address
-from magmag_core.apps.catalogue.models import StockItem
+from magmag_core.apps.catalogue.models import StockItem, ProductItem
 from magmag_core.apps.base_models.defaults import MAGMAG_ORDER_STATUSES, MAGMAG_DELIVERY_METHODS
 
 
@@ -39,7 +39,7 @@ class AbstractDelivery(models.Model):
 
 class AbstractPurchaseItem(models.Model):
     order = models.ForeignKey('Order', related_name='items', verbose_name=_("Order"))
-    product_item = models.ForeignKey('PurchaseItem', related_name='purchase_items', verbose_name=_("Product"))
+    product_item = models.ForeignKey(ProductItem, related_name='purchase_items', verbose_name=_("Product"))
     price = models.DecimalField(_("Price"), null=False, blank=False, default=0, max_digits=8, decimal_places=2)
     count = models.PositiveSmallIntegerField(_("Count"), blank=False, null=False, default=0)
 

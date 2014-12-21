@@ -9,9 +9,46 @@
 
     var items_{{ product.id }} = {
     {% for item in items %}
-        item_{{  item.hash_name }}: { id: {{ item.id }}, product: '{{ product.name }}', image: '{{ product.image.url }}', price: {{ product.price }}, color: '{{ item.color }}', size: '{{ item.size }}' },
+        item_{{  item.hash_name }}: {
+            id: {{ item.id }},
+            product: '{{ product.name }}',
+            image: '{{ product.image.url }}',
+            price: {{ product.price }},
+            color: '{{ item.color }}',
+            size: '{{ item.size }}',
+            totalCount:{{ item.total_count }},
+            stocks:[
+                  {% for stock in item.stock_items.all %}
+                      {
+                          stock: '{{ stock.store.name }}',
+                          count: {{ stock.total_count }}
+                      },
+                  {% endfor %}
+            ]
+
+        },
     {% endfor %}
     };
+
+    function get_and_display_stock(){
+        var size = $("input:radio[name=size]:checked").val();
+        var color = $("input:radio[name=color]:checked").val();
+
+        var container = $('#stock-for-item');
+        container.empty();
+
+        var item = items_{{ product.id }}['item_'+color+size];
+        if(typeof(item) !== 'undefined' && item != null)
+        {
+            for(var i = 0; i < item.stocks.length; i++){
+                container.append('<div><span>{0}</span><img src="{1}"/></div>'.format(item.stocks[i].stock, item.stocks[i].count > 0 ?
+                                '{{ STATIC_URL }}magmag_core/img/available.png': '{{ STATIC_URL }}magmag_core/img/not-available.png'
+                ));
+            }
+            return item.totalCount;
+        }
+        return 0;
+    }
     </script>
 
 {% endblock %}
@@ -29,18 +66,26 @@
         });
 
         var enable_btnadd = function(){
-            if ($('input[name=size]:checked').length > 0 && $('input[name=color]:checked').length > 0 && $('.btn-add').hasClass('btn-disabled')) {
-                $('.btn-add').removeClass('btn-disabled');
-                $('#btn_add_{{ product.id  }}').click(function(e){
-                    var size = $("input:radio[name=size]:checked").val();
-                    var color = $("input:radio[name=color]:checked").val();
+            if ($('input[name=size]:checked').length > 0 && $('input[name=color]:checked').length > 0) {
+                var count = get_and_display_stock();
+                var btn = $('.btn-add');
+                if (btn.hasClass('btn-disabled') && count > 0){
+                    btn.removeClass('btn-disabled');
+                    $('#btn_add_{{ product.id  }}').click(function(e){
+                        var size = $("input:radio[name=size]:checked").val();
+                        var color = $("input:radio[name=color]:checked").val();
 
-                    var item = items_{{ product.id }}['item_'+color+size];
-                    if(typeof(item) !== 'undefined' && item != null && typeof(basket) !== 'undefined' && basket != null)
-                    {
-                        basket.setPurchaseItem(item.id, item);
-                    }
-                });
+                        var item = items_{{ product.id }}['item_'+color+size];
+                        if(typeof(item) !== 'undefined' && item != null && typeof(basket) !== 'undefined' && basket != null && item.totalCount > 0)
+                        {
+                            basket.setPurchaseItem(item.id, item);
+                        }
+                    });
+                }
+                else{
+                    if(!btn.hasClass('btn-disabled'))
+                        btn.addClass('btn-disabled');
+                }
             }
         }
 
@@ -83,7 +128,7 @@
 
             $(window).load(function() {
 
-                $('#product_slidesnav_{{product.id  }}').flexslider({
+                $('#product_slidesnav_{{ product.id }}').flexslider({
                     animation: "slide",
                     controlNav: false,
                     animationLoop: false,
@@ -95,7 +140,7 @@
                     asNavFor: '#product_slides_{{product.id  }}'
                 });
 
-                $('#product_slides_{{product.id  }}').flexslider({
+                $('#product_slides_{{ product.id }}').flexslider({
                     animation: "slide",
                     smoothHeight: true,
                     slideshow: false,
@@ -111,7 +156,7 @@
 <section class="product-details">
     <h1 class="product-name">{{ product.name }}</h1>
     <p>{{ product.description }}</p>
-    <div>{% trans "Please select size and color and press Add to order " %}</div>
+    <div class="add-to-cart-helper">{% trans "Please select size and color and press Add to order " %}</div>
     <div class="color-size-container">
         <div>
             <ul class="product-size-list">
@@ -140,6 +185,11 @@
     </div>
     <div class="product-add-to-cart-container">
         <div id="btn_add_{{ product.id  }}" class="btn btn-disabled btn-add">Add to order</div>
+    </div>
+
+    <div class="in-stock">
+        <div id="stock-for-item">
+        </div>
     </div>
 </section>
 {% endblock %}

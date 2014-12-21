@@ -1,8 +1,9 @@
 __author__ = 'dimitriy'
 
+from django.db.models import Prefetch
 from django.views.generic import TemplateView, ListView, DetailView
 from magmag_core.apps.catalogue.models_logic import CategoryLogic
-from magmag_core.apps.catalogue.models import Product
+from magmag_core.apps.catalogue.models import Product, ProductItem, StockItem
 from django.utils.translation import ugettext_lazy as _
 
 
@@ -57,7 +58,10 @@ class ProductView(DetailView):
     def get_context_data(self, **kwargs):
         context = super(ProductView, self).get_context_data(**kwargs)
         context['images'] = list(self.object.images.all())
-        context['items'] = list(self.object.items.all())
+        context['items'] = ProductItem.objects.prefetch_related(
+            Prefetch('stock_items', queryset=StockItem.objects.select_related('store')),
+            'stock_items__reservation'
+        ).filter(product=self.object) # list(self.object.items.pre.all())
         context['sizes'] = dict((str(hash(s)).replace('-', '_'), s) for s in set([el.size for el in context['items']]))
         context['colors'] = dict((str(hash(c)).replace('-', '_'), c) for c in set([el.color for el in context['items']]))
         return context

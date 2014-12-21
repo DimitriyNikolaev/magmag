@@ -10,9 +10,10 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-from magmag.local_settings import LOCAL_DATABASES
 from magmag_core import MAGMAG_MAIN_TEMPLATE_DIR
 from magmag_core import get_core_apps
+from magmag.local_settings import LOCAL_DATABASES, LOCAL_ADMINS, LOCAL_EMAIL_BACKEND, LOCAL_EMAIL_HOST,\
+    LOCAL_EMAIL_HOST_USER,LOCAL_EMAIL_HOST_PASSWORD, LOCAL_EMAIL_SUBJECT_PREFIX
 
 location = lambda x: os.path.join(
     os.path.dirname(os.path.realpath(__file__)), x)
@@ -33,7 +34,13 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+SEND_BROKEN_LINK_EMAILS = False
+ADMINS = LOCAL_ADMINS
+EMAIL_SUBJECT_PREFIX = LOCAL_EMAIL_SUBJECT_PREFIX
+EMAIL_BACKEND = LOCAL_EMAIL_BACKEND #'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = LOCAL_EMAIL_HOST
+EMAIL_HOST_USER = LOCAL_EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = LOCAL_EMAIL_HOST_PASSWORD
 # Application definition
 
 INSTALLED_APPS = ['django.contrib.admin',

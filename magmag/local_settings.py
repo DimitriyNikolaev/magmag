@@ -10,3 +10,12 @@ LOCAL_DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+
+LOCAL_ADMINS = (
+    ('Nikolaev Dimitriy', 'constructor3@yandex.ru'),
+    )
+LOCAL_EMAIL_SUBJECT_PREFIX = '[Pharm Markt] '
+LOCAL_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #'django.core.mail.backends.smtp.EmailBackend'
+LOCAL_EMAIL_HOST ='smtp.fullspace.ru'
+LOCAL_EMAIL_HOST_USER = 'admin@evesdream.ru'
+LOCAL_EMAIL_HOST_PASSWORD = 'sps67j7k'

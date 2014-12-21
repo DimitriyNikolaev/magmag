@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 __author__ = 'dimitriy'
 
-import json
+#import json
+import simplejson as json
 from magmag_core.apps.catalogue.models import Category, Store, ProductItem, StockItem
 
 

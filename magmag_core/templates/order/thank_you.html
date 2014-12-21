@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+{% load i18n %}
+
+{% block doc_ready %}
+    if (typeof(basket) != 'undefined' && basket != null)
+        basket.clear();
+{% endblock %}
+
+{% block content_wrapper %}
+    <section class="page-template" >
+        <div class="page-template-header">{% trans "Thanks for your order" %}</div>
+        <div class="page-template-container">
+            {% if order %}
+            <div class="thankyou-layout">
+
+                <div class="order-main-info">
+                    <div>
+                        <h1>{% trans "Order" %} №{{ order.number }}</h1>
+                        <h2>{{ order.date_created|date:"j E Y" }}</h2>
+                        <div>{% trans "Order status" %}: {{ order.get_status_display }}</div>
+                        <div>{% trans "Total" %}: {{ order.total_sum }}{% trans "$" %}</div>
+                    </div>
+                    <div>
+                        <h2>{% trans "Email" %}: {{ order.customer.email }}</h2>
+                        <div>{% trans "Delivery method" %}: {{ order.delivery.get_delivery_method_display }}</div>
+                        <div>{% trans "Delivery cost" %}: {{ order.delivery.cost }}{% trans "$" %}</div>
+                    </div>
+                </div>
+                <div class="order-purchase-items">
+
+                <h2>{% trans "Purchase items" %}:</h2>
+                    {% for item in items %}
+                        <div class="purchase-item" id="order_pi_{{ item.id }}">
+                                <a href="{% url "magmag:catalogue:slug-catalogue-product"  item.product_item.product.slug %}">{{ item.product_item.product.name }}</a>
+                                <img src="{{ item.product_item.product.image.url }}" />
+                                <div>
+                                    <span>{{ item.count }}</span> x <span class="price">{{ item.price }} {% trans "$" %}</span>
+                                </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+            </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

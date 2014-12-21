@@ -3,7 +3,9 @@
 {% if paginator.num_pages > 1 %}
     <div class="paginator-wrapper">
         <div class="paginator">
-            <a class="anchor prev" {% if page_obj.has_previous %}href="?{% get_parameters page %}page={{ page_obj.previous_page_number }}"{% endif %} title="{% trans "previous" %}">&nbsp;</a>
+            <a class="anchor prev" {% if page_obj.has_previous %}href="?{% get_parameters page %}page={{ page_obj.previous_page_number }}"{% endif %} title="{% trans "previous" %}">
+            <img src="{{ STATIC_URL }}magmag_core/img/arrow_left.png"/>
+            </a>
 {#		<ul class="pager">#}
 {#			{% if page_obj.has_previous %}#}
 {#				<li class="previous"><a href="?{% get_parameters page %}page={{ page_obj.previous_page_number }}">{% trans "previous" %}</a></li>#}
@@ -33,7 +35,9 @@
 {#				<li class="next"><a href="?{% get_parameters page %}page={{ page_obj.next_page_number }}">{% trans "next" %}</a></li>#}
 {#			{% endif %}#}
 {#		</ul>#}
-            <a class="anchor next" {% if page_obj.has_next %}href="?{% get_parameters page %}page={{ page_obj.next_page_number }}"{% endif %} title="{% trans "next" %}">&nbsp;</a>
+            <a class="anchor next" {% if page_obj.has_next %}href="?{% get_parameters page %}page={{ page_obj.next_page_number }}"{% endif %} title="{% trans "next" %}">
+            <img src="{{ STATIC_URL }}magmag_core/img/arrow_right.png"/>
+            </a>
 	    </div>
     </div>
 {% endif %}

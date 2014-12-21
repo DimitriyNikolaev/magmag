@@ -3,3 +3,4 @@ psycopg2
 Pillow
 django-mptt
 unidecode
+simplejson

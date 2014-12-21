@@ -27,7 +27,13 @@ class ProductItem(AbstractProductItem):
     def hash_name(self):
         return str(hash(self.color)).replace('-', '_') + str(hash(self.size)).replace('-', '_')
 
+    def total_count(self):
+        return sum(res.count for res in self.stock_items.all())
+
 
 class StockItem(AbstractStockItem):
-    pass
+
+    @property
+    def total_count(self):
+        return self.count - sum(res.count for res in self.reservation.all())
 
