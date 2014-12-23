@@ -1,0 +1,262 @@
+{% load i18n %}
+<script>
+    //@ sourceURL={{ current_path }}.js
+    Ext.onReady(init_page);
+    function init_page()
+    {
+        var purchaseItems_store = new Ext.data.JsonStore({
+            id: 'purchase_{{ order.identifier }}_ItemsStore',
+            storeId: 'purchase_{{ order.identifier }}_ItemsStore',
+            model: 'PurchaseItem',
+            autoLoad: true,
+            proxy: {
+                type: 'memory',
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    totalProperty: 'total'
+                }
+            },
+            data: {{ purchase_items|safe }}
+
+        });
+        var orderStatus_store = new Ext.data.JsonStore({
+            id: 'orderStatus_{{ order.identifier }}_ItemsStore',
+            storeId: 'orderStatus_{{ order.identifier }}_ItemsStore',
+            model: 'KeyNameItem',
+            autoLoad: true,
+            proxy: {
+                type: 'memory',
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    totalProperty: 'total'
+                }
+            },
+            data: {{ order_statuses|safe }}
+
+        });
+
+        var tab = Ext.getCmp('{{ current_path }}');
+        if (tab)
+        {
+            var container = new Ext.panel.Panel( {
+                layout: 'fit',
+                id: '{{ current_path  }}_container',
+                items: [
+                    {
+                        xtype: 'panel',
+                        layout: {
+                            type: 'vbox',
+                            align: 'stretch'
+                        },
+                        items:[
+                            {
+                                xtype: 'form',
+                                id:'{{ current_path  }}_orderMainForm',
+                                flex: 1,
+                                title: '{% trans "Order info" %}',
+                                labelWidth:130,
+                                layout: {
+                                    type: 'hbox',
+                                    align: 'stretch'
+                                },
+                                cls:'pnlFormDetail',
+                                autoScroll: true,
+                                items:[
+
+                                    {
+                                        xtype: 'panel',
+                                        flex:1,
+                                        items:[
+                                            {
+                                                xtype: 'hidden',
+                                                id:'{{ current_path  }}_hdnId',
+                                                value: {{ order.identifier }},
+                                                name: 'id'
+                                            },{
+                                                xtype: 'displayfield',
+                                                fieldLabel:'{% trans "Order number" %}',
+                                                value: '{{ order.number }}',
+                                                labelWidth:130
+
+                                            },{
+                                                xtype: 'displayfield',
+                                                fieldLabel:'{% trans "Order date" %}',
+                                                value: '{{ order.date_created|date:'j E Y H:i' }}',
+                                                labelWidth:130
+
+                                            },{
+                                                xtype: 'combo',
+                                                fieldLabel:'{% trans "Order status" %}',
+                                                value: {{ order.status}},
+                                                displayField: 'name',
+                                                valueField: 'key',
+                                                store: orderStatus_store,
+                                                name: 'status',
+                                                labelWidth:130
+                                            },{
+                                                xtype: 'displayfield',
+                                                fieldLabel:'{% trans "Customer" %}',
+                                                value: '{{ order.customer.name }}',
+                                                labelWidth:130
+                                            },{
+                                                xtype: 'displayfield',
+                                                fieldLabel:'{% trans "Customer email" %}',
+                                                value: '{{ order.customer.email }}',
+                                                labelWidth:130
+                                            },{
+                                                xtype: 'displayfield',
+                                                fieldLabel:'{% trans "Customer phone" %}',
+                                                value: '{{ order.customer.phone }}',
+                                                labelWidth:130
+                                            },{
+                                                xtype: 'displayfield',
+                                                fieldLabel:'{% trans "Comment" %}',
+                                                value: '{{ order.order_comment }}',
+                                                labelWidth:130
+                                            },{
+                                                xtype: 'displayfield',
+                                                fieldLabel:'{% trans "Total" %}',
+                                                value: '{{ order.total_sum }}',
+                                                labelWidth:130
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        xtype: 'panel',
+                                        flex:3,
+                                        items:[
+                                            {
+                                                xtype: 'displayfield',
+                                                fieldLabel:'{% trans "Delivery method" %}',
+                                                value: '{{ order.delivery.get_delivery_method_display }}',
+                                                labelWidth:130
+                                            },{
+                                                xtype: 'displayfield',
+                                                fieldLabel:'{% trans "Postal code" %}',
+                                                value: '{{ order.delivery.address.postal_code }}',
+                                                labelWidth:130
+                                            },{
+                                                xtype: 'displayfield',
+                                                fieldLabel:'{% trans "Address" %}',
+                                                value: '{{ order.delivery.address.address }}',
+                                                labelWidth:130
+                                            },{
+                                                xtype: 'displayfield',
+                                                fieldLabel:'{% trans "Receiver" %}',
+                                                value: '{{ order.delivery.address.receiver }}',
+                                                labelWidth:130
+                                            },{
+                                                xtype: 'displayfield',
+                                                fieldLabel:'{% trans "Delivery cost" %}',
+                                                value: '{{ order.delivery.cost }}',
+                                                labelWidth:130
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                xtype:'grid',
+                                layout: 'fit',
+                                flex: 1,
+                                store: purchaseItems_store,
+                                multiSelect: false,
+                                autoScroll: true,
+                                cls: 'dashboard-grid',
+                                id: '{{ current_path }}_purchaseItemsItemsGrid',
+                                title: '{% trans "Purchase items" %}',
+                                columns: [
+                                        {
+                                            text: '{% trans "Name" %}',
+                                            flex: 2,
+                                            sortable: true,
+                                            dataIndex: 'name'
+                                        },{
+                                            text: '{% trans "Size" %}',
+                                            flex: 2,
+                                            sortable: true,
+                                            dataIndex: 'size'
+                                        },{
+                                            text: '{% trans "Color" %}',
+                                            flex: 2,
+                                            sortable: true,
+                                            dataIndex: 'color'
+                                        },{
+                                            text: '{% trans "Count" %}',
+                                            flex: 2,
+                                            sortable: true,
+                                            dataIndex: 'count'
+                                        },{
+                                            text: '{% trans "Price" %}',
+                                            flex: 2,
+                                            sortable: true,
+                                            dataIndex: 'price'
+                                        }
+
+                                ]
+                            }
+                        ]
+                    }
+
+                ],
+                 buttons:[
+                            {
+                                text: '{% trans 'Save' %}',
+                                handler: function(){
+                                    updateOrder_{{ order.identifier }}(Ext.getCmp('{{ current_path  }}_orderMainForm'));
+                                }
+
+                            },
+                            {
+                                text: '{% trans 'Cancel' %}',
+                                handler: function(){
+                                    var tab = Ext.getCmp('{{ current_path }}');
+                                    if (tab)
+                                    {
+                                        tab.ownerCt.remove(tab.id);
+                                    }
+                                }
+                            }
+                        ]
+            });
+            tab.add(container);
+        }
+    }
+
+//////handler///////////////////////////////////////////////////////////////////////////////////////////////////////////
+function updateOrder_{{ order.identifier }}(form){
+    if(form)
+    {
+        form.getForm().submit({
+            clientValidation: true,
+            url: '{{ current_path }}',
+            method: 'POST',
+            params: {
+                action: 'update',
+                csrfmiddlewaretoken: '{{ csrf_token }}'//,
+                //product_items: jsonProductItems
+            },
+            success: function(form, action) {
+                var tab = Ext.getCmp('{{ current_path }}');
+                if (tab)
+                {
+                    tab.ownerCt.remove(tab.id);
+                }
+                if (typeof(refreshOrders) != 'undefined')
+                    refreshOrders();
+            },
+            failure: function(form, action) {
+                if (action.failureType == 'server')
+                    alert('fail');
+            }
+        });
+
+
+
+    }
+    else
+        alert('Save fail');
+}
+</script>

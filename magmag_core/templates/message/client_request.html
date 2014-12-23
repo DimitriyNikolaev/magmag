@@ -1,0 +1,76 @@
+{% load i18n %}
+<div>
+    <a href="#" id="client_request_lnk" class="link-btn-dashed">{% trans "Ask a question" %}</a>
+    <div class="collapsed-area" id="client_request_wnd">
+        <form id="client_request_frm" action="{% url 'magmag:message:client_request' %}" method="post" onsubmit="return sendForm(this,client_request_success,client_request_fail);">
+            {% csrf_token %}
+            <div class="checkout-field" {% if client_request.email.is_hidden %} style="display:none;" {% endif %}>
+                <label for="{{ client_request.email.auto_id }}" class="checkout-field-label {% if client_request.email.field.required %}checkout-field-required{% endif %}">
+                    {{ client_request.email.label }}{% if client_request.email.field.required %} <span>*</span>{% endif %}
+                </label>
+                <div class="checkout-field-controls">
+                    {{ client_request.email }}
+                    {% for error in client_request.email.errors %}
+                        <span class="checkout-field-help-block">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+                    {% if client_request.email.help_text %}
+                        <span class='checkout-field-help-block'>
+                            {{ client_request.email.help_text }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="checkout-field" {% if client_request.message.is_hidden %} style="display:none;" {% endif %}>
+                <label for="{{ client_request.message.auto_id }}" class="checkout-field-label {% if client_request.message.field.required %}checkout-field-required{% endif %}">
+                    {{ client_request.message.label }}{% if client_request.message.field.required %} <span>*</span>{% endif %}
+                </label>
+                <div class="checkout-field-controls">
+                    {{ client_request.message }}
+                    {% for error in client_request.message.errors %}
+                        <span class="checkout-field-help-block">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+                    {% if client_request.message.help_text %}
+                        <span class='checkout-field-help-block'>
+                            {{ client_request.message.help_text }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div id="client_request_res"></div>
+            <input type="submit" class="right btn" value="{% trans "Ask" %}" >
+        </form>
+    </div>
+    <script type="text/javascript">
+        $('#client_request_lnk').click(
+            function(e){
+                if($('#client_request_wnd').css('display') == 'none')
+                    client_request_wnd_show();
+                else
+                    client_request_wnd_hide();
+
+            }
+        );
+        function client_request_wnd_hide(){
+            $('#client_request_wnd').animate({height:0},700);
+                    setTimeout(function() {
+                        $('#client_request_wnd').css('display','none');
+                    }, 700);
+        }
+        function client_request_wnd_show(){
+            $('#client_request_wnd').css('display','block');
+            $('#client_request_wnd').animate({height:216},700);
+        }
+        function client_request_success(res){
+            $('#client_request_res').text(res.msg);
+            document.getElementById("client_request_frm").reset();
+            setTimeout(function(){$('#client_request_res').text(''); client_request_wnd_hide();}, 2000);
+        }
+        function client_request_fail(res){
+            $('#client_request_res').text(res.msg);
+        }
+    </script>
+</div>

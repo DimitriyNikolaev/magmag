@@ -1,0 +1,157 @@
+{% load i18n %}
+<script>
+    //@ sourceURL=dynamicCallsScript.js
+
+
+    Ext.onReady(init_page);
+    function init_page(){
+
+        var store = new Ext.data.JsonStore({
+            storeId: 'call_requestListStore',
+            model: 'CallRequest',
+            autoLoad: true,
+            pageSize: {{ page_size }},
+            proxy: {
+                type: 'ajax',
+                url: '{% url "magmag:dashboard:call_requests" "json" %}',
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    totalProperty: 'total',
+                    idProperty: 'id'
+                }
+            }
+        });
+
+        var form = new Ext.form.Panel ({
+                        hidden: false,
+                        items:[
+                            {name: 'id', xtype: 'textfield'},
+                            {name: 'date', xtype: 'textfield'},
+                            {name: 'phone', xtype: 'textfield'},
+                            {name: 'viewed', xtype: 'textfield'}
+                        ]
+                    });
+
+
+        var tab = Ext.getCmp('{{ current_path }}');
+        if (tab)
+        {
+            var container = new Ext.panel.Panel( {
+                layout: 'fit',
+                title: '{% trans "Call requests" %}',
+                id: '{{ current_path  }}_container',
+                items: [
+                    {
+                        xtype : 'grid',
+                        layout: 'fit',
+                        store: store,
+                        multiSelect: false,
+                        autoScroll: true,
+                        cls: 'dashboard-grid',
+
+                        //the 'columns' property is now 'headers'
+                        columns: [
+                            {
+                                text: '{% trans "Date" %}',
+                                flex: 2,
+                                sortable: true,
+                                dataIndex: 'date'//,
+                                //renderer: calls_cell_renderer
+
+                            },{
+                                text: '{% trans "Phone" %}',
+                                flex: 2,
+                                dataIndex: 'phone',
+                                sortable: false//,
+                                //renderer: calls_cell_renderer
+                            }
+                            {% comment %},{
+                                xtype: 'actioncolumn',
+                                flex:1,
+                                items:[
+                                    {
+                                        icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/delete.png',  // Use a URL in the icon config
+                                        tooltip: '{% trans "Delete" %}',
+                                        handler: function(grid, rowIndex, colIndex) {
+                                            var record = grid.getStore().getAt(rowIndex);
+                                            if(record)
+                                                deleteEl(grid, record);
+
+                                        }
+                                    }
+                                ]
+                            }{% endcomment %}
+                        ],
+                        {% comment %}tbar:{
+                            xtype: 'toolbar',
+                            items:[
+                                {
+                                    icon: '{{ STATIC_URL }}magmag_core/img/ext_icons/add.png',
+                                    text: '{% trans "Add" %}',
+                                    tooltip: '{% trans "Add" %}',
+                                    handler: function() {
+                                        openTab('{% trans 'New product' %}', order_link_template)
+                                    }
+                                },{
+                                    xtype: 'tbfill'
+                                }
+
+                            ]
+                        },{% endcomment %}
+                        bbar:{
+                            xtype: 'pagingtoolbar',
+                            store: store,
+                            displayInfo: true
+                        },
+                        listeners:{
+                            itemdblclick: function(grid, record, item, index, e, eOpts ){
+                                if(record && form)
+                                {
+                                    record.set('viewed', true);
+                                    form.getForm().loadRecord(record);
+                                    set_call_viewed(record,form);;
+                                }
+                            }
+
+                        },
+                        viewConfig: {
+                            getRowClass: function(record, index, rowParams, store) {
+                                return !record.data.viewed ? 'bold-text' : '';
+                            }
+                        }
+                    }
+                ]
+            });
+            tab.add(container);
+        }
+    }
+//handlers///////////////////////////////////////////////////////////////////////////////////////////////////
+function calls_cell_renderer(value, metaData, record, rowIndex, colIndex, store, view)
+{
+    if(!record.data.viewed)
+        return '<span class="bold-text">'+value+'</span>';
+    return value;
+}
+
+function set_call_viewed(record, form)
+{
+    form.getForm().submit({
+            clientValidation: true,
+            url: '{{ current_path }}',
+            method: 'POST',
+            params: {
+                action: 'update',
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            success: function(form, action) {
+                record.commit();
+            },
+            failure: function(form, action) {
+                if (action.failureType == 'server')
+                    alert('fail');
+            }
+        });
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+</script>

@@ -1,0 +1,700 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2014-12-23 13:39+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: apps/base_models/base_account.py:9 apps/base_models/base_message.py:18
+#: templates/dashboard/order/client_requests.html:64
+#: templates/order/checkout_email.txt:13 templates/order/thank_you.html:24
+msgid "Email"
+msgstr ""
+
+#: apps/base_models/base_account.py:10 apps/base_models/base_message.py:25
+#: apps/base_models/base_models.py:16 apps/order/forms.py:20
+#: templates/dashboard/catalogue/stores.html:64
+#: templates/dashboard/order/call_requests.html:63
+msgid "Phone"
+msgstr "Телефон"
+
+#: apps/base_models/base_account.py:11 apps/base_models/base_order.py:19
+msgid "Total_Sum"
+msgstr "Итого"
+
+#: apps/base_models/base_account.py:12 apps/base_models/base_account.py:24
+#: apps/base_models/base_models.py:15 apps/base_models/base_models.py:33
+#: apps/base_models/base_models.py:63 apps/order/forms.py:22
+#: templates/dashboard/catalogue/categories.html:45
+#: templates/dashboard/catalogue/categories.html:173
+#: templates/dashboard/catalogue/product_form.html:123
+#: templates/dashboard/catalogue/products.html:47
+#: templates/dashboard/catalogue/stores.html:56
+#: templates/dashboard/order/order_form.html:172
+#: templates/dashboard/pages/pages.html:47
+msgid "Name"
+msgstr "Имя"
+
+#: apps/base_models/base_account.py:13
+msgid "Is_subscribe"
+msgstr ""
+
+#: apps/base_models/base_account.py:17
+msgid "Profile"
+msgstr ""
+
+#: apps/base_models/base_account.py:18
+msgid "Profiles"
+msgstr ""
+
+#: apps/base_models/base_account.py:22
+msgid "Postal_Code"
+msgstr "Почтовый индекс"
+
+#: apps/base_models/base_account.py:23 apps/base_models/base_account.py:29
+#: apps/base_models/base_models.py:17 apps/order/forms.py:26
+#: templates/dashboard/catalogue/stores.html:74
+#: templates/dashboard/order/order_form.html:142
+msgid "Address"
+msgstr "Адрес"
+
+#: apps/base_models/base_account.py:25 apps/base_models/base_account.py:30
+msgid "Addresses"
+msgstr ""
+
+#: apps/base_models/base_message.py:9
+#: templates/dashboard/order/call_requests.html:56
+#: templates/dashboard/order/client_requests.html:57
+#: templates/dashboard/order/orders.html:53
+msgid "Date"
+msgstr "Дата"
+
+#: apps/base_models/base_message.py:10
+msgid "Viewed"
+msgstr "Просмотрено"
+
+#: apps/base_models/base_message.py:17
+#: templates/dashboard/order/client_requests.html:70
+msgid "Message"
+msgstr "Сообщение"
+
+#: apps/base_models/base_models.py:28 apps/base_models/base_models.py:125
+#: templates/dashboard/catalogue/product_form.html:523
+msgid "Store"
+msgstr "Склад"
+
+#: apps/base_models/base_models.py:29
+#: apps/dashboard/dashboard_catalogue/app.py:15
+#: templates/dashboard/catalogue/stores.html:43
+msgid "Stores"
+msgstr ""
+
+#: apps/base_models/base_models.py:34 apps/base_models/base_models.py:64
+#: templates/dashboard/catalogue/categories.html:51
+#: templates/dashboard/catalogue/categories.html:178
+#: templates/dashboard/catalogue/product_form.html:160
+msgid "Description"
+msgstr "Описание"
+
+#: apps/base_models/base_models.py:35 apps/base_models/base_models.py:65
+#: apps/pages/models.py:37 templates/dashboard/catalogue/categories.html:75
+msgid "Image"
+msgstr "Изображение"
+
+#: apps/base_models/base_models.py:36 apps/base_models/base_models.py:66
+#: apps/base_models/base_order.py:14 apps/pages/models.py:16
+#: templates/dashboard/catalogue/categories.html:59
+#: templates/dashboard/catalogue/product_form.html:153
+#: templates/dashboard/catalogue/products.html:64
+#: templates/dashboard/pages/page_form.html:107
+msgid "Slug"
+msgstr ""
+
+#: apps/base_models/base_models.py:39
+msgid "products"
+msgstr ""
+
+#: apps/base_models/base_models.py:54
+#: templates/dashboard/catalogue/product_form.html:147
+msgid "Category"
+msgstr "Категория"
+
+#: apps/base_models/base_models.py:55
+#: apps/dashboard/dashboard_catalogue/app.py:14
+#: templates/dashboard/catalogue/categories.html:131
+msgid "Categories"
+msgstr "Категории"
+
+#: apps/base_models/base_models.py:67
+msgid "Date_Added"
+msgstr "Дата добавления"
+
+#: apps/base_models/base_models.py:69
+#: templates/dashboard/catalogue/product_form.html:137
+#: templates/dashboard/catalogue/products.html:53
+msgid "Article"
+msgstr "Артикул"
+
+#: apps/base_models/base_models.py:70 apps/base_models/base_order.py:43
+#: templates/dashboard/catalogue/product_form.html:130
+#: templates/dashboard/order/order_form.html:192
+msgid "Price"
+msgstr "Цена"
+
+#: apps/base_models/base_models.py:71
+msgid "Hidden"
+msgstr "Скрыто"
+
+#: apps/base_models/base_models.py:100 apps/base_models/base_models.py:105
+#: apps/base_models/base_models.py:141 apps/base_models/base_order.py:42
+#: templates/dashboard/catalogue/product_form.html:88
+msgid "Product"
+msgstr "Товар"
+
+#: apps/base_models/base_models.py:101
+#: apps/dashboard/dashboard_catalogue/app.py:13
+#: templates/dashboard/catalogue/products.html:33
+msgid "Products"
+msgstr "Товары"
+
+#: apps/base_models/base_models.py:106
+#: templates/dashboard/catalogue/product_form.html:278
+#: templates/dashboard/catalogue/product_form.html:605
+#: templates/dashboard/order/order_form.html:182
+msgid "Color"
+msgstr "Цвет"
+
+#: apps/base_models/base_models.py:107
+#: templates/dashboard/catalogue/product_form.html:288
+#: templates/dashboard/catalogue/product_form.html:606
+#: templates/dashboard/order/order_form.html:177
+msgid "Size"
+msgstr "Размер"
+
+#: apps/base_models/base_models.py:119
+msgid "Item"
+msgstr ""
+
+#: apps/base_models/base_models.py:120
+msgid "Items"
+msgstr ""
+
+#: apps/base_models/base_models.py:124
+msgid "ProductItem"
+msgstr ""
+
+#: apps/base_models/base_models.py:126 apps/base_models/base_order.py:44
+#: apps/base_models/base_order.py:54
+#: templates/dashboard/catalogue/product_form.html:539
+#: templates/dashboard/order/order_form.html:187
+msgid "Count"
+msgstr "Количество"
+
+#: apps/base_models/base_models.py:131 apps/base_models/base_order.py:53
+msgid "StockItem"
+msgstr "Остаток"
+
+#: apps/base_models/base_models.py:132
+msgid "StockItems"
+msgstr "Остатки"
+
+#: apps/base_models/base_models.py:143
+msgid "Original"
+msgstr ""
+
+#: apps/base_models/base_models.py:145
+#: templates/dashboard/catalogue/product_form.html:167
+msgid "Preview"
+msgstr ""
+
+#: apps/base_models/base_models.py:147
+msgid "Thumbnail"
+msgstr ""
+
+#: apps/base_models/base_models.py:149 apps/pages/models.py:38
+msgid "Caption"
+msgstr "Заголовок"
+
+#: apps/base_models/base_models.py:152
+msgid "Display Order"
+msgstr ""
+
+#: apps/base_models/base_models.py:153
+msgid ""
+"An image with a display order of\n"
+"                       1 will be the primary image for a product"
+msgstr ""
+
+#: apps/base_models/base_models.py:155 apps/base_models/base_order.py:13
+msgid "Date Created"
+msgstr "Дата создания"
+
+#: apps/base_models/base_models.py:167
+msgid "Product Image"
+msgstr ""
+
+#: apps/base_models/base_models.py:168
+msgid "Product Images"
+msgstr ""
+
+#: apps/base_models/base_order.py:12 templates/dashboard/order/orders.html:46
+msgid "Number"
+msgstr "Номер"
+
+#: apps/base_models/base_order.py:16 templates/dashboard/order/orders.html:58
+msgid "Status"
+msgstr "Статус"
+
+#: apps/base_models/base_order.py:17
+#: templates/dashboard/order/order_form.html:100
+#: templates/dashboard/order/orders.html:64
+msgid "Customer"
+msgstr "Заказчик"
+
+#: apps/base_models/base_order.py:18 apps/order/forms.py:34
+#: templates/dashboard/order/order_form.html:115
+msgid "Comment"
+msgstr "Комментарий"
+
+#: apps/base_models/base_order.py:20 apps/base_models/base_order.py:36
+#: apps/base_models/base_order.py:37 templates/order/checkout.html:64
+msgid "Delivery"
+msgstr "Доставка"
+
+#: apps/base_models/base_order.py:24 apps/base_models/base_order.py:41
+#: apps/order/models_logic.py:83 templates/order/checkout_email.txt:8
+#: templates/order/thank_you.html:18
+msgid "Order"
+msgstr "Заказ"
+
+#: apps/base_models/base_order.py:25 apps/dashboard/dashboard_order/app.py:14
+#: templates/dashboard/order/orders.html:32
+msgid "Orders"
+msgstr "Заказы"
+
+#: apps/base_models/base_order.py:29 apps/order/forms.py:31
+#: templates/dashboard/order/order_form.html:132
+#: templates/order/checkout_email.txt:14 templates/order/thank_you.html:25
+msgid "Delivery method"
+msgstr "Способ доставки"
+
+#: apps/base_models/base_order.py:31
+#: templates/dashboard/order/order_form.html:152
+#: templates/order/checkout.html:196 templates/order/checkout_email.txt:15
+#: templates/order/thank_you.html:26
+msgid "Delivery cost"
+msgstr "Стоимость доставки"
+
+#: apps/base_models/base_order.py:32
+msgid "Delivery address"
+msgstr "Адрес доставки"
+
+#: apps/base_models/base_order.py:48
+msgid "Purchase Item"
+msgstr ""
+
+#: apps/base_models/base_order.py:49 templates/order/checkout.html:63
+msgid "Purchase Items"
+msgstr "Заказанные товары"
+
+#: apps/base_models/base_order.py:55
+msgid "PurchaseItem"
+msgstr ""
+
+#: apps/base_models/defaults.py:6
+msgid "Adopted"
+msgstr "Принят"
+
+#: apps/base_models/defaults.py:7
+msgid "Paid"
+msgstr "Оплачен"
+
+#: apps/base_models/defaults.py:8
+msgid "Completion"
+msgstr "Комплектование"
+
+#: apps/base_models/defaults.py:9
+msgid "Completed"
+msgstr "Укомплектован"
+
+#: apps/base_models/defaults.py:10
+msgid "Sent"
+msgstr "Отослан"
+
+#: apps/base_models/defaults.py:14
+msgid "Post"
+msgstr "Почта"
+
+#: apps/base_models/defaults.py:15
+msgid "EMS"
+msgstr ""
+
+#: apps/base_models/defaults.py:16
+msgid "Pickup"
+msgstr "Самовывоз"
+
+#: apps/base_models/defaults.py:17
+msgid "Courier"
+msgstr "Курьер"
+
+#: apps/catalogue/views.py:42
+msgid "Category identifier is None"
+msgstr ""
+
+#: apps/dashboard/dashboard_catalogue/app.py:12 templates/layout.html:88
+msgid "Catalogue"
+msgstr "Каталог"
+
+#: apps/dashboard/dashboard_order/app.py:13
+msgid "CRM"
+msgstr ""
+
+#: apps/dashboard/dashboard_order/app.py:15
+msgid "Messages"
+msgstr "Сообщения"
+
+#: apps/dashboard/dashboard_order/app.py:16
+msgid "Calls"
+msgstr "Звонки"
+
+#: apps/dashboard/dashboard_pages/app.py:14 apps/pages/models.py:14
+msgid "Content"
+msgstr "Содержание"
+
+#: apps/dashboard/dashboard_pages/app.py:15
+#: templates/dashboard/pages/pages.html:33
+msgid "Pages"
+msgstr "Страницы"
+
+#: apps/message/views.py:13 apps/message/views.py:27
+msgid "Thanks for your request"
+msgstr "Спасибо, Ваш запрос принят"
+
+#: apps/order/forms.py:23
+msgid "Input your name"
+msgstr "Введите ваше имя"
+
+#: apps/order/forms.py:24 templates/dashboard/order/order_form.html:137
+msgid "Postal code"
+msgstr "Почтовый индекс"
+
+#: apps/order/forms.py:28
+msgid "Receiver name"
+msgstr "Имя получателя"
+
+#: apps/order/forms.py:41
+msgid "This field is required."
+msgstr "Это поле обязательно."
+
+#: apps/order/forms.py:63
+msgid "Add product to cart"
+msgstr "Добавить товар в корзину"
+
+#: apps/pages/models.py:11 templates/dashboard/pages/page_form.html:100
+#: templates/dashboard/pages/pages.html:53
+msgid "Title"
+msgstr "Заголовок"
+
+#: apps/pages/models.py:12 templates/dashboard/pages/page_form.html:127
+msgid "URL"
+msgstr ""
+
+#: apps/pages/models.py:13 templates/dashboard/pages/page_form.html:134
+msgid "Display name"
+msgstr ""
+
+#: apps/pages/models.py:15
+msgid "Deletable"
+msgstr ""
+
+#: apps/pages/models.py:36
+msgid "Page"
+msgstr ""
+
+#: templates/catalogue/product.html:159
+msgid "Please select size and color and press Add to order "
+msgstr "Пожалуйста выберите цвет и размер для добавления в корзину"
+
+#: templates/catalogue/product.html:187
+msgid "Buy"
+msgstr "Купить"
+
+#: templates/dashboard/base.html:42
+msgid "Logout"
+msgstr "Выход"
+
+#: templates/dashboard/base.html:51
+msgid "Menu"
+msgstr "Меню"
+
+#: templates/dashboard/catalogue/categories.html:24
+msgid "Edit category"
+msgstr "Редактировать категорию"
+
+#: templates/dashboard/catalogue/categories.html:69
+msgid "Parent"
+msgstr "Родитель"
+
+#: templates/dashboard/catalogue/categories.html:76
+#: templates/dashboard/catalogue/product_form.html:168
+msgid "Select"
+msgstr "Выбрать"
+
+#: templates/dashboard/catalogue/categories.html:100
+#: templates/dashboard/catalogue/categories.html:101
+#: templates/dashboard/catalogue/product_form.html:372
+#: templates/dashboard/order/order_form.html:206
+#: templates/dashboard/pages/page_form.html:193
+#: templates/dashboard/pages/page_form.html:208
+msgid "Save"
+msgstr "Сохранить"
+
+#: templates/dashboard/catalogue/categories.html:108
+#: templates/dashboard/catalogue/categories.html:109
+#: templates/dashboard/catalogue/product_form.html:379
+#: templates/dashboard/order/order_form.html:213
+#: templates/dashboard/pages/page_form.html:215
+msgid "Cancel"
+msgstr "Отменить"
+
+#: templates/dashboard/catalogue/categories.html:190
+#: templates/dashboard/catalogue/products.html:75
+#: templates/dashboard/catalogue/stores.html:101
+#: templates/dashboard/pages/page_form.html:192
+#: templates/dashboard/pages/pages.html:78 templates/layout.html:15
+#: templates/order/checkout.html:138
+msgid "Delete"
+msgstr "Удалить"
+
+#: templates/dashboard/catalogue/categories.html:204
+#: templates/dashboard/catalogue/categories.html:205
+#: templates/dashboard/catalogue/product_form.html:354
+#: templates/dashboard/catalogue/products.html:90
+#: templates/dashboard/catalogue/products.html:91
+#: templates/dashboard/catalogue/stores.html:116
+#: templates/dashboard/catalogue/stores.html:117
+#: templates/dashboard/pages/pages.html:99
+#: templates/dashboard/pages/pages.html:100
+msgid "Add"
+msgstr "Добавить"
+
+#: templates/dashboard/catalogue/categories.html:213
+#: templates/dashboard/catalogue/categories.html:214
+#: templates/dashboard/catalogue/products.html:99
+#: templates/dashboard/catalogue/products.html:100
+#: templates/dashboard/catalogue/stores.html:132
+#: templates/dashboard/catalogue/stores.html:133
+#: templates/dashboard/pages/pages.html:108
+#: templates/dashboard/pages/pages.html:109
+msgid "Refresh"
+msgstr "Обновить"
+
+#: templates/dashboard/catalogue/product_form.html:97
+msgid "Main info"
+msgstr "Основная информация"
+
+#: templates/dashboard/catalogue/product_form.html:185
+msgid "Hide from site"
+msgstr "Скрыть с сайта"
+
+#: templates/dashboard/catalogue/product_form.html:218
+#: templates/dashboard/pages/page_form.html:163
+msgid "Images"
+msgstr "Изображения"
+
+#: templates/dashboard/catalogue/product_form.html:243
+msgid "Delete:"
+msgstr "Удалить:"
+
+#: templates/dashboard/catalogue/product_form.html:251
+#: templates/dashboard/pages/page_form.html:200
+msgid "No images available"
+msgstr "Нет доступных изображений"
+
+#: templates/dashboard/catalogue/product_form.html:265
+msgid "Product items"
+msgstr "Цвета и размеры"
+
+#: templates/dashboard/catalogue/product_form.html:302
+msgid "Add new"
+msgstr "Добавить новый"
+
+#: templates/dashboard/catalogue/product_form.html:355
+msgid "Add new item"
+msgstr "Добавить новый"
+
+#: templates/dashboard/catalogue/product_form.html:483
+msgid "Sorry. Internal server error"
+msgstr "Ошибка"
+
+#: templates/dashboard/catalogue/products.html:58
+msgid "Date Added"
+msgstr "Дата добавления"
+
+#: templates/dashboard/catalogue/products.html:93
+msgid "New product"
+msgstr "Новый товар"
+
+#: templates/dashboard/catalogue/stores.html:89
+msgid "Update"
+msgstr "Обновить"
+
+#: templates/dashboard/order/call_requests.html:42
+msgid "Call requests"
+msgstr "Заказанные звонки"
+
+#: templates/dashboard/order/client_requests.html:43
+msgid "Client requests"
+msgstr "Вопросы клиентов"
+
+#: templates/dashboard/order/order_form.html:58
+msgid "Order info"
+msgstr "Информация о заказе"
+
+#: templates/dashboard/order/order_form.html:79
+msgid "Order number"
+msgstr "Номер заказа"
+
+#: templates/dashboard/order/order_form.html:85
+msgid "Order date"
+msgstr "Дата заказа"
+
+#: templates/dashboard/order/order_form.html:91
+#: templates/order/checkout_email.txt:10 templates/order/thank_you.html:20
+msgid "Order status"
+msgstr "Статус заказа"
+
+#: templates/dashboard/order/order_form.html:105
+#: templates/dashboard/order/orders.html:69
+msgid "Customer email"
+msgstr "Email заказчика"
+
+#: templates/dashboard/order/order_form.html:110
+msgid "Customer phone"
+msgstr "Телефон заказчика"
+
+#: templates/dashboard/order/order_form.html:120
+#: templates/order/checkout_email.txt:11 templates/order/thank_you.html:21
+msgid "Total"
+msgstr "Итого"
+
+#: templates/dashboard/order/order_form.html:147
+msgid "Receiver"
+msgstr "Получатель"
+
+#: templates/dashboard/order/order_form.html:169
+#: templates/order/checkout_email.txt:18 templates/order/thank_you.html:31
+msgid "Purchase items"
+msgstr "Заказанные товары"
+
+#: templates/dashboard/order/orders.html:74
+msgid "Sum"
+msgstr "Сумма"
+
+#: templates/dashboard/order/orders.html:122
+msgid "Order - "
+msgstr "заказ -"
+
+#: templates/dashboard/pages/page_form.html:70
+msgid "Page content"
+msgstr "Содержание страницы"
+
+#: templates/dashboard/pages/pages.html:58
+msgid "Url"
+msgstr ""
+
+#: templates/dashboard/pages/pages.html:102
+msgid "New page"
+msgstr "Новая страница"
+
+#: templates/layout.html:15 templates/layout.html.py:106
+#: templates/order/checkout.html:137 templates/order/checkout.html.py:198
+#: templates/order/checkout.html:268 templates/order/checkout_email.txt:11
+#: templates/order/checkout_email.txt:15 templates/order/checkout_email.txt:20
+#: templates/order/thank_you.html:21 templates/order/thank_you.html.py:26
+#: templates/order/thank_you.html:37
+msgid "$"
+msgstr "₽"
+
+#: templates/layout.html:89
+msgid "About us"
+msgstr "О нас"
+
+#: templates/layout.html:90
+msgid "Contact"
+msgstr "Контакты"
+
+#: templates/layout.html:93
+msgid "My shopping bug"
+msgstr "Моя корзина"
+
+#: templates/layout.html:105
+msgid "Checkout"
+msgstr "Оформить"
+
+#: templates/layout.html:106 templates/order/checkout.html:268
+msgid "Total: "
+msgstr "Итого:"
+
+#: templates/message/call_request.html:3
+msgid "Call request"
+msgstr ""
+
+#: templates/message/call_request.html:26
+msgid "Request"
+msgstr ""
+
+#: templates/message/client_request.html:3
+msgid "Ask a question"
+msgstr "Задать вопрос"
+
+#: templates/message/client_request.html:44
+msgid "Ask"
+msgstr "Спросить"
+
+#: templates/order/checkout.html:62
+msgid "Main Info"
+msgstr "Основная информация"
+
+#: templates/order/checkout.html:269
+msgid "Set order"
+msgstr "Подтвердить заказ"
+
+#: templates/order/checkout_email.txt:4 templates/order/thank_you.html:11
+msgid "Thanks for your order"
+msgstr "Спасибо за Ваш заказ"
+
+#: templates/partials/paginator.html:6
+msgid "previous"
+msgstr ""
+
+#: templates/partials/paginator.html:39
+msgid "next"
+msgstr ""
+
+#: view/base_views.py:61
+#, python-format
+msgid "Empty list and '%(class_name)s.allow_empty' is False."
+msgstr ""
+
+#: view/decorators.py:34
+msgid "You must log in to access this page"
+msgstr ""
+
+#~| msgid "Set order"
+#~ msgid "Add to order"
+#~ msgstr "Добавить в заказ"

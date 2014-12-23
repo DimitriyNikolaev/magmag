@@ -47,3 +47,82 @@ Ext.define('Image', {
         { name:'deleted', type:'boolean' },
     ]
 });
+
+Ext.define('PageImage', {
+    extend: 'Ext.data.Model',
+    fields: [
+        { name:'id', type:'int' },
+        { name:'page_id', type:'int' },
+        { name:'url', type:'string' },
+        { name:'caption', type:'string' },
+        { name:'order', type:'int' },
+        { name:'deleted', type:'boolean' },
+    ]
+});
+
+Ext.define('Page', {
+    extend: 'Ext.data.Model',
+    fields: [
+        { name:'id', type:'int' },
+        { name:'title', type:'string' },
+        { name:'display_name', type:'string' },
+        { name:'url', type:'string' },
+        { name:'deletable', type:'boolean'},
+        { name:'slug', type:'string' },
+    ]
+});
+
+
+Ext.define('Order', {
+    extend: 'Ext.data.Model',
+    fields: [
+        { name:'id', type:'int' },
+        { name:'status_id', type:'int' },
+        { name:'status_name', type:'string' },
+        { name:'number', type:'string' },
+        { name:'date', type:'string'},
+        { name:'total_sum', type:'float'},
+        { name:'customer_name', type:'string'},
+        { name:'customer_email', type:'string'}
+    ]
+});
+
+Ext.define('PurchaseItem', {
+    extend: 'Ext.data.Model',
+    fields: [
+        { name:'id', type:'int' },
+        { name:'name', type:'string' },
+        { name:'size', type:'string' },
+        { name:'color', type:'string' },
+        { name:'count', type:'int' },
+        { name:'price', type:'float' }
+    ]
+});
+Ext.define('KeyNameItem', {
+    extend: 'Ext.data.Model',
+    fields: [
+        { name:'key', type:'int' },
+        { name:'name', type:'string' }
+    ]
+});
+
+Ext.define('CallRequest',{
+    extend: 'Ext.data.Model',
+    fields: [
+        { name:'id', type:'int' },
+        { name:'date', type:'string' },
+        { name:'phone', type:'string' },
+        { name:'viewed', type:'boolean' }
+    ]
+});
+
+Ext.define('ClientRequest',{
+    extend: 'Ext.data.Model',
+    fields: [
+        { name:'id', type:'int' },
+        { name:'date', type:'string' },
+        { name:'viewed', type:'boolean' },
+        { name:'email', type:'string' },
+        { name:'message', type:'string' },
+    ]
+});

@@ -7,8 +7,13 @@ MAGMAG_CORE_APPS = [
     'magmag_core.apps.account',
     'magmag_core.apps.catalogue',
     'magmag_core.apps.order',
+    'magmag_core.apps.pages',
+    'magmag_core.apps.promo',
+    'magmag_core.apps.message',
     'magmag_core.apps.dashboard',
-    'magmag_core.apps.dashboard.dashboard_catalogue'
+    'magmag_core.apps.dashboard.dashboard_catalogue',
+    'magmag_core.apps.dashboard.dashboard_order',
+    'magmag_core.apps.dashboard.dashboard_pages'
 ]
 
 

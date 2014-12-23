@@ -191,7 +191,7 @@
                             </div>
                         </div>
                         <div class="checkout-field" >
-                            <span class="checkout-field-label">{% trans "Deleivery cost" %}</span>
+                            <span class="checkout-field-label">{% trans "Delivery cost" %}</span>
                             <div style="line-height: 28px;" class="checkout-field-controls">
                                 <span id="delivery_cost">{{ delivery_cost|floatformat }}</span>{% trans "$" %}
                             </div>
@@ -264,7 +264,7 @@
     <section class="order-props">
         <div class="checkout-order">
             <span>{% trans "Total: " %}</span><span id="order_totalsum">{{ total_sum|floatformat }}</span><span>{% trans "$" %}</span>
-            <input type="submit" class="btn" value="{% trans "Set order" %}">
+            <input type="submit" class="btn btn-set-order" value="{% trans "Set order" %}">
         </div>
         <div class="checkout-field">
             <label for="{{ form.comment.auto_id }}" class="checkout-field-label {% if form.comment.field.required %}checkout-field-required{% endif %}">

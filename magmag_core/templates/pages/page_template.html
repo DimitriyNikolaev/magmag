@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+{% load i18n %}
+
+{% block content_wrapper %}
+    <section class="page-template" >
+        <div class="page-template-header">{{ page.title }}</div>
+        <div class="page-template-container">
+            {% if page %}
+                {{ page.content|safe }}
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,375 @@
+{% load i18n %}
+<script>
+    //@ sourceURL={{ current_path }}.js
+    Ext.onReady(init_page);
+    function init_page()
+    {
+        var tinyCfg1 = {
+            // General options
+            theme : "advanced",
+
+            skin: "extjs",
+            inlinepopups_skin: "extjs",
+
+            // Original value is 23, hard coded.
+            // with 23 the editor calculates the height wrong.
+            // With these settings, you can do the fine tuning of the height
+            // by the initialization.
+            theme_advanced_row_height: 27,
+            delta_height: 1,
+
+            schema: "html5",
+
+            plugins : "autolink,lists,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template,wordcount,advlist",
+
+                // Theme options
+                theme_advanced_buttons1 : "save,newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,styleselect,formatselect,fontselect,fontsizeselect",
+                theme_advanced_buttons2 : "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,anchor,image,cleanup,help,code,|,insertdate,inserttime,preview,|,forecolor,backcolor",
+                theme_advanced_buttons3 : "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,emotions,iespell,media,advhr,|,print,|,ltr,rtl,|,fullscreen",
+                theme_advanced_buttons4 : "insertlayer,moveforward,movebackward,absolute,|,styleprops,|,cite,abbr,acronym,del,ins,attribs,|,visualchars,nonbreaking,template,pagebreak,restoredraft",
+                theme_advanced_toolbar_location : "top",
+                theme_advanced_toolbar_align : "left",
+                theme_advanced_statusbar_location : "bottom",
+
+                // Example content CSS (should be your site CSS)
+                content_css : "{{ STATIC_URL }}magmag_core/css/content.css"
+        };
+
+        var pageImage_store = new Ext.data.JsonStore({
+            storeId: 'pageImages_{{ page.identifier }}_ListStore',
+            model: 'PageImage',
+            autoLoad: true,
+            proxy: {
+                type: 'ajax',
+                url: '{% url "magmag:dashboard:page_images" page.identifier "json" %}',
+                reader: {
+                    type: 'json',
+                    root: 'data',
+                    totalProperty: 'total',
+                    idProperty: 'id'
+                }
+            },
+            sorters: [
+                {
+                    property: 'id',
+                    direction: 'DESC'
+                }
+            ]
+        });
+
+
+        var tab = Ext.getCmp('{{ current_path }}');
+        if (tab)
+        {
+            var container = new Ext.panel.Panel( {
+                layout: 'fit',
+                id: '{{ current_path  }}_container',
+                items: [
+                    {
+                        xtype: 'form',
+                        title: '{% trans "Page content" %}',
+                        id: '{{ current_path  }}_pageMainForm',
+                        layout: {
+                            type: 'vbox',
+                            align: 'stretch'
+                        },
+                        items:[
+                            {
+                                xtype:'panel',
+                                flex:1,
+                                minHeight: 70,
+                                layout: {
+                                    type: 'hbox',
+                                    align: 'stretch'
+                                },
+                                items:[
+                                    {
+                                        xtype: 'panel',
+                                        flex:1,
+                                        cls:'pnlFormDetail',
+                                        items:[
+                                            {
+                                                xtype: 'hidden',
+                                                id:'{{ current_path  }}_hdnId',
+                                                value: {{ page.identifier }},
+                                                name: 'id'
+                                            },{
+                                                xtype: 'textfield',
+                                                name: 'title',
+                                                value: '{{ page.title }}',
+                                                fieldLabel: '{% trans 'Title' %}',
+                                                allowBlank: false,
+                                                id: '{{ current_path  }}_txtTitle'
+                                            },{
+                                                xtype: 'textfield',
+                                                name: 'slug',
+                                                value: '{{ page.slug }}',
+                                                fieldLabel: '{% trans 'Slug' %}',
+                                                allowBlank: false,
+                                                id: '{{ current_path  }}_txtSlug'
+                                            },{
+                                                xtype: 'hidden',
+                                                name: 'deletable',
+                                                value: '{{ page.deletable|lower }}',
+                                                id: '{{ current_path  }}_hdnDeleteble'
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        xtype: 'panel',
+                                        flex:3,
+                                        cls:'pnlFormDetail',
+                                        items:[
+                                            {
+                                                xtype: 'textfield',
+                                                name: 'url',
+                                                value: '{{ page.url }}',
+                                                fieldLabel: '{% trans 'URL' %}',
+                                                allowBlank: false,
+                                                id: '{{ current_path  }}_txtUrl'
+                                            },{
+                                                xtype: 'textfield',
+                                                name: 'display_name',
+                                                value: '{{ page.display_name }}',
+                                                fieldLabel: '{% trans 'Display name' %}',
+                                                allowBlank: false,
+                                                id: '{{ current_path  }}_txtDisplay_name'
+                                            }
+                                        ]
+                                    }
+
+                                ]
+                            },{
+                                xtype: 'panel',
+                                flex:7,
+                                cls:'pnlFormDetail',
+                                layout:'fit',
+                                //autoScroll:true,
+                                items:[
+                                    {
+                                        autoHeight: true,
+                                        xtype: 'tinymce_textarea',
+                                        fieldStyle: 'font-family: Courier New; font-size: 12px;',
+                                        noWysiwyg: false,
+                                        tinyMCEConfig: tinyCfg1,
+                                        value: '{{ page.safe_content|safe}}',
+                                        id: '{{ current_path  }}_pageContent',
+                                        name: 'content'
+                                    }
+                                ]
+                            },{
+                                xtype: 'panel',
+                                flex:7,
+                                title:'{% trans "Images" %}',
+                                cls:'images-view',
+                                collapsible:true,
+                                //collapsed:true,
+                                autoScroll:true,
+                                items:[
+                                    {
+                                        xtype: 'dataview',
+                                        hidden: {% if page.identifier > 0 %} false {% else %} true {% endif %},
+                                        store: pageImage_store,
+                                        id: '{{ current_path  }}_imagesDataView',
+                                        tpl:new Ext.XTemplate(
+                                            '<tpl for=".">',
+                                                    '<div class="thumb-wrap upload-image">',
+                                                        '<input name="id" type="hidden" id="image_id_{{ page.identifier }}_{id}" value="{id}"/>',
+                                                        '<input name="page" type="hidden" id="page_id_{{ page.identifier }}_{id}" value="{page_id}"/>',
+                                                        '<label>',
+                                                            '<input name="caption" type="text" id="image_caption_{{ page.identifier }}_{id}" value="{caption}" class="x-form-field x-form-text image-caption" />',
+                                                        '</label>',
+                                                        '<div class="thumb image-input">',
+                                                            '<img id="image_{{ page.identifier }}_{id}" src="{url}" alt="thumbnail"/>',
+                                                            '<div class="input-field">',
+                                                                '<label>',
+                                                                    '<input value="{url}" name="image" type="file" id="image_input_{{ page.identifier }}_{id}" onchange="if(readURL_{{ page.identifier }}(this,{id})) addNewPageImage_{{ page.identifier }}();"  />',
+                                                                '</label>',
+                                                            '</div>',
+                                                        '</div>',
+                                                        '<div class="thumb-url">{url}</div>',
+                                                        '<div>',
+                                                            '<div onclick="delete_image_{{ page.identifier }}({id})" class="btn image-btn">{% trans "Delete" %}</div>',
+                                                            '<div onclick="update_image_{{ page.identifier }}({id})" class="btn image-btn">{% trans "Save" %}</div>',
+                                                        '</div>',
+                                                    '</div>',
+                                            '</tpl>',
+                                            '<div class="x-clear"></div>'
+                                        ),
+                                        itemSelector: 'div.thumb-wrap',
+                                        emptyText: '{% trans 'No images available' %}'
+                                    }
+                                ]
+                            }
+
+                        ],
+                        buttons:[
+                            {
+                                text: '{% trans 'Save' %}',
+                                handler: function(){
+                                    updatePage_{{ page.identifier }}(Ext.getCmp('{{ current_path  }}_pageMainForm'));
+                                }
+
+                            },
+                            {
+                                text: '{% trans 'Cancel' %}',
+                                handler: function(){
+                                    var tab = Ext.getCmp('{{ current_path }}');
+                                    if (tab)
+                                    {
+                                        tab.ownerCt.remove(tab.id);
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+            });
+            tab.add(container);
+        }
+    }
+//handler//////////////////////////////////////////////////////////////////////////////
+function updatePage_{{ page.identifier }}(form){
+    if(form)
+    {
+        form.getForm().submit({
+            clientValidation: true,
+            url: '{{ current_path }}',
+            method: 'POST',
+            params: {
+                action: 'update',
+                csrfmiddlewaretoken: '{{ csrf_token }}'//,
+                //product_items: jsonProductItems
+            },
+            success: function(form, action) {
+                var tab = Ext.getCmp('{{ current_path }}');
+                if (tab)
+                {
+                    tab.ownerCt.remove(tab.id);
+                }
+                if (typeof(refreshPages) != 'undefined')
+                    refreshPages();
+            },
+            failure: function(form, action) {
+                if (action.failureType == 'server')
+                    alert('fail');
+            }
+        });
+    }
+    else
+        alert('Save fail');
+}
+
+/////images handlers
+function get_images_store_{{ page.identifier }}()
+{
+    var dview = Ext.getCmp('{{ current_path }}_imagesDataView');
+    return dview.getStore();
+}
+function addNewPageImage_{{ page.identifier }}()
+{
+    var store = get_images_store_{{ page.identifier }}();
+    store.add(Ext.ModelManager.create({
+                id: -store.data.length,
+                url: '{{ STATIC_URL }}magmag_core/img/add_large.png',
+                caption: '',
+                page_id: {{ page.identifier }},
+                deleted: false
+            }, 'PageImage'));
+    //dview.refresh( );
+}
+
+function readURL_{{ page.identifier }}(input, imgid) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        var imgprevId = 'image_{{ page.identifier }}_'+imgid;
+        reader.onload = function (e) {
+            document.getElementById(imgprevId).src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
+        if(document.getElementById(imgprevId).src.indexOf('{{ STATIC_URL }}magmag_core/img/add_large.png') != -1)
+            return true;
+    }
+    return false;
+}
+
+function delete_image_{{ page.identifier }}(id){
+    if(id > 0)
+    {
+        Ext.Ajax.request({
+            url: '{% url "magmag:dashboard:page_images" page.identifier "json" %}',
+            params: {
+                action: 'delete',
+                delElId: id,
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            method: 'POST',
+            success: function(response){
+                    var store = get_images_store_{{ page.identifier }}()
+                    var record = store.getById(id);
+                    store.remove(record);
+                }
+            ,
+            failure: function(response){
+                    alert('fail');
+                }
+        });
+
+    }
+}
+
+
+function update_image_{{ page.identifier }}(id){
+
+    //{% url "magmag:dashboard:page_images" page.identifier "json" %}
+
+    var formData = get_image_formData_{{ page.identifier }}(id);
+
+    sendFormDataWithParams(formData, '{% url "magmag:dashboard:page_images" page.identifier "json" %}',
+            page_image_updated_{{ page.identifier }},
+            page_image_update_failure_{{ page.identifier }},
+            {
+                action: 'update'
+            }
+    );
+}
+function get_image_formData_{{ page.identifier }}(id)
+{
+    var formData = new FormData();
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+
+    var inpId = document.getElementById('image_id_{{ page.identifier }}_'+id);
+    formData.append(inpId.name, inpId.value);
+
+    var inpPageId = document.getElementById('page_id_{{ page.identifier }}_'+id);
+    formData.append(inpPageId.name, inpPageId.value);
+
+    var inpCaption = document.getElementById('image_caption_{{ page.identifier }}_'+id);
+    formData.append(inpCaption.name, inpCaption.value);
+
+    var inpFile = document.getElementById('image_input_{{ page.identifier }}_'+id);
+    formData.append(inpFile.name, inpFile.files[0]);
+
+    return formData;
+}
+function page_image_updated_{{ page.identifier }}(res)
+{
+    var old_id = parseInt(res.result.old_id);
+    var store = get_images_store_{{ page.identifier }}()
+    var record = store.getById(old_id);
+    store.remove(record);
+    store.add(Ext.ModelManager.create({
+                id: res.result.id,
+                url: res.result.url,
+                caption: res.result.caption,
+                page_id: {{ page.identifier }},
+                deleted: false
+            }, 'PageImage'));
+
+
+}
+function page_image_update_failure_{{ page.identifier }}(res)
+{
+    alert('fail');
+}
+</script>

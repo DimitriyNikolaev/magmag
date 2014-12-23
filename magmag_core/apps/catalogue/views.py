@@ -11,7 +11,7 @@ class IndexView(ListView):
     template_name = 'catalogue/index.html'
     model = Product
     context_object_name = "products"
-    paginate_by = 4
+    paginate_by = 6
 
     def get_queryset(self):
         return Product.objects.filter(hidden=False, price__gt=0)
@@ -29,7 +29,7 @@ class CategoryView(ListView):
     template_name = 'catalogue/index.html'
     model = Product
     context_object_name = 'products'
-    paginate_by = 4
+    paginate_by = 6
 
     def get_queryset(self):
         pk = self.kwargs.get('pk', None)

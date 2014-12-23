@@ -1,0 +1,59 @@
+{% load i18n %}
+<div>
+    <a href="#" id="call_request_lnk" class="link-btn-dashed" >{% trans "Call request" %}</a>
+    <div id="call_request_wnd" class="collapsed-area">
+        <form id="call_request_frm" action="{% url 'magmag:message:call_request' %}" method="post" onsubmit="return sendForm(this,call_request_success,call_request_fail);">
+            {% csrf_token %}
+            <div class="checkout-field" {% if call_request.phone.is_hidden %} style="display:none;" {% endif %}>
+                <label for="{{ call_request.phone.auto_id }}" class="checkout-field-label {% if call_request.phone.field.required %}checkout-field-required{% endif %}">
+                    {{ call_request.phone.label }}{% if call_request.phone.field.required %} <span>*</span>{% endif %}
+                </label>
+                <div class="checkout-field-controls">
+                    {{ call_request.phone }}
+                    {% for error in call_request.phone.errors %}
+                        <span class="checkout-field-help-block">
+                            {{ error }}
+                        </span>
+                    {% endfor %}
+                    {% if call_request.phone.help_text %}
+                        <span class='checkout-field-help-block'>
+                            {{ call_request.phone.help_text }}
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+            <div id="call_request_res"></div>
+            <input type="submit" value="{% trans "Request" %}" class="right btn">
+        </form>
+    </div>
+    <script type="text/javascript">
+        $('#call_request_lnk').click(
+            function(e){
+                if($('#call_request_wnd').css('display') == 'none')
+                    call_request_wnd_show();
+                else
+                call_request_wnd_hide();
+            }
+        );
+
+        function call_request_wnd_hide(){
+             $('#call_request_wnd').animate({height:0},700);
+                    setTimeout(function() {
+                        $('#call_request_wnd').css('display','none');
+                    }, 700);
+        }
+        function call_request_wnd_show(){
+            $('#call_request_wnd').css('display','block');
+            $('#call_request_wnd').animate({height:91},700);
+        }
+
+        function call_request_success(res){
+            $('#call_request_res').text(res.msg);
+            document.getElementById("call_request_frm").reset();
+            setTimeout(function(){$('#call_request_res').text(''); call_request_wnd_hide();}, 2000);
+        }
+        function call_request_fail(res){
+            $('#call_request_res').text(res.msg);
+        }
+    </script>
+</div>
