@@ -346,9 +346,15 @@ nav li {
 }
 
 .product-add-to-cart-container{ float: right; height: 70px;}
+.product-add-to-cart-container .product-price{
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 7px;
+}
 
 .btn-add{
-    margin-top: 20px;
+    margin-top: 12px;
     margin-bottom: 20px;
     font-size: 14px;
 
@@ -502,7 +508,7 @@ nav li {
 }
 
 .btn-set-order{
-    width: 130px;
+    width: 140px;
 }
 
 /* thank_you page
