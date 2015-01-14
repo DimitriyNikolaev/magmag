@@ -27,7 +27,7 @@ def get_preview(original_image, field):
     # Метод thumb не используется, т.к. он не увеличивает размер изображения,
     # если оно меньше требуемого
     # img = img.crop((0, 0, min(img.size), min(img.size)))
-    img = img.resize((width, height), Image.ANTIALIAS)
+    img = img.resize((width, height), Image.BICUBIC)
     img.save(thumb, 'JPEG')
     if hasattr(original_image, 'path'):
         name = 'preview_%s' % os.path.basename(original_image.path)
@@ -62,7 +62,7 @@ def get_thumbnail(original_image,field):
     # Метод thumb не используется, т.к. он не увеличивает размер изображения,
     # если оно меньше требуемого
     # img = img.crop((0, 0, min(img.size), min(img.size)))
-    img.thumbnail((width, height), Image.ANTIALIAS)
+    img.thumbnail((width, height))
     if height > settings.THUMBNAIL_HEIGHT:
         img = img.crop((0,0,width, settings.THUMBNAIL_HEIGHT))
     elif width > settings.THUMBNAIL_WIDTH:

@@ -4,6 +4,7 @@
 {% block extra %}
     <link rel="stylesheet" href="{{ STATIC_URL }}magmag_core/css/flexslider.css" type="text/css" media="screen" />
     <script src="{{ STATIC_URL }}magmag_core/js/jplugins/jquery.flexslider.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}magmag_core/js/jplugins/jquery.loupe.min.js" type="text/javascript"></script>
     <script type="text/javascript">
 
 
@@ -54,6 +55,17 @@
 {% endblock %}
 
 {% block doc_ready %}
+        $('#btn_add_{{ product.id  }}').click(function(e){
+            var size = $("input:radio[name=size]:checked").val();
+            var color = $("input:radio[name=color]:checked").val();
+
+            var item = items_{{ product.id }}['item_'+color+size];
+            if(typeof(item) !== 'undefined' && item != null && typeof(basket) !== 'undefined' && basket != null && item.totalCount > 0)
+            {
+                basket.setPurchaseItem(item.id, item);
+            }
+        });
+
         $('.product-size-list li div').click(function(e){
             var inputid = this.id.replace('alt-','#');
             $(inputid).prop("checked","true");
@@ -71,25 +83,23 @@
                 var btn = $('.btn-add');
                 if (btn.hasClass('btn-disabled') && count > 0){
                     btn.removeClass('btn-disabled');
-                    $('#btn_add_{{ product.id  }}').click(function(e){
-                        var size = $("input:radio[name=size]:checked").val();
-                        var color = $("input:radio[name=color]:checked").val();
-
-                        var item = items_{{ product.id }}['item_'+color+size];
-                        if(typeof(item) !== 'undefined' && item != null && typeof(basket) !== 'undefined' && basket != null && item.totalCount > 0)
-                        {
-                            basket.setPurchaseItem(item.id, item);
-                        }
-                    });
+                    btn.prop('disabled', false);
                 }
                 else{
-                    if(!btn.hasClass('btn-disabled'))
+                    if(!btn.hasClass('btn-disabled')){
                         btn.addClass('btn-disabled');
+                        btn.prop('disabled', true);
+                    }
                 }
             }
-        }
+        };
+        $('a.loupe_el').loupe({
+            width: 500, // width of magnifier
+            height: 380, // height of magnifier
+            loupe: 'loupe' // css class for magnifier
+        });
+{% endblock %}
 
-    {% endblock %}
 
 {% block content_wrapper %}
 <aside class="image-galery">
@@ -99,7 +109,9 @@
             {% for img in images %}
                 <li data-thumb="{{ img.thumbnail.url }}">
                     {% if img.preview %}
+                        <a href="{{ img.original.url }}" class="loupe_el">
                             <img src="{{ img.preview.url }}" >
+                        </a>
                             {% if img.caption %}
                                 <div class="flex-caption">{{ img.caption }}</div>
                             {% endif %}

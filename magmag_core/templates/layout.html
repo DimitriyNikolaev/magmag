@@ -73,6 +73,12 @@
         }
     });
 
+    $(window).load(function (){
+        {% block win_load %}
+
+        {% endblock %}
+    });
+
     </script>
 {% endblock %}
 

@@ -1,4 +1,5 @@
 {% extends "layout.html" %}
+{% load i18n %}
 
 {% block content_wrapper %}
     <aside class="left-sidebar-category-tree">
@@ -43,7 +44,7 @@
                                 {{ product.name }}
                                 <img style="margin-left: 10px;" src="{{ STATIC_URL }}magmag_core/img/right_name.png"/>
                         </div>
-                        <div class="catalogue-product-price">{{ product.price|floatformat:"0"  }}p.</div>
+                        <div class="catalogue-product-price">{{ product.price|floatformat:"0"  }}{% trans "$" %}</div>
 
                     </div>
                 {% endfor %}

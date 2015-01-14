@@ -267,7 +267,7 @@ nav li {
 
 /*basket
 -----------------------------------------------------------------------------*/
-.basket { margin-left: 421px; position: relative;}
+.basket { margin-left: 460px; position: relative;}
 .basket .basket-link { display: inline;}
 .basket .basket-items { display: inline;}
 
@@ -550,3 +550,6 @@ nav li {
 .page-template-container{
     padding: 14px;
 }
+/* loupe
+----------------------------------------------------------------------------*/
+.loupe { background-color:#555; background:rgba(0, 0, 0, 0.25); border:5px solid rgba(0, 0, 0, 0); cursor:url(blank.png), url(blank.cur), none; }
