@@ -81,9 +81,11 @@
             if ($('input[name=size]:checked').length > 0 && $('input[name=color]:checked').length > 0) {
                 var count = get_and_display_stock();
                 var btn = $('.btn-add');
-                if (btn.hasClass('btn-disabled') && count > 0){
-                    btn.removeClass('btn-disabled');
-                    btn.prop('disabled', false);
+                if (count > 0){
+                    if(btn.hasClass('btn-disabled')){
+                        btn.removeClass('btn-disabled');
+                        btn.prop('disabled', false);
+                    }
                 }
                 else{
                     if(!btn.hasClass('btn-disabled')){

@@ -3,6 +3,7 @@
 
 {% block content_wrapper %}
     <aside class="left-sidebar-category-tree">
+
         <img class="catalogue_corner-top" src="{{ STATIC_URL }}magmag_core/img/rocaille_top.png"/>
         <div class="catalogue-tree">
             <ul>
@@ -29,6 +30,16 @@
             </ul>
         </div>
         <img class="catalogue_corner-bottom" src="{{ STATIC_URL }}magmag_core/img/rocaille_bottom.png"/>
+
+        <div class="vk-group-container">
+            <script type="text/javascript" src="//vk.com/js/api/openapi.js?116"></script>
+            <!-- VK Widget -->
+            <div id="vk_groups"></div>
+            <script type="text/javascript">
+            VK.Widgets.Group("vk_groups", {mode: 0, width: "150", height: "400", color1: 'FFFFFF', color2: '341409', color3: '341409'}, 48722465);
+            </script>
+        </div>
+
         </aside>
         <section class="catalogue-list" >
             <div class="product-container">

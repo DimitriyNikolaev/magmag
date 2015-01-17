@@ -217,7 +217,7 @@ nav li {
 }
 .left-sidebar-category-tree .catalogue_corner-bottom{
     left:76px;
-    bottom: -11px;
+    bottom: 418px;
 }
 
 .catalogue-tree{
@@ -553,3 +553,14 @@ nav li {
 /* loupe
 ----------------------------------------------------------------------------*/
 .loupe { background-color:#555; background:rgba(0, 0, 0, 0.25); border:5px solid rgba(0, 0, 0, 0); cursor:url(blank.png), url(blank.cur), none; }
+
+
+/*external
+----------------------------------------------------------------------------*/
+.vk-group-container{
+    margin-top: 30px;
+}
+.yandex-metrika-container{
+    float: left;
+    margin-top: 30px;
+}
