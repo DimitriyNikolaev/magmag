@@ -63,7 +63,7 @@ class AbstractProduct(models.Model):
     name = models.CharField(_('Name'), max_length=255, db_index=True)
     description = models.TextField(_('Description'), blank=True, null=True)
     image = models.ImageField(_('Image'), upload_to=upload_to_product_path, blank=True, null=True)
-    slug = models.SlugField(_('Slug'), max_length=255, db_index=True, editable=True)
+    slug = models.SlugField(_('Slug'), max_length=255, db_index=True, editable=True, unique=True)
     date_added = models.DateField(_('Date_Added'), editable=False, blank=False, null=False,
                                   default=datetime.datetime.today())
     article = models.CharField(_('Article'), max_length=10, db_index=True, blank=False, null=False, default='')
