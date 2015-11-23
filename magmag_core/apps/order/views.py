@@ -51,6 +51,7 @@ class CheckoutView(FormView):
     def form_valid(self, form):
         order_data = self.process_form(form)
         OrderCheckout.send_confirmation(order_data)
+        OrderCheckout.send_notification(order_data)
         return self.get_success_response(order_data)
 
     def get_success_response(self, order_data):

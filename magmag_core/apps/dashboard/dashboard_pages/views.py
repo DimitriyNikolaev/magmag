@@ -29,7 +29,8 @@ class PageFormView(SingleEditMixedView, SingleEditorMixin):
     template_name = 'dashboard/pages/page_form.html'
     model = Page
     context_object_name = 'page'
-    form_type = PageForm
+    # form_type = PageForm
+    form_class = PageForm
     pk_sing = 'pk'
     update = PageLogic.update_instance
 

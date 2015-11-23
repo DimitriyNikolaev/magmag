@@ -27,7 +27,7 @@ class ProductForm(ModelForm):
 class ProductImageForm(ModelForm):
     class Meta:
         model = ProductImage
-        exclude = ('preview', 'thumbnail',)
+        exclude = ['preview', 'thumbnail',]
 
     def save(self, *args, **kwargs):
         # # We infer the display order of the image based on the order of the

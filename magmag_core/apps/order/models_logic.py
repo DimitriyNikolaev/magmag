@@ -9,7 +9,7 @@ from magmag_core.apps.order.models import PurchaseItem, Order, Delivery
 from magmag_core.apps.account.models import Profile, Address
 from magmag_core.apps.order.utils import get_new_order_number
 from magmag_core.global_utils.json import deserialize_list
-from magmag_core.global_utils.email import send_email
+from magmag_core.global_utils.email import send_email, mail_managers
 from magmag_core.apps.base_models.models_logic_base import BaseLogic
 from magmag_core.apps.base_models.defaults import MAGMAG_DELIVERY_COSTS
 from magmag_core.apps.catalogue.models import ProductItem
@@ -81,7 +81,20 @@ class OrderCheckout(object):
         }))
         # title = '%s № %s' % (str(_('Order')), order_data[2].number,)
         title = u'%s № %s' % (unicode(_('Order')), order_data[2].number,)
-        send_email(title, msg, [order_data[0].email])
+        mail_managers(title, msg, [order_data[0].email])
+
+    @staticmethod
+    def send_notification(order_data):
+        msg = get_template('order/new_order_note.txt').render(Context({
+            'order': order_data[2],
+            'delivery': order_data[3],
+            'customer': order_data[0],
+            'address': order_data[1],
+            'items': order_data[4]
+        }))
+        # title = '%s № %s' % (str(_('Order')), order_data[2].number,)
+        title = u'%s № %s' % (unicode(_('Order')), order_data[2].number,)
+        send_email(title, msg)
 
 
 class OrderLogic(BaseLogic):

@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 import os
 from magmag_core import MAGMAG_MAIN_TEMPLATE_DIR
 from magmag_core import get_core_apps
-from magmag.local_settings import LOCAL_DATABASES, LOCAL_ADMINS, LOCAL_EMAIL_BACKEND, LOCAL_EMAIL_HOST,\
+from magmag.local_settings import LOCAL_DATABASES, LOCAL_ADMINS, LOCAL_MANAGERS, LOCAL_EMAIL_BACKEND, LOCAL_EMAIL_HOST,\
     LOCAL_EMAIL_HOST_USER,LOCAL_EMAIL_HOST_PASSWORD, LOCAL_EMAIL_SUBJECT_PREFIX
 
 location = lambda x: os.path.join(
@@ -36,6 +36,7 @@ ALLOWED_HOSTS = []
 
 SEND_BROKEN_LINK_EMAILS = False
 ADMINS = LOCAL_ADMINS
+MANAGERS = LOCAL_MANAGERS
 EMAIL_SUBJECT_PREFIX = LOCAL_EMAIL_SUBJECT_PREFIX
 EMAIL_BACKEND = LOCAL_EMAIL_BACKEND #'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = LOCAL_EMAIL_HOST

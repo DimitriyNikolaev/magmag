@@ -75,7 +75,7 @@ class SingleEditorMixin(object):
     update = None
     delete = None
     pk_sing = 'id'
-    form_type = None
+    form_class = None
 
     def get_object(self):
         pk = self.request.POST.get(self.pk_sing)
@@ -95,8 +95,8 @@ class SingleEditorMixin(object):
         elif action == 'update':
             form_kwargs = {'data': self.request.POST, 'files': self.request.FILES}
             form_kwargs.update({'instance': self.get_object()})
-            if self.form_type is not None and self.update is not None:
-                form = self.form_type(**form_kwargs)
+            if self.form_class is not None and self.update is not None:
+                form = self.form_class(**form_kwargs)
                 res = self.update(form)
                 return HttpResponse(json.dumps({'success': res[0], 'msg': 'success', 'result': res[1]}),
                                     content_type='application/json')
@@ -178,8 +178,8 @@ class SingleTreeEditorMixin(SingleEditorMixin):
             if 'parent' in form_kwargs['data'] and form_kwargs['data']['parent'] == 'root':
                 form_kwargs['data']['parent'] = None
             form_kwargs.update({'instance': self.get_object()})
-            if self.form_type is not None and self.update is not None:
-                form = self.form_type(**form_kwargs)
+            if self.form_class is not None and self.update is not None:
+                form = self.form_class(**form_kwargs)
                 res = self.update(form)
                 return HttpResponse(json.dumps({'success': res[0], 'msg': 'success'}),
                                     content_type='application/json')

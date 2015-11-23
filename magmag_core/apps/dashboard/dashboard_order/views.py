@@ -36,7 +36,8 @@ class OrderFormView(SingleEditMixedView, SingleEditorMixin):
     template_name = 'dashboard/order/order_form.html'
     model = Order
     context_object_name = 'order'
-    form_type = OrderStatusForm
+    # form_type = OrderStatusForm
+    form_class = OrderStatusForm
     pk_sing = 'pk'
     update = OrderLogic.update_instance
 

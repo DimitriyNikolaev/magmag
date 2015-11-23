@@ -14,6 +14,10 @@ LOCAL_DATABASES = {
 LOCAL_ADMINS = (
     ('Nikolaev Dimitriy', 'constructor3@yandex.ru'),
     )
+LOCAL_MANAGERS = (
+    ('Nikolaeva Evgeniya', 'evgeshka-sol@yandex.ru'),
+    ('Nikolaev Dimitriy', 'constructor3@yandex.ru'),
+)
 LOCAL_EMAIL_SUBJECT_PREFIX = "[Eve's Dream] "
 LOCAL_EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #'django.core.mail.backends.smtp.EmailBackend'
 LOCAL_EMAIL_HOST ='smtp.fullspace.ru'

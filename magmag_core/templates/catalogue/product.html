@@ -171,7 +171,7 @@
 </aside>
 <section class="product-details">
     <h1 class="product-name">{{ product.name }}</h1>
-    <p>{{ product.description }}</p>
+    <p>{{ product.description|safe }}</p>
     <div class="add-to-cart-helper">{% trans "Please select size and color and press Add to order " %}</div>
     <div class="color-size-container">
         <div>

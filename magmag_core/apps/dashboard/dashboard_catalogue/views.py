@@ -74,7 +74,8 @@ class ProductFormView(SingleEditMixedView, SingleEditorMixin):
     template_name = 'dashboard/catalogue/product_form.html'
     model = Product
     context_object_name = 'product'
-    form_type = ProductForm
+    # form_type = ProductForm
+    form_class = ProductForm
     pk_sing = 'pk'
     update = ProductLogic.update_instance
 

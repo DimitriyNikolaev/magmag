@@ -1,0 +1,21 @@
+{% load i18n %}
+
+
+{% trans "New Order!!!" %}
+
+{% if order %}
+
+{% trans "Order" %} №{{ order.number }}
+{{ order.date_created|date:"j E Y" }}
+{% trans "Total" %}: {{ order.total_sum }}{% trans "$" %}
+
+{% trans "Email" %}: {{ customer.email }}
+{% trans "Delivery method" %}: {{ delivery.get_delivery_method_display }}
+{% trans "Delivery cost" %}: {{ delivery.cost }}{% trans "$" %}
+
+
+{% trans "Purchase items" %}:
+    {% for item in items %}
+        {{ item.product.name }}_________{{ item.count }}x {{ item.price }} {% trans "$" %}
+    {% endfor %}
+{% endif %}
