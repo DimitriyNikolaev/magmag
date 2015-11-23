@@ -8,6 +8,7 @@ from magmag_core.apps.order.models import Order
 class OrderFullForm(ModelForm):
     class Meta:
         model = Order
+        fields = "__all__"
 
 
 class OrderStatusForm(ModelForm):

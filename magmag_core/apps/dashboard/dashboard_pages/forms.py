@@ -10,11 +10,13 @@ from magmag_core.apps.pages.models import Page, PageImage
 class PageForm(ModelForm):
     class Meta:
         model = Page
+        fields = "__all__"
 
 
 class PageImageForm(ModelForm):
     class Meta:
         model = PageImage
+        fields = "__all__"
 
 
 BasePageImageFormSet = inlineformset_factory(

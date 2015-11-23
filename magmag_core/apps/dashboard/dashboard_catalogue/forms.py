@@ -9,16 +9,19 @@ from magmag_core.global_utils.image_utils import get_thumbnail, get_preview
 class CategoryForm(ModelForm):
     class Meta:
         model = Category
+        fields = "__all__"
 
 
 class StoreForm(ModelForm):
     class Meta:
         model = Store
+        fields = "__all__"
 
 
 class ProductForm(ModelForm):
     class Meta:
         model = Product
+        fields = "__all__"
 
 
 class ProductImageForm(ModelForm):

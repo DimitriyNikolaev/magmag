@@ -3,6 +3,7 @@ __author__ = 'dimitriy'
 import datetime
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+from django.utils.timezone import now
 from mptt.managers import TreeManager
 from mptt.models import MPTTModel, TreeForeignKey
 from magmag_core.apps.base_models.path_builder import upload_to_product_path, upload_to_image_product_path
@@ -65,7 +66,7 @@ class AbstractProduct(models.Model):
     image = models.ImageField(_('Image'), upload_to=upload_to_product_path, blank=True, null=True)
     slug = models.SlugField(_('Slug'), max_length=255, db_index=True, editable=True, unique=True)
     date_added = models.DateField(_('Date_Added'), editable=False, blank=False, null=False,
-                                  default=datetime.datetime.today())
+                                  default=now)
     article = models.CharField(_('Article'), max_length=10, db_index=True, blank=False, null=False, default='')
     price = models.DecimalField(_('Price'), blank=False, null=False, default=0, max_digits=8, decimal_places=2)
     hidden = models.BooleanField(_('Hidden'), blank=False, null=False, default=False)

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="evesdream" showNewOnTargetInSync="false">
+  <component name="PublishConfigData" serverName="prod" showNewOnTargetInSync="false">
     <serverData>
-      <paths name="evesdream">
+      <paths name="prod">
         <serverdata>
           <mappings>
             <mapping deploy="/public_html" local="$PROJECT_DIR$" web="/" />
           </mappings>
           <excludedPaths>
-            <excludedPath path="/public_html/magmag/media" />
+            <excludedPath local="true" path="$PROJECT_DIR$/magmag/media" />
           </excludedPaths>
         </serverdata>
       </paths>

@@ -26,9 +26,11 @@ class CallRequestForm(forms.ModelForm):
 class CallRequestFullForm(forms.ModelForm):
     class Meta:
         model = CallRequest
+        fields = "__all__"
 
 
 class ClientRequestFullForm(forms.ModelForm):
     class Meta:
         model = ClientRequest
+        fields = "__all__"
 
