@@ -19,7 +19,7 @@ class ProductListView(ListMixedView, SingleEditorMixin):
     context_object_name = 'products'
     converter = get_product_grid_model
     delete = ProductLogic.delete_instance
-    paginate_by = 20
+    paginate_by = 30
 
     def get_queryset(self):
         return Product.objects.all()

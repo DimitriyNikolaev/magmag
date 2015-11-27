@@ -436,7 +436,7 @@ function updateProduct_{{ product.identifier }}(form)
     }
 
 
-    var commit_images = function(url, id){
+    function commit_images(url, id){
 
         var formData = new FormData();
         formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
@@ -489,7 +489,7 @@ function updateProduct_{{ product.identifier }}(form)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //piGrid method and handlers
-    var productItemExpandRow_{{ product.identifier }} = function(rowNode, record, expandRow, eOpts)
+    function productItemExpandRow_{{ product.identifier }}(rowNode, record, expandRow, eOpts)
     {
         var restPlaceHolder = document.getElementById('restsExpandPanel' + record.data.id);
         var strStores = Ext.data.StoreManager.lookup('stores_{{ product.identifier }}_Store');
@@ -582,23 +582,22 @@ function updateProduct_{{ product.identifier }}(form)
 
     }
 
-    var addNewProductItem_{{ product.identifier }} = function(grid)
+    function addNewProductItem_{{ product.identifier }} (grid)
     {
 
         var rests = [];
         var strs = Ext.data.StoreManager.lookup('stores_{{ product.identifier }}_Store');
+        var store = grid.getStore();
         Ext.Array.each(strs.data.items, function(s){
             rests.push(
                     {
                     id: -rests.length,
-                    item_id: {{ product.identifier }},
+                    item_id: -store.data.length,//{{ product.identifier }},
                     store_id: s.data.id,
                     store_name: s.data.name,
                     count:0
                 });
-        })
-
-        var store = grid.getStore();
+        });
         store.add(
               Ext.ModelManager.create({
                     id: -store.data.length,
@@ -609,7 +608,7 @@ function updateProduct_{{ product.identifier }}(form)
         );
     }
 /////images handlers
-    var addNewProductImage_{{ product.identifier }} = function()
+    function addNewProductImage_{{ product.identifier }}()
     {
         var dview = Ext.getCmp('{{ current_path  }}_imagesDataView');
         var store = dview.getStore();

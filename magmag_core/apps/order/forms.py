@@ -7,7 +7,7 @@ from magmag_core.apps.order.models import Order
 from magmag_core.apps.account.models import Profile, Address
 
 from django import forms
-from django.forms.util import ErrorList
+from django.forms.utils import ErrorList
 from django.utils.translation import ugettext_lazy as _
 from magmag_core.apps.base_models.defaults import MAGMAG_DELIVERY_METHODS
 from magmag_core.global_utils.json import deserialize_list
